@@ -1,0 +1,6 @@
+﻿  Source.cpp
+f:\jing.wang\c++ primer plus\the first chapter\the first chapter\source.cpp(1630): warning C4018: '<': signed/unsigned mismatch
+f:\jing.wang\c++ primer plus\the first chapter\the first chapter\source.cpp(1633): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+f:\jing.wang\c++ primer plus\the first chapter\the first chapter\source.cpp(1642): warning C4018: '<': signed/unsigned mismatch
+  The First Chapter.vcxproj -> F:\Jing.Wang\C++ Primer Plus\The First Chapter\Debug\The First Chapter.exe
+  The First Chapter.vcxproj -> F:\Jing.Wang\C++ Primer Plus\The First Chapter\Debug\The First Chapter.pdb (Full PDB)
