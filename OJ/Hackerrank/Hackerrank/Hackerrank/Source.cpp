@@ -5,7 +5,7 @@
 // - Introduce: The project file is a thirty day training program.  
 
 /*
- 0: hello world
+0: hello world
 */
 
 #include <iostream>
@@ -13,12 +13,12 @@
 
 using namespace std;
 
-int main() 
+int main()
 {
 	string inputString;			// declare a variable to hold our input
 	getline(cin, inputString);  // get a line of input from cin and save it to our variable
 
-	// Your first line of output goes here
+								// Your first line of output goes here
 	cout << "Hello, World." << endl;
 
 	// Write the second line of output
@@ -28,7 +28,7 @@ int main()
 
 
 /*
- 1: Data Types 
+1: Data Types
 */
 
 #include <iostream>
@@ -37,7 +37,7 @@ int main()
 
 using namespace std;
 
-int main() 
+int main()
 {
 	int i = 4;
 	double d = 4.0;
@@ -59,7 +59,7 @@ int main()
 }
 
 /*
- 2: Operators
+2: Operators
 */
 
 #include <cmath>
@@ -70,7 +70,7 @@ int main()
 using namespace std;
 
 
-int main() 
+int main()
 {
 	double dMealCost;
 	int    iTipPercent, iTaxPercent, Total;
@@ -94,7 +94,7 @@ int main()
 }
 
 /*
- 3: Intro to Conditional Statements
+3: Intro to Conditional Statements
 */
 
 #include <map>
@@ -150,10 +150,10 @@ int main()
 }
 
 /*
- 4: Class vs. Instance 
+4: Class vs. Instance
 */
 
-class Person 
+class Person
 {
 public:
 	int age;
@@ -170,7 +170,7 @@ Person::Person(int initialAge)
 	age = initialAge;
 }
 
-void Person::amIOld() 
+void Person::amIOld()
 {
 	// Do some computations in here and print out the correct statement to the console 
 	if (age<13)
@@ -181,14 +181,14 @@ void Person::amIOld()
 		cout << "You are old." << endl;
 }
 
-void Person::yearPasses() 
+void Person::yearPasses()
 {
 	// Increment the age of the person in here
 	age++;
 }
 
 /*
- 5: Loops 
+5: Loops
 */
 
 #include <cmath>
@@ -199,7 +199,7 @@ void Person::yearPasses()
 using namespace std;
 
 
-int main() 
+int main()
 {
 	/* Enter your code here. Read input from STDIN. Print output to STDOUT */
 	int n;
@@ -212,7 +212,7 @@ int main()
 }
 
 /*
- 6: Let's Review 
+6: Let's Review
 */
 
 #include <cmath>
@@ -223,7 +223,7 @@ int main()
 using namespace std;
 
 
-int main() 
+int main()
 {
 
 	int n;
@@ -263,7 +263,7 @@ int main()
 }
 
 /*
- 7: Arrays 
+7: Arrays
 */
 
 #include <map>
@@ -311,7 +311,7 @@ int main()
 }
 
 /*
- 8: Dictionaries and Maps 
+8: Dictionaries and Maps
 */
 
 #include <cmath>
@@ -323,7 +323,7 @@ int main()
 using namespace std;
 
 
-int main() 
+int main()
 {
 
 	long long n;
@@ -331,7 +331,7 @@ int main()
 	cin >> n;
 
 	long long value;
-	std:string str, str1;
+std:string str, str1;
 
 	map<string, long long> mData;
 	map<string, long long>::iterator mFind;
@@ -360,7 +360,7 @@ int main()
 }
 
 /*
- 9: Recursion 
+9: Recursion
 */
 
 #include <cmath>
@@ -372,7 +372,7 @@ using namespace std;
 
 long Factorial(unsigned int i);
 
-int main() 
+int main()
 {
 
 	unsigned int n;
@@ -395,8 +395,9 @@ long Factorial(unsigned int i)
 }
 
 /*
- 10: Binary Numbers 
+10: Binary Numbers
 */
+
 
 
 
