@@ -1,0 +1,8 @@
+﻿  Source.cpp
+e:\jing.wang\algorithm and data structure\algorithm and data structure\algorithm and data structure\source.cpp(20): warning C4101: 'middle_number': unreferenced local variable
+e:\jing.wang\algorithm and data structure\algorithm and data structure\algorithm and data structure\source.cpp(49): warning C4018: '<': signed/unsigned mismatch
+e:\jing.wang\algorithm and data structure\algorithm and data structure\algorithm and data structure\source.cpp(52): warning C4018: '<': signed/unsigned mismatch
+e:\jing.wang\algorithm and data structure\algorithm and data structure\algorithm and data structure\source.cpp(69): warning C4018: '<': signed/unsigned mismatch
+e:\jing.wang\algorithm and data structure\algorithm and data structure\algorithm and data structure\source.cpp(72): warning C4018: '<': signed/unsigned mismatch
+  Algorithm and Data Structure.vcxproj -> E:\Jing.Wang\Algorithm and Data Structure\Algorithm and Data Structure\Debug\Algorithm and Data Structure.exe
+  Algorithm and Data Structure.vcxproj -> E:\Jing.Wang\Algorithm and Data Structure\Algorithm and Data Structure\Debug\Algorithm and Data Structure.pdb (Full PDB)

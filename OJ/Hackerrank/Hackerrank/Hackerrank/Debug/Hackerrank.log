@@ -1,0 +1,4 @@
+﻿  Source.cpp
+e:\jing.wang\oj\hackerrank\hackerrank\hackerrank\source.cpp(460): warning C4101: 'middle': unreferenced local variable
+  Hackerrank.vcxproj -> E:\Jing.Wang\OJ\Hackerrank\Hackerrank\Debug\Hackerrank.exe
+  Hackerrank.vcxproj -> E:\Jing.Wang\OJ\Hackerrank\Hackerrank\Debug\Hackerrank.pdb (Full PDB)
