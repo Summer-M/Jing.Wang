@@ -10,86 +10,76 @@
 using namespace std;
 
 
-//1
+//About: sort
+//Information:This is used to practice about "sort"
 
-/*
-int indexFunction1(int array[], int size,int index);									//! "Bubble Sort"
-int indexFunction2(int array[], int index);												//! this is used to sort
+//bubble
+void Bubble(int *array, int size);
+void Select(int *array, int size);
+void Insert(int *array, int size);
 
 int main()
 {
-	const unsigned int size = 5;
-	int array[size],index1,middle_number;
+	const unsigned int size = 10;
+	int array[size] = {13,4,26,87,30,17,64,51,20,21};
+
+	Bubble(array,size);
+
+	//Select(array, size);
+
 	for (size_t i = 0; i < size; i++)
 	{
-		cin >> array[i];
+		cout << array[i] << " ";
 	}
 
-	cin >> index1;
-
-	cout << indexFunction1(array, size,index1) << endl;
-	
-	for (size_t i = index1; i < size; i++)
-	{
-		if (array[i] < indexFunction2(array, index1))
-		{
-			middle_number = array[i];
-			array[i] = array[index1 - 1];
-			array[index1 - 1] = middle_number;
-		}
-	}
-
-	cout << array[index1 - 1] << endl;
-	
+	cout << endl;
 	system("pause");
 	return 0;
 }
 
-int indexFunction1(int array[], int size,int index)
+
+void Bubble(int *array, int size)
 {
-	int middle;
+	int iMimddle;
 	for (size_t i = 0; i < size; i++)
 	{
-		int currentindex = array[i];
-		for (size_t j = 0; j < size-1; j++)
+		for (size_t j = i+1; j < size; j++)
 		{
-			if (currentindex > array[j])
+			if (array[i] > array[j])
 			{
-				middle = array[i];
+				iMimddle = array[i];
 				array[i] = array[j];
-				array[j] = middle;
+				array[j] = iMimddle;
 			}
 		}
 	}
-
-	return index-1;
 }
 
-int indexFunction2(int *array, int index)
+void Select(int *array, int size)
 {
-	int middle;
-	for (size_t i = 0; i < index; i++)
+	int index;
+	int iMiddle;
+	for (size_t i = 0; i < size; i++)
 	{
-		int currentindex = array[i];
-		for (size_t j = 0; j < index - 1; j++)
+		index = i;
+		for (size_t j = i+1; j <= size-1; j++)
 		{
-			if (currentindex < array[j])
+			if (array[index]>array[j])
 			{
-				middle   = array[i];
-				array[i] = array[j];
-				array[j] = middle;
+				index = j;
 			}
 		}
+
+		iMiddle = array[index];
+		array[index] = array[i];
+		array[i] = iMiddle;
 	}
-	
-	return array[index - 1];
 }
 
-*/
-
-//2
-
-
+void Insert(int *array, int size)
+{
+	
+}
 
 
 
