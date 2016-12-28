@@ -24,7 +24,10 @@ And thanks for the support of my girlfriend,i love her.
            · The  Eighth  Chapter
         · OJ
            · The  First Stage
-#   · Others
+        · Data Visualization
+           · Visual sorting
+           · List operation
+#   · Others
     1 . I will continue to update the practice of the subject and the solution of the problem
     2 . Welcome to find the answers to the questions and enrich the practice Library  
     3 . The name of this Repo is the name of my girlfriend
