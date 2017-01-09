@@ -8,6 +8,8 @@
 #include <Windows.h>
 #include <malloc.h>
 
+#include "Variable.h"
+
 //namespace
 using namespace std;
 using namespace System;
@@ -17,28 +19,29 @@ namespace Process
 	// extern 
 	extern	HANDLE				HMutex;
 	extern	bool				SortFinished;
-	extern	vector<long long>   IArraysize;
 	
 	/*
 		the part of this namespace is used for sort
 	*/
 
+	template <typename T>
 	struct MyStruct
 	{
-		vector<long long> nums;
+		vector<T> nums;
 		unsigned int SortIndex;
 	};
 
+	template <typename DataType>
 	class Sort
 	{
 	public:
 		enum {size = 10,othersize = 100};
-		Sort(vector<long long> Object)
+		Sort(vector<DataType> Object)
 			:array(0)
 			//IArraysize(size)
 		{
 			array = Object;
-			IArraysize = Object;
+			IArraysize<int,1> = Object;
 		};
 		~Sort() {};
 
@@ -46,42 +49,195 @@ namespace Process
 		//!\brief no code
 	public:
 		//!\brief passing parameters
-		vector<long long> array;
+		vector<DataType> array;
 
 	public:	
 		//!\brief thread
 	
 	public:
-
 		//Bubble
-		void Bubble(vector<long long> array);
+		void Bubble(vector<DataType> array)
+		{
+			int iMimddle;
+			for (size_t i = 0; i < array.size(); i++)
+			{
+				//lock
+				WaitForSingleObject(HMutex, INFINITE);
+
+				for (size_t j = i + 1; j < array.size(); j++)
+				{
+					if (array[i] > array[j])
+					{
+						iMimddle = array[i];
+						array[i] = array[j];
+						array[j] = iMimddle;
+					}
+				}
+
+				// update IArraysize
+				IArraysize = array;
+
+				//unlock
+				Sleep(50);
+				ReleaseMutex(HMutex);
+			}
+
+			SortFinished = false;
+			return;
+		}
 		//Select
-		void Select(vector<long long> array);
+		void Select(vector<DataType> array)
+		{
+			int index;
+			int iMiddle;
+			for (size_t i = 0; i < array.size(); i++)
+			{
+				//lock
+				WaitForSingleObject(HMutex, INFINITE);
+
+				index = i;
+				for (size_t j = i + 1; j <= array.size() - 1; j++)
+				{
+					if (array[index]>array[j])
+					{
+						index = j;
+					}
+				}
+
+				iMiddle = array[index];
+				array[index] = array[i];
+				array[i] = iMiddle;
+
+				// update IArraysize
+				IArraysize = array;
+
+				//unlock
+				Sleep(50);
+				ReleaseMutex(HMutex);
+			}
+
+			SortFinished = false;
+			return;
+		}
 		//insert
-		void Insert(vector<long long> array);
+		void Insert(vector<DataType> array)
+		{
+			int temp, j;
+			for (size_t i = 1; i < array.size(); i++)
+			{
+				//lock
+				WaitForSingleObject(HMutex, INFINITE);
+
+				temp = array[i];
+				for (j = i; j > 0 && array[j - 1]>temp; j--)
+				{
+					array[j] = array[j - 1];
+				}
+
+				array[j] = temp;
+
+				// update IArraysize
+				IArraysize = array;
+
+				//unlock
+				Sleep(50);
+				ReleaseMutex(HMutex);
+			}
+
+			SortFinished = false;
+			return;
+		}
 		//Shell
-		void Shell(vector<long long> array);
+		void Shell(vector<DataType> array)
+		{
+			int temp, j;
+			int gap = array.size() / 2;
+
+			while (gap > 0)
+			{
+				for (size_t i = gap; i < array.size(); i++)
+				{
+					// lock
+					WaitForSingleObject(HMutex, INFINITE);
+
+					temp = array[i];
+					j = i - gap;
+
+					while (j >= 0 && array[j] > temp)
+					{
+						array[j + gap] = array[j];
+						j -= gap;
+					}
+
+					array[j + gap] = temp;
+
+					// update IArraysize
+					IArraysize = array;
+
+					//unlock
+					Sleep(50);
+					ReleaseMutex(HMutex);
+				}
+
+				gap /= 2;
+			}
+
+			SortFinished = false;
+			return;
+
+		}
 		//Quick
-		void Quick(vector<long long> array);
+		void Quick(vector<DataType> array)
+		{
+			SortFinished = false;
+			return;
+		}
 		//Heap
-		void Heap(vector<long long> array);
+		void Heap(vector<DataType> array)
+		{
+			SortFinished = false;
+			return;
+		}
 		//Merge
-		void Merge(vector<long long> array);
+		void Merge(vector<DataType> array)
+		{
+			SortFinished = false;
+			return;
+		}
 	};
 
 //! \brief Process rand test-numbers 
 //---------------------------------------------------------------------------
+	template <typename DataType>
+	vector<DataType> RandNumbers()					// 10
+	{
+		vector<DataType> RandNumber;
+		srand((DataType)time(NULL));
+		for (size_t i = 0; i < Sort<DataType>::size; i++)
+		{
+			RandNumber.push_back(((rand() % 11) * 3));
+		}
 
-	vector<long long> RandNumbers();				// 10
-	vector<long long> RandNums();					// 300
+		return RandNumber;
+	}
+
+	
+	template <typename DataType>
+	vector<DataType> RandNums()					   // 300
+	{
+		vector<DataType> RandNumber;
+		srand((DataType)time(NULL));
+		for (size_t i = 0; i < Sort<DataType>::othersize; i++)
+		{
+			RandNumber.push_back(((rand() % 100) * 3));
+		}
+
+		return RandNumber;
+	}
 
 //! \brief thread 
 //---------------------------------------------------------------------------
-
-	DWORD WINAPI ThreadOfSort(LPVOID lpParam);
-
-	DWORD WINAPI ThreadReady(LPVOID lpParam);
-
+	
 	/*
 		the part of this namespace is used for linkedlist
 	*/
@@ -89,13 +245,26 @@ namespace Process
 	// extern
 	extern	vector<long long>   Result;
 	extern  struct NoteList*    Mylink;
+	extern  struct DoublyNoteList*    Mylink1;
 
 	struct NoteList
 	{
 		long long data;						// data area
-		NoteList *next;					// pointer area 
+		NoteList *next;						// pointer area 
+	};
+
+	struct DoublyNoteList
+	{
+		long long data;						// data area
+		DoublyNoteList *pev;						// the pev pointer area
+		DoublyNoteList *next;						// the next pointer area
 	};
 	
+
+	/*
+		- Notice: the class is going to be into a template class!!
+	*/
+
 	class LinkedList
 	{
 	public:
@@ -105,7 +274,7 @@ namespace Process
 	private:
 		// no code
 	public:
-
+		// Singly Linked List
 		// judge empty
 		bool Empty(struct NoteList *head);
 		// judge full
@@ -124,5 +293,13 @@ namespace Process
 		struct NoteList * Remove(int data, struct NoteList *head);
 		// Output data
 		vector<long long> Output(struct NoteList *head);
+
+		// Doubly linked List
+		// create in linkedlist
+		struct DoublyNoteList *CreateDoubly(int nums);
+		// search in LinkedList
+		bool SearchIndex(int data, struct DoublyNoteList *head);
+		// Output data
+		vector<long long> LinkedList::Output1(struct DoublyNoteList *head);
 	};
 }

@@ -2,6 +2,8 @@
 
 #include "Draw.h"
 #include "Header.h"
+#include "Variable.h"
+#include "Thread.h"
 
 namespace DataVisualization {
 	
@@ -25,7 +27,8 @@ namespace DataVisualization {
 	public:
 		MyForm(void)
 			:thread(nullptr),
-			 hThread1(NULL)
+			 hThread1(NULL),
+			 timekeeping(0)
 		{
 			InitializeComponent();
 
@@ -35,7 +38,6 @@ namespace DataVisualization {
 			//
 		    myGraphics = this->pictureBox1->CreateGraphics();
 			thread = gcnew Thread(gcnew ThreadStart(this, &MyForm::ThreadOfDraw));
-			hThread1 = CreateThread(NULL, 0, ThreadReady, NULL, 0, NULL);
 		}
 
 	protected:
@@ -49,6 +51,7 @@ namespace DataVisualization {
 				delete components;
 			}
 		}
+
 	private: System::Windows::Forms::MenuStrip^  menuStrip1;
 	protected:
 	private: System::Windows::Forms::ToolStripMenuItem^  menuToolStripMenuItem;
@@ -103,6 +106,7 @@ namespace DataVisualization {
 	private: System::Windows::Forms::TextBox^	  ResultData;
 	private: System::Windows::Forms::GroupBox^	  groupBox4;
 	private: System::Windows::Forms::GroupBox^	  groupBox5;
+	private: System::Windows::Forms::GroupBox^	  groupBox6;
 	private: System::Windows::Forms::Button^	  Create;
 	private: System::Windows::Forms::Button^	  Search;
 	private: System::Windows::Forms::Button^	  Delete;
@@ -111,15 +115,22 @@ namespace DataVisualization {
 	private: System::Windows::Forms::TextBox^	  TextCreate;
 	private: System::Windows::Forms::TextBox^	  TextSearch;
 	private: System::Windows::Forms::TextBox^	  TextDelete;
+	private: System::Windows::Forms::TextBox^	  TextReverse;
 	private: System::Windows::Forms::TextBox^	  TextInsert;
+	private: System::Windows::Forms::RadioButton^ format3;
+	private: System::Windows::Forms::RadioButton^ format4;
+	private: System::Windows::Forms::RadioButton^ format5;
 
 	private:
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
+
+		//sort
 		System::Drawing::Graphics^ myGraphics;				// draw	
 		System::Threading::Thread^ thread;                  // thread for update label
 		HANDLE hThread1;									// thread for update sort
+		long long timekeeping;								// time for update sort
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -190,7 +201,7 @@ namespace DataVisualization {
 			// 
 			// timer1
 			// 
-			this->timer1->Interval = 100;
+			this->timer1->Interval = 50;
 			this->timer1->Tick += gcnew System::EventHandler(this, &MyForm::timer1_Tick);
 			// 
 			// MyForm
@@ -502,6 +513,7 @@ namespace DataVisualization {
 		{
 			this->TextCreate = (gcnew System::Windows::Forms::TextBox());
 			this->TextDelete = (gcnew System::Windows::Forms::TextBox());
+			this->TextReverse = (gcnew System::Windows::Forms::TextBox());
 			this->TextSearch = (gcnew System::Windows::Forms::TextBox());
 			this->TextInsert = (gcnew System::Windows::Forms::TextBox());
 			this->Create = (gcnew System::Windows::Forms::Button());
@@ -511,10 +523,48 @@ namespace DataVisualization {
 			this->InsertLink = (gcnew System::Windows::Forms::Button());
 			this->groupBox4 = (gcnew System::Windows::Forms::GroupBox());
 			this->groupBox5 = (gcnew System::Windows::Forms::GroupBox());
+			this->groupBox6 = (gcnew System::Windows::Forms::GroupBox());
 			this->OriginalData = (gcnew System::Windows::Forms::TextBox());
 			this->ResultData = (gcnew System::Windows::Forms::TextBox());
 			this->labelOriginalData = (gcnew System::Windows::Forms::Label());
 			this->labelResultData = (gcnew System::Windows::Forms::Label());
+			this->format3 = (gcnew System::Windows::Forms::RadioButton());
+			this->format4 = (gcnew System::Windows::Forms::RadioButton());
+			this->format5 = (gcnew System::Windows::Forms::RadioButton());
+
+			//
+			// select
+			//
+			this->format3->AutoSize = true;
+			this->format3->Location = System::Drawing::Point(3, 22);
+			this->format3->Name = L"format3";
+			this->format3->Size = System::Drawing::Size(85, 16);
+			this->format3->TabIndex = 0;
+			this->format3->TabStop = true;
+			this->format3->Text = L"Singly Linked List";
+			this->format3->UseVisualStyleBackColor = true;
+
+			this->format4->AutoSize = true;
+			this->format4->Location = System::Drawing::Point(3, 50);
+			this->format4->Name = L"format4";
+			this->format4->Size = System::Drawing::Size(85, 16);
+			this->format4->TabIndex = 0;
+			this->format4->TabStop = true;
+			this->format4->Text = L"Doubly linked List";
+			this->format4->UseVisualStyleBackColor = true;
+
+			this->format5->AutoSize = true;
+			this->format5->Location = System::Drawing::Point(3, 78);
+			this->format5->Name = L"format5";
+			this->format5->Size = System::Drawing::Size(85, 16);
+			this->format5->TabIndex = 0;
+			this->format5->TabStop = true;
+			this->format5->Text = L"Circular linked list ";
+			this->format5->UseVisualStyleBackColor = true;
+
+			this->groupBox6->Text = L"Select";
+			this->groupBox6->Size = System::Drawing::Size(152, 110);
+			this->groupBox6->Location = System::Drawing::Point(2, 445);
 
 			//TextCreate
 			this->TextCreate->Name = L"TextCreate";
@@ -533,6 +583,14 @@ namespace DataVisualization {
 			this->TextDelete->Location = System::Drawing::Point(105, 121);
 			this->TextDelete->Size = System::Drawing::Size(33, 32);
 			this->TextDelete->BackColor = System::Drawing::Color::White;
+
+			//TextReverse
+			this->TextReverse->Text = L"True";
+			this->TextReverse->Enabled = false;
+			this->TextReverse->Name = L"TextReverse";
+			this->TextReverse->Location = System::Drawing::Point(105, 171);
+			this->TextReverse->Size = System::Drawing::Size(33, 32);
+			this->TextReverse->BackColor = System::Drawing::Color::White;
 
 			//TextDelete
 			this->TextInsert->Name = L"TextInsert";
@@ -644,11 +702,17 @@ namespace DataVisualization {
 			this->groupBox5->Controls->Add(Delete);
 			this->groupBox5->Controls->Add(Reverse);
 			this->groupBox5->Controls->Add(InsertLink);
+			this->groupBox5->Controls->Add(this->groupBox6);
 
 			this->groupBox5->Controls->Add(TextCreate);
 			this->groupBox5->Controls->Add(TextSearch);
 			this->groupBox5->Controls->Add(TextDelete);
+			this->groupBox5->Controls->Add(TextReverse);
 			this->groupBox5->Controls->Add(TextInsert);
+
+			this->groupBox6->Controls->Add(format3);
+			this->groupBox6->Controls->Add(format4);
+			this->groupBox6->Controls->Add(format5);
 
 			this->Controls->Add(this->groupBox4);
 			this->Controls->Add(this->groupBox5);
@@ -669,6 +733,7 @@ namespace DataVisualization {
 		/// the contents of this method with the code editor.
 		/// </summary>
 private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
+	InitializeText();
 	InitializeRun(IArraysize);
 }
 private: System::Void Form_Closing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
@@ -723,7 +788,7 @@ private: System::Void Merge_Click(System::Object^  sender, System::EventArgs^  e
 }
 private: void ReadyForSort( /*The function is create object*/ const unsigned int SortIndex) {
 	
-	MyStruct Sortstruct;
+	MyStruct<SortType> Sortstruct;
 
 	try
 	{
@@ -731,14 +796,14 @@ private: void ReadyForSort( /*The function is create object*/ const unsigned int
 		thread->Abort();
 		while (true)
 		{
-			if (WaitForSingleObject(hThread1, 0) == WAIT_OBJECT_0)
+			if (WaitForSingleObject(hThread1, 0) == WAIT_OBJECT_0 || hThread1==NULL)
 			{
 				IArraysize.clear();
 
 				//
 				if (this->format1->Checked)
 				{
-					IArraysize = Sortstruct.nums = Process::RandNums();
+					IArraysize = Sortstruct.nums = RandNums<SortType>();
 					HiddenLabel();
 
 					Sortstruct.SortIndex = SortIndex;
@@ -748,7 +813,7 @@ private: void ReadyForSort( /*The function is create object*/ const unsigned int
 				}
 				else if (this->format2->Checked)
 				{
-					IArraysize = Sortstruct.nums = Process::RandNumbers();
+					IArraysize = Sortstruct.nums = RandNumbers<SortType>();
 					ShowLabel();
 
 					Sortstruct.SortIndex = SortIndex;
@@ -766,8 +831,10 @@ private: void ReadyForSort( /*The function is create object*/ const unsigned int
 		return;
 	}
 }
-private: void Go( /*The function is create object*/ MyStruct SortInfo ){
+private: void Go( /*The function is create object*/ MyStruct<SortType> SortInfo ){
 
+	MYThread<SortType> ThreadInSort;
+	
 	// initialize object
 	if (this->format1->Checked)
 	{
@@ -792,7 +859,7 @@ private: void Go( /*The function is create object*/ MyStruct SortInfo ){
 		try
 		{
 			thread = gcnew Thread(gcnew ThreadStart(this, &MyForm::ThreadOfDraw));
-			hThread1 = CreateThread(NULL, 0, ThreadOfSort, &SortInfo, 0, NULL);
+			hThread1 = CreateThread(NULL, 0, ThreadInSort.ThreadOfSort, &SortInfo, 0, NULL);
 
 			thread->Start();
 			timer1->Start();
@@ -817,7 +884,7 @@ private: void ThreadOfDraw(void)
 
 		if (this->format1->Checked)
 		{
-			timer1->Stop();
+			timer1->Start();
 
 			for (size_t i = 0; i < 100; i++)
 			{
@@ -843,13 +910,14 @@ private: void ThreadOfDraw(void)
 
 	SortFinished = true;
 	timer1->Stop();
+	timekeeping = 0;
 	return;
 }
 
 private: void ClearView( /*The function is create object*/System::Drawing::Graphics^ myGraphics) {
 	myGraphics->Clear(System::Drawing::Color::White);
 }
-private: void InitializeRun( /*The function is create object*/vector<long long> nums) {
+private: void InitializeRun( /*The function is create object*/vector<SortType> nums) {
 	this->Controls->Add(this->groupBox2);
 	this->label1->Text = nums[0].ToString();
 	this->label2->Text = nums[1].ToString();
@@ -861,6 +929,12 @@ private: void InitializeRun( /*The function is create object*/vector<long long> 
 	this->label8->Text = nums[7].ToString();
 	this->label9->Text = nums[8].ToString();
 	this->label10->Text = nums[9].ToString();
+}
+
+private: void InitializeText(/*The function is update time*/)
+{
+	timekeeping += 50;
+	this->Time->Text = timekeeping.ToString() + " ms ";
 }
 
 private: void HiddenLabel( /*The function is create object*/ ) {
@@ -902,14 +976,31 @@ private:void ReadyForLinkedList(/* start */const unsigned int index)
 	switch (index)
 	{
 		case 0: 
-			{
+			{ 
 				if (this->TextCreate->Text=="")
 					break;
 				else
-					Mylink = link.Create(Convert::ToInt32(this->TextCreate->Text));
+				{
+					if (this->format4->Checked)
+					{
+						Mylink1 = link.CreateDoubly(Convert::ToInt32(this->TextCreate->Text));
 
-				Result = link.Output(Mylink);
-				UpdateTextBoxForOriginal(Result);
+						Result = link.Output1(Mylink1);
+						UpdateTextBoxForOriginal(Result);
+					}
+					else if (this->format3->Checked)
+					{
+						Mylink = link.Create(Convert::ToInt32(this->TextCreate->Text));
+
+						Result = link.Output(Mylink);
+						UpdateTextBoxForOriginal(Result);
+					}
+					else
+					{
+						// 
+						break;
+					}
+				}
 		    }
 			
 			break;
@@ -1003,6 +1094,11 @@ private:void UpdateTextBoxForResultAboutSearch(/* start */bool result)
 {
 	String^ Textaboutlink = result ? "Yes!" : "No!";
 	this->ResultData->Text = (this->ResultData->Text == "") ? Textaboutlink : this->ResultData->Text + "\r\n" + Textaboutlink;
+}
+private:void Clear(/* start */)
+{
+	this->OriginalData->Text = "";
+	this->ResultData->Text = "";
 }
 
 #pragma endregion

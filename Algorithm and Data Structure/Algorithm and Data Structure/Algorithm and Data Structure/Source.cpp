@@ -14,71 +14,26 @@ using namespace std;
 //Information:This is used to practice about "sort"
 
 //bubble
-void Bubble(int *array, int size);
-void Select(int *array, int size);
-void Insert(int *array, int size);
 
 int main()
 {
-	const unsigned int size = 10;
-	int array[size] = {13,4,26,87,30,17,64,51,20,21};
+	int x, y;
 
-	Bubble(array,size);
-
-	//Select(array, size);
-
-	for (size_t i = 0; i < size; i++)
+	for (int i = 0; i < 1000; i++)
 	{
-		cout << array[i] << " ";
+		x = i;
+		for (int j = 0; j < 1000; j++)
+		{
+			y = j;
+			if (x * 10000 + y * 1000 == 305000)
+			{
+				cout << x << " " << y << endl;
+			}
+		}
 	}
 
-	cout << endl;
 	system("pause");
 	return 0;
-}
-
-
-void Bubble(int *array, int size)
-{
-	int iMimddle;
-	for (size_t i = 0; i < size; i++)
-	{
-		for (size_t j = i+1; j < size; j++)
-		{
-			if (array[i] > array[j])
-			{
-				iMimddle = array[i];
-				array[i] = array[j];
-				array[j] = iMimddle;
-			}
-		}
-	}
-}
-
-void Select(int *array, int size)
-{
-	int index;
-	int iMiddle;
-	for (size_t i = 0; i < size; i++)
-	{
-		index = i;
-		for (size_t j = i+1; j <= size-1; j++)
-		{
-			if (array[index]>array[j])
-			{
-				index = j;
-			}
-		}
-
-		iMiddle = array[index];
-		array[index] = array[i];
-		array[i] = iMiddle;
-	}
-}
-
-void Insert(int *array, int size)
-{
-	
 }
 
 
