@@ -3,6 +3,7 @@
 //! \file
 //! This file define the thread
 
+#include "Draw.h"
 #include "Header.h"
 #include "Variable.h"
 
@@ -18,7 +19,7 @@ private:
 public:
 	static DWORD WINAPI ThreadOfSort(LPVOID lpParam)
 	{
-		Process::Sort<T> *sort = (Sort<T>*)lpParam;
+		Process::Sort<T> *sort = (Process::Sort<T>*)lpParam;
 		MyStruct<T> *sortstruct = (MyStruct<T>*)lpParam;
 
 		switch (sortstruct->SortIndex)
@@ -35,6 +36,22 @@ public:
 			break;
 		}
 
+		return 0;
+	}
+};
+
+class ThreadAboutAlgorithm
+{
+public:
+	ThreadAboutAlgorithm() {};
+	~ThreadAboutAlgorithm() {};
+
+public:
+	// no code
+	static DWORD WINAPI ThreadOfA(LPVOID lpParam)
+	{
+		Geometric::Object *object = (Geometric::Object*)lpParam;
+		object->Move();
 		return 0;
 	}
 };

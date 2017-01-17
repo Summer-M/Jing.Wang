@@ -40,7 +40,7 @@ namespace Process
 			:array(0)
 			//IArraysize(size)
 		{
-			array = Object;
+			array = Object;0
 			IArraysize<int,1> = Object;
 		};
 		~Sort() {};
@@ -212,7 +212,7 @@ namespace Process
 	vector<DataType> RandNumbers()					// 10
 	{
 		vector<DataType> RandNumber;
-		srand((DataType)time(NULL));
+		srand((unsigned int)time(NULL));
 		for (size_t i = 0; i < Sort<DataType>::size; i++)
 		{
 			RandNumber.push_back(((rand() % 11) * 3));
@@ -226,7 +226,7 @@ namespace Process
 	vector<DataType> RandNums()					   // 300
 	{
 		vector<DataType> RandNumber;
-		srand((DataType)time(NULL));
+		srand((unsigned int)time(NULL));
 		for (size_t i = 0; i < Sort<DataType>::othersize; i++)
 		{
 			RandNumber.push_back(((rand() % 100) * 3));

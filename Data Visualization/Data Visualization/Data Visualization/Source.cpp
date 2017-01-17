@@ -57,7 +57,7 @@ namespace Process
 		}
 		else
 		{
-			for (size_t i = 0; i < nums; i++)
+			for (int i = 0; i < nums; i++)
 			{
 				p1 = (struct NoteList *)malloc(sizeof(struct NoteList));
 				p1->data = rand() % 100 * 3;
@@ -204,11 +204,9 @@ namespace Process
 	// Doubly linked List
 	struct DoublyNoteList *LinkedList::CreateDoubly(int nums)
 	{
-		struct DoublyNoteList *head;
+		struct DoublyNoteList *head = NULL;
 		struct DoublyNoteList *p1;
 		struct DoublyNoteList *p2;
-
-		head->pev = NULL;
 
 		p2 = p1 = (struct DoublyNoteList *)malloc(sizeof(struct DoublyNoteList));
 
@@ -219,7 +217,7 @@ namespace Process
 		}
 		else
 		{
-			for (size_t i = 0; i < nums; i++)
+			for (int i = 0; i < nums; i++)
 			{
 				p1 = (struct DoublyNoteList *)malloc(sizeof(struct DoublyNoteList));
 				p1->data = rand() % 100 * 3;

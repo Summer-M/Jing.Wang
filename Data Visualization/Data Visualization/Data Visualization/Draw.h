@@ -5,7 +5,7 @@
 
 #include "Header.h"
 
-namespace AboutSort
+namespace Geometric
 {
 	//using mamespace
 	using namespace std;
@@ -17,6 +17,17 @@ namespace AboutSort
 	using namespace System::Drawing;
 
 	using namespace Process;
+
+	//!\brief extern
+	// --------------------------------------------------------------------
+	//|					About The graphics transformation				   |
+	// --------------------------------------------------------------------
+	
+	extern	HANDLE		AMutex;
+	extern	vector<int>	PoxXCircle;
+	extern	vector<int>	PoxYCircle;
+	extern	vector<int>	DirectionXCircle;
+	extern	vector<int>	DirectionYCircle;
 
 	class Object
 	{
@@ -35,11 +46,19 @@ namespace AboutSort
 
 	private:
 		//my code
-		int OffsetX;
-		int OffsetW;
+		double OffsetX;
+		double OffsetW;
 	public:
 		//!\brief draw rectangle
 		bool DrawCylindrical(System::Drawing::Graphics^ myGraphics);
 		bool DrawPoints(System::Drawing::Graphics^ myGraphics);
+		bool DrawCircle(System::Drawing::Graphics^ myGraphics);
+
+		//!\brief move my object
+		void Move();
 	};
+
+//! \brief Process rand test-numbers 
+//-------------------------------------------------------------------------
+	inline vector<int> RandNumbers(int value);
 }

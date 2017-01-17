@@ -32,7 +32,7 @@ using namespace std;
 //T InSort<T,n>::IArraysize;
 
 //! define
-#define SortType int
+#define SortType long long
 
 //! the statement
 static std::vector<SortType> IArraysize;
@@ -40,4 +40,32 @@ static std::vector<SortType> IArraysize;
 // --------------------------------------------------------------------
 //|					      About LinkedList						       |
 // --------------------------------------------------------------------
+
+// --------------------------------------------------------------------
+//|					      About Tree							       |
+// --------------------------------------------------------------------
+
+// --------------------------------------------------------------------
+//|					      About Algorithm						       |
+// --------------------------------------------------------------------
+
+/*
+	Draw the area
+*/
+#
+#define  BELOW		675 
+#define  TOP		  0
+#define  LEFT		  0
+#define  RIGHT		595
+
+/*
+	Draw the basic warrior
+*/
+#define Circlesize	110
+#define CircleW		80
+#define CircleH		80
+
+
+
+
 

@@ -16,7 +16,7 @@ namespace DataVisualization {
 	using namespace System::Threading;
 
 	//New namespace
-	using namespace AboutSort;
+	using namespace Geometric;
 	using namespace Process;
 
 	/// <summary>
@@ -28,15 +28,23 @@ namespace DataVisualization {
 		MyForm(void)
 			:thread(nullptr),
 			 hThread1(NULL),
+			 hThread2(NULL),
 			 timekeeping(0)
 		{
+			//Initiallization
 			InitializeComponent();
-
 			InitializeComponentSort();
+			InitializeComponentLinkedList();
+			InitializeComponentTree();
+			InitializeComponentAlgorithm();
+			
+			ShowSort();
+
 			//
 			//TODO: Add the constructor code here
 			//
 		    myGraphics = this->pictureBox1->CreateGraphics();
+			thread = gcnew Thread(gcnew ThreadStart(this, &MyForm::ThreadOfDraw));
 			thread = gcnew Thread(gcnew ThreadStart(this, &MyForm::ThreadOfDraw));
 		}
 
@@ -121,16 +129,64 @@ namespace DataVisualization {
 	private: System::Windows::Forms::RadioButton^ format4;
 	private: System::Windows::Forms::RadioButton^ format5;
 
+	//Tree
+	private: System::Windows::Forms::Label^	  labelOriginalDataTree;
+	private: System::Windows::Forms::Label^	  labelResultDataTree;
+	private: System::Windows::Forms::TextBox^	  OriginalDataTree;
+	private: System::Windows::Forms::TextBox^	  ResultDataTree;
+	private: System::Windows::Forms::GroupBox^	  groupBox4Tree;
+	private: System::Windows::Forms::GroupBox^	  groupBox5Tree;
+	private: System::Windows::Forms::GroupBox^	  groupBox6Tree;
+	private: System::Windows::Forms::Button^	  CreateTree;
+	private: System::Windows::Forms::Button^	  SearchTree;
+	private: System::Windows::Forms::Button^	  DeleteTree;
+	private: System::Windows::Forms::Button^	  ReverseTree;
+	private: System::Windows::Forms::Button^	  InsertLinkTree;
+	private: System::Windows::Forms::TextBox^	  TextCreateTree;
+	private: System::Windows::Forms::TextBox^	  TextSearchTree;
+	private: System::Windows::Forms::TextBox^	  TextDeleteTree;
+	private: System::Windows::Forms::TextBox^	  TextReverseTree;
+	private: System::Windows::Forms::TextBox^	  TextInsertTree;
+	private: System::Windows::Forms::RadioButton^ format3Tree;
+	private: System::Windows::Forms::RadioButton^ format4Tree;
+	private: System::Windows::Forms::RadioButton^ format5Tree;
+
+	//Algorithm
+	private: System::Windows::Forms::Label^	  labelOriginalDataAlgorithm;
+	private: System::Windows::Forms::Label^	  labelResultDataAlgorithm;
+	private: System::Windows::Forms::TextBox^	  OriginalDataAlgorithm;
+	private: System::Windows::Forms::TextBox^	  ResultDataAlgorithm;
+	private: System::Windows::Forms::GroupBox^	  groupBox4Algorithm;
+	private: System::Windows::Forms::GroupBox^	  groupBox5Algorithm;
+	private: System::Windows::Forms::GroupBox^	  groupBox6Algorithm;
+	private: System::Windows::Forms::Button^	  CreateAlgorithm;
+	private: System::Windows::Forms::Button^	  SearchAlgorithm;
+	private: System::Windows::Forms::Button^	  DeleteAlgorithm;
+	private: System::Windows::Forms::Button^	  ReverseAlgorithm;
+	private: System::Windows::Forms::Button^	  InsertLinkAlgorithm;
+	private: System::Windows::Forms::TextBox^	  TextCreateAlgorithm;
+	private: System::Windows::Forms::TextBox^	  TextSearchAlgorithm;
+	private: System::Windows::Forms::TextBox^	  TextDeleteAlgorithm;
+	private: System::Windows::Forms::TextBox^	  TextReverseAlgorithm;
+	private: System::Windows::Forms::TextBox^	  TextInsertAlgorithm;
+	private: System::Windows::Forms::RadioButton^ format3Algorithm;
+	private: System::Windows::Forms::RadioButton^ format4Algorithm;
+	private: System::Windows::Forms::RadioButton^ format5Algorithm;
+	private: System::Windows::Forms::PictureBox^  pictureBoxAlgorithm;
+
 	private:
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-
 		//sort
 		System::Drawing::Graphics^ myGraphics;				// draw	
-		System::Threading::Thread^ thread;                  // thread for update label
+		System::Threading::Thread^ thread;                  // thread for update Draw
 		HANDLE hThread1;									// thread for update sort
 		long long timekeeping;								// time for update sort
+
+		//Algorithm
+		System::Threading::Thread^ threadAlgorithm;			// thread for update Draw
+		HANDLE hThread2;									// thread for update move object in Algorithm
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -191,7 +247,7 @@ namespace DataVisualization {
 			this->comboBox1->Font = (gcnew System::Drawing::Font(L"Segoe UI Emoji", 10.5F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->comboBox1->FormattingEnabled = true;
-			this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(3) { L"Sort", L"LinkedList", L"Tree" });
+			this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(4) { L"Sort", L"LinkedList", L"Tree" ,L"Algorithm"});
 			this->comboBox1->Location = System::Drawing::Point(692, 28);
 			this->comboBox1->Name = L"comboBox1";
 			this->comboBox1->Size = System::Drawing::Size(156, 27);
@@ -201,11 +257,18 @@ namespace DataVisualization {
 			// 
 			// timer1
 			// 
-			this->timer1->Interval = 50;
+			this->timer1->Interval = 20;
 			this->timer1->Tick += gcnew System::EventHandler(this, &MyForm::timer1_Tick);
 			// 
 			// MyForm
-			// 
+			//
+			this->SetStyle(System::Windows::Forms::ControlStyles::OptimizedDoubleBuffer
+				| System::Windows::Forms::ControlStyles::ResizeRedraw
+				| System::Windows::Forms::ControlStyles::Selectable
+				| System::Windows::Forms::ControlStyles::AllPaintingInWmPaint
+				| System::Windows::Forms::ControlStyles::UserPaint
+				| System::Windows::Forms::ControlStyles::SupportsTransparentBackColor,
+				true);
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::White;
@@ -232,6 +295,9 @@ namespace DataVisualization {
 		/// </summary>
 		void InitializeComponentSort(Void)
 		{
+			//
+			// Sort
+			//
 			this->format1 = (gcnew System::Windows::Forms::RadioButton());
 			this->format2 = (gcnew System::Windows::Forms::RadioButton());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
@@ -365,43 +431,43 @@ namespace DataVisualization {
 			this->label10->Location = System::Drawing::Point(77 + 60 * 9, 500);
 
 			//index
-			this->labelNum1->Text = L"1";
+			//this->labelNum1->Text = L"1";
 			this->labelNum1->Size = System::Drawing::Size(20, 20);
 			this->labelNum1->Location = System::Drawing::Point(77, 535);
 
-			this->labelNum2->Text = L"2";
+			//this->labelNum2->Text = L"2";
 			this->labelNum2->Size = System::Drawing::Size(20, 20);
 			this->labelNum2->Location = System::Drawing::Point(77 + 60, 535);
 
-			this->labelNum3->Text = L"3";
+			//this->labelNum3->Text = L"3";
 			this->labelNum3->Size = System::Drawing::Size(20, 20);
 			this->labelNum3->Location = System::Drawing::Point(77 + 60 * 2, 535);
 
-			this->labelNum4->Text = L"4";
+			//this->labelNum4->Text = L"4";
 			this->labelNum4->Size = System::Drawing::Size(20, 20);
 			this->labelNum4->Location = System::Drawing::Point(77 + 60 * 3, 535);
 
-			this->labelNum5->Text = L"5";
+			//this->labelNum5->Text = L"5";
 			this->labelNum5->Size = System::Drawing::Size(20, 20);
 			this->labelNum5->Location = System::Drawing::Point(77 + 60 * 4, 535);
 
-			this->labelNum6->Text = L"6";
+			//this->labelNum6->Text = L"6";
 			this->labelNum6->Size = System::Drawing::Size(20, 20);
 			this->labelNum6->Location = System::Drawing::Point(77 + 60 * 5, 535);
 
-			this->labelNum7->Text = L"7";
+			//this->labelNum7->Text = L"7";
 			this->labelNum7->Size = System::Drawing::Size(20, 20);
 			this->labelNum7->Location = System::Drawing::Point(77 + 60 * 6, 535);
 
-			this->labelNum8->Text = L"8";
+			//this->labelNum8->Text = L"8";
 			this->labelNum8->Size = System::Drawing::Size(20, 20);
 			this->labelNum8->Location = System::Drawing::Point(77 + 60 * 7, 535);
 
-			this->labelNum9->Text = L"9";
+			//this->labelNum9->Text = L"9";
 			this->labelNum9->Size = System::Drawing::Size(20, 20);
 			this->labelNum9->Location = System::Drawing::Point(77 + 60 * 8, 535);
 
-			this->labelNum10->Text = L"10";
+			//this->labelNum10->Text = L"10";
 			this->labelNum10->Size = System::Drawing::Size(20, 20);
 			this->labelNum10->Location = System::Drawing::Point(77 + 60 * 9, 535);
 
@@ -496,11 +562,40 @@ namespace DataVisualization {
 			this->groupBox2->Controls->Add(this->labelNum8);
 			this->groupBox2->Controls->Add(this->labelNum9);
 			this->groupBox2->Controls->Add(this->labelNum10);
-
+		}
+		void ShowSort(Void)
+		{
 			this->Controls->Add(this->groupBox2);
 			this->Controls->Add(this->groupBox1);
 
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
+
+			//SET
+			this->Focus();
+
+			//open
+			this->groupBox1->Visible = true;
+			this->groupBox1->Enabled = true;
+			this->groupBox2->Visible = true;
+			this->groupBox2->Enabled = true;
+
+			//close LinkedList
+			this->groupBox4->Visible = false;
+			this->groupBox4->Enabled = false;
+			this->groupBox5->Visible = false;
+			this->groupBox5->Enabled = false;
+
+			//close Tree
+			this->groupBox4Tree->Visible = false;
+			this->groupBox4Tree->Enabled = false;
+			this->groupBox5Tree->Visible = false;
+			this->groupBox5Tree->Enabled = false;
+
+			//close Algorithm
+			this->groupBox4Algorithm->Visible = false;
+			this->groupBox4Algorithm->Enabled = false;
+			this->groupBox5Algorithm->Visible = false;
+			this->groupBox5Algorithm->Enabled = false;
 		}
 #pragma endregion
 
@@ -511,6 +606,9 @@ namespace DataVisualization {
 		/// </summary>
 		void InitializeComponentLinkedList(Void)
 		{
+			//
+			// LinkedList
+			//
 			this->TextCreate = (gcnew System::Windows::Forms::TextBox());
 			this->TextDelete = (gcnew System::Windows::Forms::TextBox());
 			this->TextReverse = (gcnew System::Windows::Forms::TextBox());
@@ -713,17 +811,546 @@ namespace DataVisualization {
 			this->groupBox6->Controls->Add(format3);
 			this->groupBox6->Controls->Add(format4);
 			this->groupBox6->Controls->Add(format5);
-
+		}
+		void ShowLinkedList(Void)
+		{
 			this->Controls->Add(this->groupBox4);
 			this->Controls->Add(this->groupBox5);
 
 			//SET
 			this->Focus();
+
+			//open
+			this->groupBox4->Visible = true;
+			this->groupBox4->Enabled = true;
+			this->groupBox5->Visible = true;
+			this->groupBox5->Enabled = true;
+
+			//close sort
 			this->groupBox1->Visible = false;
 			this->groupBox1->Enabled = false;
 			this->groupBox2->Visible = false;
 			this->groupBox2->Enabled = false;
-			
+
+			//close Tree
+			this->groupBox4Tree->Visible = false;
+			this->groupBox4Tree->Enabled = false;
+			this->groupBox5Tree->Visible = false;
+			this->groupBox5Tree->Enabled = false;
+
+			//close Algorithm
+			this->groupBox4Algorithm->Visible = false;
+			this->groupBox4Algorithm->Enabled = false;
+			this->groupBox5Algorithm->Visible = false;
+			this->groupBox5Algorithm->Enabled = false;
+		}
+#pragma endregion
+
+#pragma region Tree
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		void InitializeComponentTree(Void)
+		{
+			//
+			// Tree
+			//
+			this->TextCreateTree = (gcnew System::Windows::Forms::TextBox());
+			this->TextDeleteTree = (gcnew System::Windows::Forms::TextBox());
+			this->TextReverseTree = (gcnew System::Windows::Forms::TextBox());
+			this->TextSearchTree = (gcnew System::Windows::Forms::TextBox());
+			this->TextInsertTree = (gcnew System::Windows::Forms::TextBox());
+			this->CreateTree = (gcnew System::Windows::Forms::Button());
+			this->SearchTree = (gcnew System::Windows::Forms::Button());
+			this->DeleteTree = (gcnew System::Windows::Forms::Button());
+			this->ReverseTree = (gcnew System::Windows::Forms::Button());
+			this->InsertLinkTree = (gcnew System::Windows::Forms::Button());
+			this->groupBox4Tree = (gcnew System::Windows::Forms::GroupBox());
+			this->groupBox5Tree = (gcnew System::Windows::Forms::GroupBox());
+			this->groupBox6Tree = (gcnew System::Windows::Forms::GroupBox());
+			this->OriginalDataTree = (gcnew System::Windows::Forms::TextBox());
+			this->ResultDataTree = (gcnew System::Windows::Forms::TextBox());
+			this->labelOriginalDataTree = (gcnew System::Windows::Forms::Label());
+			this->labelResultDataTree = (gcnew System::Windows::Forms::Label());
+			this->format3Tree = (gcnew System::Windows::Forms::RadioButton());
+			this->format4Tree = (gcnew System::Windows::Forms::RadioButton());
+			this->format5Tree = (gcnew System::Windows::Forms::RadioButton());
+
+			//
+			// select
+			//
+			this->format3Tree->AutoSize = true;
+			this->format3Tree->Location = System::Drawing::Point(3, 22);
+			this->format3Tree->Name = L"format3Tree";
+			this->format3Tree->Size = System::Drawing::Size(85, 16);
+			this->format3Tree->TabIndex = 0;
+			this->format3Tree->TabStop = true;
+			this->format3Tree->Text = L"Singly Linked List";
+			this->format3Tree->UseVisualStyleBackColor = true;
+
+			this->format4Tree->AutoSize = true;
+			this->format4Tree->Location = System::Drawing::Point(3, 50);
+			this->format4Tree->Name = L"format4Tree";
+			this->format4Tree->Size = System::Drawing::Size(85, 16);
+			this->format4Tree->TabIndex = 0;
+			this->format4Tree->TabStop = true;
+			this->format4Tree->Text = L"Doubly linked List";
+			this->format4Tree->UseVisualStyleBackColor = true;
+
+			this->format5Tree->AutoSize = true;
+			this->format5Tree->Location = System::Drawing::Point(3, 78);
+			this->format5Tree->Name = L"format5Tree";
+			this->format5Tree->Size = System::Drawing::Size(85, 16);
+			this->format5Tree->TabIndex = 0;
+			this->format5Tree->TabStop = true;
+			this->format5Tree->Text = L"Circular linked list ";
+			this->format5Tree->UseVisualStyleBackColor = true;
+
+			this->groupBox6Tree->Text = L"Select";
+			this->groupBox6Tree->Size = System::Drawing::Size(152, 110);
+			this->groupBox6Tree->Location = System::Drawing::Point(2, 445);
+
+			//TextCreate
+			this->TextCreateTree->Name = L"TextCreateTree";
+			this->TextCreateTree->Location = System::Drawing::Point(105, 21);
+			this->TextCreateTree->Size = System::Drawing::Size(33, 32);
+			this->TextCreateTree->BackColor = System::Drawing::Color::White;
+
+			//TextSearch
+			this->TextSearchTree->Name = L"TextSearchTree";
+			this->TextSearchTree->Location = System::Drawing::Point(105, 71);
+			this->TextSearchTree->Size = System::Drawing::Size(33, 32);
+			this->TextSearchTree->BackColor = System::Drawing::Color::White;
+
+			//TextDelete
+			this->TextDeleteTree->Name = L"TextDeleteTree";
+			this->TextDeleteTree->Location = System::Drawing::Point(105, 121);
+			this->TextDeleteTree->Size = System::Drawing::Size(33, 32);
+			this->TextDeleteTree->BackColor = System::Drawing::Color::White;
+
+			//TextReverse
+			this->TextReverseTree->Text = L"True";
+			this->TextReverseTree->Enabled = false;
+			this->TextReverseTree->Name = L"TextReverseTree";
+			this->TextReverseTree->Location = System::Drawing::Point(105, 171);
+			this->TextReverseTree->Size = System::Drawing::Size(33, 32);
+			this->TextReverseTree->BackColor = System::Drawing::Color::White;
+
+			//TextDelete
+			this->TextInsertTree->Name = L"TextInsertTree";
+			this->TextInsertTree->Location = System::Drawing::Point(105, 221);
+			this->TextInsertTree->Size = System::Drawing::Size(33, 32);
+			this->TextInsertTree->BackColor = System::Drawing::Color::White;
+
+			//Create
+			this->CreateTree->Name = L"CreateTree";
+			this->CreateTree->Location = System::Drawing::Point(20, 20);
+			this->CreateTree->Size = System::Drawing::Size(80, 25);
+			this->CreateTree->Text = L"Create Tree";
+			this->CreateTree->Click += gcnew System::EventHandler(this, &MyForm::Create_Click);
+
+			//Search
+			this->SearchTree->Name = L"SearchTree";
+			this->SearchTree->Location = System::Drawing::Point(20, 70);
+			this->SearchTree->Size = System::Drawing::Size(80, 25);
+			this->SearchTree->Text = L"Search Tree";
+			this->SearchTree->Click += gcnew System::EventHandler(this, &MyForm::Search_Click);
+
+			//Delete
+			this->DeleteTree->Name = L"DeleteTree";
+			this->DeleteTree->Location = System::Drawing::Point(20, 120);
+			this->DeleteTree->Size = System::Drawing::Size(80, 25);
+			this->DeleteTree->Text = L"Tree";
+			this->DeleteTree->Click += gcnew System::EventHandler(this, &MyForm::Delete_Click);
+
+			//Reverse
+			this->ReverseTree->Name = L"ReverseTree";
+			this->ReverseTree->Location = System::Drawing::Point(20, 170);
+			this->ReverseTree->Size = System::Drawing::Size(80, 25);
+			this->ReverseTree->Text = L"Reverse Tree";
+			this->ReverseTree->Click += gcnew System::EventHandler(this, &MyForm::Reverse_Click);
+
+			//InsertLink
+			this->InsertLinkTree->Name = L"InsertLinkTree";
+			this->InsertLinkTree->Location = System::Drawing::Point(20, 220);
+			this->InsertLinkTree->Size = System::Drawing::Size(80, 25);
+			this->InsertLinkTree->Text = L"Insert Tree";
+			this->InsertLinkTree->Click += gcnew System::EventHandler(this, &MyForm::InsertLink_Click);
+
+			// 
+			// groupBox1
+			// 
+			this->groupBox5Tree->BackColor = System::Drawing::SystemColors::Control;
+			this->groupBox5Tree->Location = System::Drawing::Point(692, 56);
+			this->groupBox5Tree->Name = L"groupBox5Tree";
+			this->groupBox5Tree->Size = System::Drawing::Size(156, 565);
+			this->groupBox5Tree->TabIndex = 3;
+			this->groupBox5Tree->TabStop = false;
+			this->groupBox5Tree->Text = L"Class";
+
+			// 
+			// groupBox4
+			// 
+			this->groupBox4Tree->Location = System::Drawing::Point(5, 20);
+			this->groupBox4Tree->Name = L"groupBox4Tree";
+			this->groupBox4Tree->Size = System::Drawing::Size(682, 600);
+			this->groupBox4Tree->TabIndex = 3;
+			this->groupBox4Tree->TabStop = false;
+
+			//
+			//
+			//
+			this->labelOriginalDataTree->Text = L"Original :";
+			this->labelOriginalDataTree->Name = L"labelOriginalDataTree";
+			this->labelOriginalDataTree->Size = System::Drawing::Size(120, 20);
+			this->labelOriginalDataTree->Location = System::Drawing::Point(5, 10);
+			this->labelOriginalDataTree->Font = (gcnew System::Drawing::Font(L"Segoe UI Emoji", 10.5F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			//
+			//
+			//
+			this->labelResultDataTree->Text = L"Result :";
+			this->labelResultDataTree->Name = L"labelResultDataTree";
+			this->labelResultDataTree->Size = System::Drawing::Size(120, 20);
+			this->labelResultDataTree->Location = System::Drawing::Point(5, 300);
+			this->labelResultDataTree->Font = (gcnew System::Drawing::Font(L"Segoe UI Emoji", 10.5F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+
+			//
+			// OriginalData
+			//
+			this->OriginalDataTree->ReadOnly = true;
+			this->OriginalDataTree->Name = L"OriginalDataTree";
+			this->OriginalDataTree->Location = System::Drawing::Point(5, 30);
+			this->OriginalDataTree->Size = System::Drawing::Size(670, 270);
+			this->OriginalDataTree->BackColor = System::Drawing::Color::White;
+			this->OriginalDataTree->Multiline = true;
+
+			//
+			// ResultData
+			//
+			this->ResultDataTree->ReadOnly = true;
+			this->ResultDataTree->Name = L"ResultDataTree";
+			this->ResultDataTree->Location = System::Drawing::Point(5, 320);
+			this->ResultDataTree->Size = System::Drawing::Size(670, 270);
+			this->ResultDataTree->BackColor = System::Drawing::Color::White;
+			this->ResultDataTree->Multiline = true;
+
+			this->groupBox4Tree->Controls->Add(OriginalDataTree);
+			this->groupBox4Tree->Controls->Add(ResultDataTree);
+			this->groupBox4Tree->Controls->Add(labelOriginalDataTree);
+			this->groupBox4Tree->Controls->Add(labelResultDataTree);
+
+			this->groupBox5Tree->Controls->Add(CreateTree);
+			this->groupBox5Tree->Controls->Add(SearchTree);
+			this->groupBox5Tree->Controls->Add(DeleteTree);
+			this->groupBox5Tree->Controls->Add(ReverseTree);
+			this->groupBox5Tree->Controls->Add(InsertLinkTree);
+			this->groupBox5Tree->Controls->Add(this->groupBox6Tree);
+
+			this->groupBox5Tree->Controls->Add(TextCreateTree);
+			this->groupBox5Tree->Controls->Add(TextSearchTree);
+			this->groupBox5Tree->Controls->Add(TextDeleteTree);
+			this->groupBox5Tree->Controls->Add(TextReverseTree);
+			this->groupBox5Tree->Controls->Add(TextInsertTree);
+
+			this->groupBox6Tree->Controls->Add(format3Tree);
+			this->groupBox6Tree->Controls->Add(format4Tree);
+			this->groupBox6Tree->Controls->Add(format5Tree);
+		}
+		void ShowTree(Void)
+		{
+			this->Controls->Add(this->groupBox4Tree);
+			this->Controls->Add(this->groupBox5Tree);
+
+			//SET
+			this->Focus();
+
+			//open
+			this->groupBox4Tree->Visible = true;
+			this->groupBox4Tree->Enabled = true;
+			this->groupBox5Tree->Visible = true;
+			this->groupBox5Tree->Enabled = true;
+
+			//close Sort
+			this->groupBox1->Visible = false;
+			this->groupBox1->Enabled = false;
+			this->groupBox2->Visible = false;
+			this->groupBox2->Enabled = false;
+
+			//close LinkedList
+			this->groupBox4->Visible = false;
+			this->groupBox4->Enabled = false;
+			this->groupBox5->Visible = false;
+			this->groupBox5->Enabled = false;
+
+			//close Algorithm
+			this->groupBox4Algorithm->Visible = false;
+			this->groupBox4Algorithm->Enabled = false;
+			this->groupBox5Algorithm->Visible = false;
+			this->groupBox5Algorithm->Enabled = false;
+		}
+#pragma endregion
+
+#pragma region Algorithm
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		void InitializeComponentAlgorithm(Void)
+		{
+			//
+			// Tree
+			//
+			this->pictureBoxAlgorithm = (gcnew System::Windows::Forms::PictureBox());
+			this->TextCreateAlgorithm = (gcnew System::Windows::Forms::TextBox());
+			this->TextDeleteAlgorithm = (gcnew System::Windows::Forms::TextBox());
+			this->TextReverseAlgorithm = (gcnew System::Windows::Forms::TextBox());
+			this->TextSearchAlgorithm = (gcnew System::Windows::Forms::TextBox());
+			this->TextInsertAlgorithm = (gcnew System::Windows::Forms::TextBox());
+			this->CreateAlgorithm = (gcnew System::Windows::Forms::Button());
+			this->SearchAlgorithm = (gcnew System::Windows::Forms::Button());
+			this->DeleteAlgorithm = (gcnew System::Windows::Forms::Button());
+			this->ReverseAlgorithm = (gcnew System::Windows::Forms::Button());
+			this->InsertLinkAlgorithm = (gcnew System::Windows::Forms::Button());
+			this->groupBox4Algorithm = (gcnew System::Windows::Forms::GroupBox());
+			this->groupBox5Algorithm = (gcnew System::Windows::Forms::GroupBox());
+			this->groupBox6Algorithm = (gcnew System::Windows::Forms::GroupBox());
+			this->OriginalDataAlgorithm = (gcnew System::Windows::Forms::TextBox());
+			this->ResultDataAlgorithm = (gcnew System::Windows::Forms::TextBox());
+			this->labelOriginalDataAlgorithm = (gcnew System::Windows::Forms::Label());
+			this->labelResultDataAlgorithm = (gcnew System::Windows::Forms::Label());
+			this->format3Algorithm = (gcnew System::Windows::Forms::RadioButton());
+			this->format4Algorithm = (gcnew System::Windows::Forms::RadioButton());
+			this->format5Algorithm = (gcnew System::Windows::Forms::RadioButton());
+
+			// 
+			// pictureBoxAlgorithm
+			// 
+			this->pictureBoxAlgorithm->BackColor = System::Drawing::Color::White;
+			this->pictureBoxAlgorithm->Location = System::Drawing::Point(8, 10);
+			this->pictureBoxAlgorithm->Name = L"pictureBoxAlgorithm";
+			this->pictureBoxAlgorithm->Size = System::Drawing::Size(667, 585);
+			this->pictureBoxAlgorithm->TabIndex = 1;
+			this->pictureBoxAlgorithm->TabStop = false;
+			this->pictureBoxAlgorithm->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MyForm::pictureBoxAlgorithm_Paint);
+
+			//
+			// select
+			//
+			this->format3Algorithm->AutoSize = true;
+			this->format3Algorithm->Location = System::Drawing::Point(3, 22);
+			this->format3Algorithm->Name = L"Singly";
+			this->format3Algorithm->Size = System::Drawing::Size(85, 16);
+			this->format3Algorithm->TabIndex = 0;
+			this->format3Algorithm->TabStop = true;
+			this->format3Algorithm->Text = L"Singly";
+			this->format3Algorithm->UseVisualStyleBackColor = true;
+
+			this->format4Algorithm->AutoSize = true;
+			this->format4Algorithm->Location = System::Drawing::Point(3, 50);
+			this->format4Algorithm->Name = L"Middle";
+			this->format4Algorithm->Size = System::Drawing::Size(85, 16);
+			this->format4Algorithm->TabIndex = 0;
+			this->format4Algorithm->TabStop = true;
+			this->format4Algorithm->Text = L"Middle";
+			this->format4Algorithm->UseVisualStyleBackColor = true;
+
+			this->format5Algorithm->AutoSize = true;
+			this->format5Algorithm->Location = System::Drawing::Point(3, 78);
+			this->format5Algorithm->Name = L"Diffcult";
+			this->format5Algorithm->Size = System::Drawing::Size(85, 16);
+			this->format5Algorithm->TabIndex = 0;
+			this->format5Algorithm->TabStop = true;
+			this->format5Algorithm->Text = L"Diffcult";
+			this->format5Algorithm->UseVisualStyleBackColor = true;
+
+			this->groupBox6Algorithm->Text = L"Select";
+			this->groupBox6Algorithm->Size = System::Drawing::Size(152, 110);
+			this->groupBox6Algorithm->Location = System::Drawing::Point(2, 445);
+
+			//TextCreate
+			this->TextCreateAlgorithm->Name = L"TextCreateAlgorithm";
+			this->TextCreateAlgorithm->Location = System::Drawing::Point(105, 21);
+			this->TextCreateAlgorithm->Size = System::Drawing::Size(33, 32);
+			this->TextCreateAlgorithm->BackColor = System::Drawing::Color::White;
+
+			//TextSearch
+			this->TextSearchAlgorithm->Name = L"TextSearchAlgorithm";
+			this->TextSearchAlgorithm->Location = System::Drawing::Point(105, 71);
+			this->TextSearchAlgorithm->Size = System::Drawing::Size(33, 32);
+			this->TextSearchAlgorithm->BackColor = System::Drawing::Color::White;
+
+			//TextDelete
+			this->TextDeleteAlgorithm->Name = L"TextDeleteAlgorithm";
+			this->TextDeleteAlgorithm->Location = System::Drawing::Point(105, 121);
+			this->TextDeleteAlgorithm->Size = System::Drawing::Size(33, 32);
+			this->TextDeleteAlgorithm->BackColor = System::Drawing::Color::White;
+
+			//TextReverse
+			this->TextReverseAlgorithm->Text = L"True";
+			this->TextReverseAlgorithm->Enabled = false;
+			this->TextReverseAlgorithm->Name = L"TextReverseAlgorithm";
+			this->TextReverseAlgorithm->Location = System::Drawing::Point(105, 171);
+			this->TextReverseAlgorithm->Size = System::Drawing::Size(33, 32);
+			this->TextReverseAlgorithm->BackColor = System::Drawing::Color::White;
+
+			//TextDelete
+			this->TextInsertAlgorithm->Name = L"TextInsertAlgorithm";
+			this->TextInsertAlgorithm->Location = System::Drawing::Point(105, 221);
+			this->TextInsertAlgorithm->Size = System::Drawing::Size(33, 32);
+			this->TextInsertAlgorithm->BackColor = System::Drawing::Color::White;
+
+			//Create
+			this->CreateAlgorithm->Name = L"";
+			this->CreateAlgorithm->Location = System::Drawing::Point(8, 20);
+			this->CreateAlgorithm->Size = System::Drawing::Size(140, 25);
+			this->CreateAlgorithm->Text = L"Collision Detection";
+			this->CreateAlgorithm->Click += gcnew System::EventHandler(this, &MyForm::CreateAlgorithm_Click);
+
+			//Search
+			this->SearchAlgorithm->Name = L"SearchAlgorithm";
+			this->SearchAlgorithm->Location = System::Drawing::Point(8, 70);
+			this->SearchAlgorithm->Size = System::Drawing::Size(140, 25);
+			this->SearchAlgorithm->Text = L"Search Algorithm";
+			this->SearchAlgorithm->Click += gcnew System::EventHandler(this, &MyForm::Search_Click);
+
+			//Delete
+			this->DeleteAlgorithm->Name = L"DeleteAlgorithm";
+			this->DeleteAlgorithm->Location = System::Drawing::Point(8, 120);
+			this->DeleteAlgorithm->Size = System::Drawing::Size(140, 25);
+			this->DeleteAlgorithm->Text = L"Algorithm";
+			this->DeleteAlgorithm->Click += gcnew System::EventHandler(this, &MyForm::Delete_Click);
+
+			//Reverse
+			this->ReverseAlgorithm->Name = L"ReverseAlgorithm";
+			this->ReverseAlgorithm->Location = System::Drawing::Point(8, 170);
+			this->ReverseAlgorithm->Size = System::Drawing::Size(140, 25);
+			this->ReverseAlgorithm->Text = L"Reverse Algorithm";
+			this->ReverseAlgorithm->Click += gcnew System::EventHandler(this, &MyForm::Reverse_Click);
+
+			//InsertLink
+			this->InsertLinkAlgorithm->Name = L"InsertLinkAlgorithm";
+			this->InsertLinkAlgorithm->Location = System::Drawing::Point(8, 220);
+			this->InsertLinkAlgorithm->Size = System::Drawing::Size(140, 25);
+			this->InsertLinkAlgorithm->Text = L"Insert Algorithm";
+			this->InsertLinkAlgorithm->Click += gcnew System::EventHandler(this, &MyForm::InsertLink_Click);
+
+			// 
+			// groupBox1
+			// 
+			this->groupBox5Algorithm->BackColor = System::Drawing::SystemColors::Control;
+			this->groupBox5Algorithm->Location = System::Drawing::Point(692, 56);
+			this->groupBox5Algorithm->Name = L"groupBox5Algorithm";
+			this->groupBox5Algorithm->Size = System::Drawing::Size(156, 565);
+			this->groupBox5Algorithm->TabIndex = 3;
+			this->groupBox5Algorithm->TabStop = false;
+			this->groupBox5Algorithm->Text = L"Class";
+
+			// 
+			// groupBox4
+			// 
+			this->groupBox4Algorithm->Location = System::Drawing::Point(5, 20);
+			this->groupBox4Algorithm->Name = L"groupBox4Algorithm";
+			this->groupBox4Algorithm->Size = System::Drawing::Size(682, 600);
+			this->groupBox4Algorithm->TabIndex = 3;
+			this->groupBox4Algorithm->TabStop = false;
+
+			//
+			//
+			//
+			this->labelOriginalDataAlgorithm->Text = L"Original :";
+			this->labelOriginalDataAlgorithm->Name = L"labelOriginalDataAlgorithm";
+			this->labelOriginalDataAlgorithm->Size = System::Drawing::Size(120, 20);
+			this->labelOriginalDataAlgorithm->Location = System::Drawing::Point(5, 10);
+			this->labelOriginalDataAlgorithm->Font = (gcnew System::Drawing::Font(L"Segoe UI Emoji", 10.5F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			//
+			//
+			//
+			this->labelResultDataAlgorithm->Text = L"Result :";
+			this->labelResultDataAlgorithm->Name = L"labelResultDataAlgorithm";
+			this->labelResultDataAlgorithm->Size = System::Drawing::Size(120, 20);
+			this->labelResultDataAlgorithm->Location = System::Drawing::Point(5, 300);
+			this->labelResultDataAlgorithm->Font = (gcnew System::Drawing::Font(L"Segoe UI Emoji", 10.5F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+
+			//
+			// OriginalData
+			//
+			this->OriginalDataAlgorithm->ReadOnly = true;
+			this->OriginalDataAlgorithm->Name = L"OriginalDataAlgorithm";
+			this->OriginalDataAlgorithm->Location = System::Drawing::Point(5, 30);
+			this->OriginalDataAlgorithm->Size = System::Drawing::Size(670, 270);
+			this->OriginalDataAlgorithm->BackColor = System::Drawing::Color::White;
+			this->OriginalDataAlgorithm->Multiline = true;
+
+			//
+			// ResultData
+			//
+			this->ResultDataAlgorithm->ReadOnly = true;
+			this->ResultDataAlgorithm->Name = L"ResultDataAlgorithm";
+			this->ResultDataAlgorithm->Location = System::Drawing::Point(5, 320);
+			this->ResultDataAlgorithm->Size = System::Drawing::Size(670, 270);
+			this->ResultDataAlgorithm->BackColor = System::Drawing::Color::White;
+			this->ResultDataAlgorithm->Multiline = true;
+
+			/*this->groupBox4Algorithm->Controls->Add(OriginalDataAlgorithm);
+			this->groupBox4Algorithm->Controls->Add(ResultDataAlgorithm);
+			this->groupBox4Algorithm->Controls->Add(labelOriginalDataAlgorithm);
+			this->groupBox4Algorithm->Controls->Add(labelResultDataAlgorithm);*/
+
+			this->groupBox4Algorithm->Controls->Add(pictureBoxAlgorithm);
+
+			this->groupBox5Algorithm->Controls->Add(CreateAlgorithm);
+			this->groupBox5Algorithm->Controls->Add(SearchAlgorithm);
+			this->groupBox5Algorithm->Controls->Add(DeleteAlgorithm);
+			this->groupBox5Algorithm->Controls->Add(ReverseAlgorithm);
+			this->groupBox5Algorithm->Controls->Add(InsertLinkAlgorithm);
+			this->groupBox5Algorithm->Controls->Add(this->groupBox6Algorithm);
+
+			/*this->groupBox5Algorithm->Controls->Add(TextCreateAlgorithm);
+			this->groupBox5Algorithm->Controls->Add(TextSearchAlgorithm);
+			this->groupBox5Algorithm->Controls->Add(TextDeleteAlgorithm);
+			this->groupBox5Algorithm->Controls->Add(TextReverseAlgorithm);
+			this->groupBox5Algorithm->Controls->Add(TextInsertAlgorithm);*/
+
+			this->groupBox6Algorithm->Controls->Add(format3Algorithm);
+			this->groupBox6Algorithm->Controls->Add(format4Algorithm);
+			this->groupBox6Algorithm->Controls->Add(format5Algorithm);
+		}
+		void ShowAlgorithm(Void)
+		{
+			this->Controls->Add(this->groupBox4Algorithm);
+			this->Controls->Add(this->groupBox5Algorithm);
+
+			//SET
+			this->Focus();
+
+			//open
+			this->groupBox4Algorithm->Visible = true;
+			this->groupBox4Algorithm->Enabled = true;
+			this->groupBox5Algorithm->Visible = true;
+			this->groupBox5Algorithm->Enabled = true;
+
+			//close Sort
+			this->groupBox1->Visible = false;
+			this->groupBox1->Enabled = false;
+			this->groupBox2->Visible = false;
+			this->groupBox2->Enabled = false;
+
+			//close LinkedList
+			this->groupBox4->Visible = false;
+			this->groupBox4->Enabled = false;
+			this->groupBox5->Visible = false;
+			this->groupBox5->Enabled = false;
+
+			//close Tree
+			this->groupBox4Tree->Visible = false;
+			this->groupBox4Tree->Enabled = false;
+			this->groupBox5Tree->Visible = false;
+			this->groupBox5Tree->Enabled = false;
 		}
 #pragma endregion
 
@@ -751,8 +1378,10 @@ private: System::Void comboBox1_SelectedIndexChanged(System::Object^  sender, Sy
 		int index = comboBox1->SelectedIndex;
 		switch (index)
 		{
-		case 0:InitializeComponentSort(); break;
-		case 1:InitializeComponentLinkedList(); break;
+		case 0:ShowSort(); break;
+		case 1:ShowLinkedList(); break;
+		case 2:ShowTree(); break;
+		case 3:ShowAlgorithm(); break;
 		default:
 			break;
 		}
@@ -786,6 +1415,7 @@ private: System::Void Heap_Click(System::Object^  sender, System::EventArgs^  e)
 private: System::Void Merge_Click(System::Object^  sender, System::EventArgs^  e) {
 	ReadyForSort(6);
 }
+
 private: void ReadyForSort( /*The function is create object*/ const unsigned int SortIndex) {
 	
 	MyStruct<SortType> Sortstruct;
@@ -840,7 +1470,7 @@ private: void Go( /*The function is create object*/ MyStruct<SortType> SortInfo 
 	{
 		for (size_t i = 0; i < 100; i++)
 		{
-			AboutSort::Object object(2*i, SortInfo.nums[i]);
+			Geometric::Object object(2*i, SortInfo.nums[i]);
 			object.DrawPoints(myGraphics);
 		}
 	}
@@ -848,7 +1478,7 @@ private: void Go( /*The function is create object*/ MyStruct<SortType> SortInfo 
 	{
 		for (size_t i = 0; i < 10; i++)
 		{
-			AboutSort::Object object(60 * i, SortInfo.nums[i]);
+			Geometric::Object object(60 * i, SortInfo.nums[i]);
 			object.DrawCylindrical(myGraphics);
 		}
 	}
@@ -872,7 +1502,6 @@ private: void Go( /*The function is create object*/ MyStruct<SortType> SortInfo 
 		}
 	}
 }
-
 private: void ThreadOfDraw(void)
 {
 	// sorting objet 
@@ -888,7 +1517,7 @@ private: void ThreadOfDraw(void)
 
 			for (size_t i = 0; i < 100; i++)
 			{
-				AboutSort::Object object(10*i, IArraysize[i]);
+				Geometric::Object object(10*i, IArraysize[i]);
 				object.DrawPoints(myGraphics);
 			}
 		}
@@ -898,7 +1527,7 @@ private: void ThreadOfDraw(void)
 			
 			for (size_t i = 0; i < 10; i++)
 			{
-				AboutSort::Object object(60 * i, IArraysize[i]);
+				Geometric::Object object(60 * i, IArraysize[i]);
 				object.DrawCylindrical(myGraphics);
 			}
 		}
@@ -913,9 +1542,8 @@ private: void ThreadOfDraw(void)
 	timekeeping = 0;
 	return;
 }
-
 private: void ClearView( /*The function is create object*/System::Drawing::Graphics^ myGraphics) {
-	myGraphics->Clear(System::Drawing::Color::White);
+	myGraphics->Clear(this->pictureBoxAlgorithm->BackColor);
 }
 private: void InitializeRun( /*The function is create object*/vector<SortType> nums) {
 	this->Controls->Add(this->groupBox2);
@@ -930,18 +1558,15 @@ private: void InitializeRun( /*The function is create object*/vector<SortType> n
 	this->label9->Text = nums[8].ToString();
 	this->label10->Text = nums[9].ToString();
 }
-
 private: void InitializeText(/*The function is update time*/)
 {
 	timekeeping += 50;
 	this->Time->Text = timekeeping.ToString() + " ms ";
 }
-
 private: void HiddenLabel( /*The function is create object*/ ) {
 	//this->groupBox2->Enabled = false;  
 	this->groupBox2->Visible = true;
 }
-
 private: void ShowLabel( /*The function is create object*/){
 	this->groupBox2->Visible = true;
 	this->groupBox2->Enabled = true;
@@ -1064,7 +1689,6 @@ private:void ReadyForLinkedList(/* start */const unsigned int index)
 			break;
 	}
 }
-
 private:void UpdateTextBoxForOriginal(/* start */vector<long long> result)
 {
 	String^ Textaboutlink;
@@ -1077,7 +1701,6 @@ private:void UpdateTextBoxForOriginal(/* start */vector<long long> result)
 
 	this->OriginalData->Text = (this->OriginalData->Text=="") ? Textaboutlink: this->OriginalData->Text + "\r\n" + Textaboutlink;
 }
-
 private:void UpdateTextBoxForResultAboutRemove(/* start */vector<long long> result)
 {
 	String^ Textaboutlink;
@@ -1099,6 +1722,62 @@ private:void Clear(/* start */)
 {
 	this->OriginalData->Text = "";
 	this->ResultData->Text = "";
+}
+#pragma endregion
+
+#pragma region "Tree"
+		/// <summary>
+		/// Some functions about the Tree.
+		/// </summary>
+#pragma endregion
+
+#pragma region "Algorithm"
+		/// <summary>
+		/// Some functions about the Algorithm.
+		/// </summary>
+
+private: System::Void CreateAlgorithm_Click(System::Object^  sender, System::EventArgs^  e) {
+	ReadyGo();
+}
+
+private: void ReadyGo()
+{
+	ThreadAboutAlgorithm threadaboutalgorithm;
+	myGraphics->SmoothingMode = System::Drawing::Drawing2D::SmoothingMode::AntiAlias;
+
+	try
+	{
+		hThread2 = CreateThread(NULL, 0, threadaboutalgorithm.ThreadOfA, NULL, 0, NULL);
+		AMutex = CreateMutex(NULL, FALSE, LPCWSTR("Algorithm"));
+	}
+	catch (const std::exception&)
+	{
+		return;
+	}
+}
+
+private: System::Void pictureBoxAlgorithm_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e)
+{
+	System::Drawing::Graphics^  AloGraphics =	e->Graphics;
+	System::Drawing::Brush^  brush  = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::DarkTurquoise);
+	System::Drawing::Bitmap^ bitmap = gcnew System::Drawing::Bitmap(this->pictureBoxAlgorithm->Width, this->pictureBoxAlgorithm->Height);
+	System::Drawing::Bitmap^ canvas = gcnew System::Drawing::Bitmap(this->pictureBoxAlgorithm->Width, this->pictureBoxAlgorithm->Height);
+	AloGraphics->FromImage(bitmap);
+
+	//lock
+	WaitForSingleObject(Geometric::AMutex, INFINITE);
+
+	for (size_t i = 0; i < Circlesize; i++)
+	{
+		AloGraphics->FillEllipse(brush, PoxXCircle[i], PoxYCircle[i], CircleW, CircleH);
+	}
+	
+	AloGraphics->DrawImage(bitmap, 0, 0);
+	pictureBoxAlgorithm->BackgroundImage = canvas;
+
+	//unlock
+	Sleep(6);
+	ReleaseMutex(AMutex);
 }
 
 #pragma endregion
