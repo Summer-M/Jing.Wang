@@ -2,6 +2,12 @@
 *.suo
 *.pdb
 *.db
+*.log
+*.ilk
+*.exe
+*.tlog
+*.obj
+*.idb
 *.filters
 *.vcxproj
 *.opendb
