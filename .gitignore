@@ -1,5 +1,6 @@
 *.ncb
 *.suo
+*.pdb
 *.db
 *.filters
 *.vcxproj
