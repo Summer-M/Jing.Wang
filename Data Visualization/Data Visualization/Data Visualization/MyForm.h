@@ -257,7 +257,7 @@ namespace DataVisualization {
 			// 
 			// timer1
 			// 
-			this->timer1->Interval = 20;
+			this->timer1->Interval = 6;
 			this->timer1->Tick += gcnew System::EventHandler(this, &MyForm::timer1_Tick);
 			// 
 			// MyForm
@@ -1758,17 +1758,31 @@ private: void ReadyGo()
 
 private: System::Void pictureBoxAlgorithm_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e)
 {
+	System::Drawing::Brush^  brush;
 	System::Drawing::Graphics^  AloGraphics =	e->Graphics;
-	System::Drawing::Brush^  brush  = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::DarkTurquoise);
 	System::Drawing::Bitmap^ bitmap = gcnew System::Drawing::Bitmap(this->pictureBoxAlgorithm->Width, this->pictureBoxAlgorithm->Height);
 	System::Drawing::Bitmap^ canvas = gcnew System::Drawing::Bitmap(this->pictureBoxAlgorithm->Width, this->pictureBoxAlgorithm->Height);
 	AloGraphics->FromImage(bitmap);
+	AloGraphics->SmoothingMode = System::Drawing::Drawing2D::SmoothingMode::AntiAlias;
 
 	//lock
 	WaitForSingleObject(Geometric::AMutex, INFINITE);
 
 	for (size_t i = 0; i < Circlesize; i++)
 	{
+		if(i==0)
+	 		brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::DarkBlue));
+		else if(i==1)
+			brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::GreenYellow));
+		else if (i == 2)
+			brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::Pink));
+		else if (i == 3)
+			brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::Crimson));
+		else if (i == 4)
+			brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::LightSalmon));
+		else
+			brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::MediumSpringGreen));
+
 		AloGraphics->FillEllipse(brush, PoxXCircle[i], PoxYCircle[i], CircleW, CircleH);
 	}
 	

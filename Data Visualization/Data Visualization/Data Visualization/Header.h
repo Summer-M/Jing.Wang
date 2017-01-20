@@ -7,15 +7,15 @@
 #include <process.h>
 #include <Windows.h>
 #include <malloc.h>
-
 #include "Variable.h"
 
-//namespace
-using namespace std;
-using namespace System;
 
 namespace Process
 {
+	//namespace
+	using namespace std;
+	using namespace System;
+
 	// extern 
 	extern	HANDLE				HMutex;
 	extern	bool				SortFinished;

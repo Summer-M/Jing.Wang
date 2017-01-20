@@ -1,4 +1,5 @@
 #include "Header.h"
+#include "Draw.h"
 
 namespace Process
 {
@@ -9,12 +10,12 @@ namespace Process
 	bool SortFinished = true;
 
 	//-------------------------------------------------------
-	
+
 
 	/*
 		Sort
 	*/
-	
+
 	// No code!!!
 
 	/*
@@ -28,17 +29,17 @@ namespace Process
 	struct DoublyNoteList*    Mylink1 = NULL;
 
 	//-------------------------------------------------------
-	
+
 	bool LinkedList::Empty(struct NoteList *head)
 	{
 		return head->next == NULL;
 	}
-	
+
 	bool LinkedList::Full(struct NoteList *head)
 	{
 		return false;
 	}
-	
+
 	// Singly Linked List
 	struct NoteList *LinkedList::Create(int nums)
 	{
@@ -78,13 +79,13 @@ namespace Process
 
 		return head;
 	}
-	
+
 	bool LinkedList::SearchIndex(int data, struct NoteList *head)
 	{
 		struct NoteList *p = head;
 		int iCounter = 0;
 
-		while (p->next!=NULL && p->data!=data)
+		while (p->next != NULL && p->data != data)
 		{
 			p = p->next;
 		}
@@ -106,14 +107,14 @@ namespace Process
 		struct NoteList*  p1;
 		struct NoteList*  prev = NULL;
 
-		while (head !=NULL)
+		while (head != NULL)
 		{
 			p1 = head->next;
 			head->next = prev;
 			prev = head;
 			head = p1;
 		}
-		
+
 		return prev;
 	}
 
@@ -122,17 +123,17 @@ namespace Process
 		return head;
 	}
 
-	struct NoteList * LinkedList::Insert(int Pos,struct NoteList *head,struct NoteList *insert)
+	struct NoteList * LinkedList::Insert(int Pos, struct NoteList *head, struct NoteList *insert)
 	{
 		struct NoteList *Current;
 		struct NoteList *p1;
 		struct NoteList *p = head;
-		
+
 		p1 = head;
 		int iCounter = 0;
 		if (head != NULL && insert != NULL)
 		{
-			while ((iCounter++)!=Pos)
+			while ((iCounter++) != Pos)
 			{
 				Current = p;
 				p = p->next;
@@ -160,7 +161,7 @@ namespace Process
 
 		if (p != NULL)
 		{
-			while (p->next!=NULL && p->data!=data)
+			while (p->next != NULL && p->data != data)
 			{
 				Current = p;
 				p = p->next;

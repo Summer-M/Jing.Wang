@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <time.h>
-
 #include "Header.h"
 
 namespace Geometric
@@ -15,8 +14,6 @@ namespace Geometric
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
-
-	using namespace Process;
 
 	//!\brief extern
 	// --------------------------------------------------------------------
@@ -58,6 +55,85 @@ namespace Geometric
 		void Move();
 	};
 
+	class GeoCircle
+	{
+	public:
+		GeoCircle(int x,int y,int width,int height)
+			:UppeLeftX(0),
+			 UppeLeftY(0),
+			 Width(0),
+			 Height(0)
+		{
+			UppeLeftX = x;
+			UppeLeftY = y;
+			Width = width;
+			Height = height;
+		};
+		~GeoCircle() 
+		{
+		};
+
+	private:
+		// no code
+		int UppeLeftX;
+		int UppeLeftY;
+		int Width;
+		int Height;
+	public:
+
+		//! access to the upper left corner X coordinate
+		const int UppeLeftx() const;
+
+		//! access to the upper left corner Y coordinate
+		const int UppeLefty() const;
+
+		//! access to the Width this object
+		const int width() const;
+
+		//! access to the Hight this object
+		const int height() const;
+	public:
+		//! access to the center in this object
+		inline vector<int> CircleCenter();
+	};
+
+	class GeoRrectangular
+	{
+	public:
+		GeoRrectangular() {};
+		~GeoRrectangular() {};
+
+	private:
+		// no code
+	};
+
+	/*
+	- Notice: the class is going to be into a template class!!
+	*/
+	class Collision
+	{
+
+	public:
+		Collision(vector<int> PosX, vector<int> PosY)
+			:CheckPosx(0),
+			CheckPosy(0)
+		{
+			CheckPosx = PosX;
+			CheckPosy = PosY;
+		};
+		~Collision() {};
+
+	private:
+		// no code
+		vector<int> CheckPosx;
+		vector<int> CheckPosy;
+	public:
+		//! collision detection of the ellipse
+		vector<int> CollsionAboutCircle(const int size);
+
+		//! the first algorithm
+		bool AlgorithmFirst(vector<int> mycenter, int index, int Others, const int size);
+	};
 //! \brief Process rand test-numbers 
 //-------------------------------------------------------------------------
 	inline vector<int> RandNumbers(int value);

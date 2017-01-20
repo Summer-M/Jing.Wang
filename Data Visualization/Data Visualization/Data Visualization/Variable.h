@@ -53,17 +53,17 @@ static std::vector<SortType> IArraysize;
 	Draw the area
 */
 #
-#define  BELOW		675 
+#define  BELOW		665 
 #define  TOP		  0
 #define  LEFT		  0
-#define  RIGHT		595
+#define  RIGHT		585
 
 /*
 	Draw the basic warrior
 */
-#define Circlesize	110
-#define CircleW		80
-#define CircleH		80
+#define Circlesize	30
+#define CircleW		25
+#define CircleH		25
 
 
 
