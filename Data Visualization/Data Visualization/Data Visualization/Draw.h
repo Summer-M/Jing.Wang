@@ -97,16 +97,16 @@ namespace Geometric
 	public:
 
 		//! access to the upper left corner X coordinate
-		const int UppeLeftx() const;
+		const int &UppeLeftx() const;
 
 		//! access to the upper left corner Y coordinate
-		const int UppeLefty() const;
+		const int &UppeLefty() const;
 
 		//! access to the Width this object
-		const int width() const;
+		const int &width() const;
 
 		//! access to the Hight this object
-		const int height() const;
+		const int &height() const;
 	public:
 		//! access to the center in this object
 		inline vector<int> CircleCenter();

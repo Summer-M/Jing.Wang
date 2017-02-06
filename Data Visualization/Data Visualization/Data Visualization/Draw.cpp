@@ -278,22 +278,22 @@ namespace Geometric
 	class GeoCircle
 	*/
 
-	const int GeoCircle::UppeLeftx() const
+	const int &GeoCircle::UppeLeftx() const
 	{
 		return UppeLeftX;
 	}
 
-	const int GeoCircle::UppeLefty() const
+	const int &GeoCircle::UppeLefty() const
 	{
 		return UppeLeftY;
 	}
 
-	const int GeoCircle::width() const
+	const int &GeoCircle::width() const
 	{
 		return Width;
 	}
 
-	const int GeoCircle::height() const
+	const int &GeoCircle::height() const
 	{
 		return Height;
 	}

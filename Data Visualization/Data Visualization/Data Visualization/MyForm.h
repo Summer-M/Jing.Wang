@@ -280,7 +280,7 @@ namespace DataVisualization {
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
 			this->Name = L"MyForm";
-			this->Text = L"MyForm";
+			this->Text = L"Data Visualization";
 			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &MyForm::Form_Closing);
 			this->menuStrip1->ResumeLayout(false);
 			this->menuStrip1->PerformLayout();
@@ -431,43 +431,43 @@ namespace DataVisualization {
 			this->label10->Location = System::Drawing::Point(77 + 60 * 9, 500);
 
 			//index
-			//this->labelNum1->Text = L"1";
+			this->labelNum1->Text = L"1";
 			this->labelNum1->Size = System::Drawing::Size(20, 20);
 			this->labelNum1->Location = System::Drawing::Point(77, 535);
 
-			//this->labelNum2->Text = L"2";
+			this->labelNum2->Text = L"2";
 			this->labelNum2->Size = System::Drawing::Size(20, 20);
 			this->labelNum2->Location = System::Drawing::Point(77 + 60, 535);
 
-			//this->labelNum3->Text = L"3";
+			this->labelNum3->Text = L"3";
 			this->labelNum3->Size = System::Drawing::Size(20, 20);
 			this->labelNum3->Location = System::Drawing::Point(77 + 60 * 2, 535);
 
-			//this->labelNum4->Text = L"4";
+			this->labelNum4->Text = L"4";
 			this->labelNum4->Size = System::Drawing::Size(20, 20);
 			this->labelNum4->Location = System::Drawing::Point(77 + 60 * 3, 535);
 
-			//this->labelNum5->Text = L"5";
+			this->labelNum5->Text = L"5";
 			this->labelNum5->Size = System::Drawing::Size(20, 20);
 			this->labelNum5->Location = System::Drawing::Point(77 + 60 * 4, 535);
 
-			//this->labelNum6->Text = L"6";
+			this->labelNum6->Text = L"6";
 			this->labelNum6->Size = System::Drawing::Size(20, 20);
 			this->labelNum6->Location = System::Drawing::Point(77 + 60 * 5, 535);
 
-			//this->labelNum7->Text = L"7";
+			this->labelNum7->Text = L"7";
 			this->labelNum7->Size = System::Drawing::Size(20, 20);
 			this->labelNum7->Location = System::Drawing::Point(77 + 60 * 6, 535);
 
-			//this->labelNum8->Text = L"8";
+			this->labelNum8->Text = L"8";
 			this->labelNum8->Size = System::Drawing::Size(20, 20);
 			this->labelNum8->Location = System::Drawing::Point(77 + 60 * 7, 535);
 
-			//this->labelNum9->Text = L"9";
+			this->labelNum9->Text = L"9";
 			this->labelNum9->Size = System::Drawing::Size(20, 20);
 			this->labelNum9->Location = System::Drawing::Point(77 + 60 * 8, 535);
 
-			//this->labelNum10->Text = L"10";
+			this->labelNum10->Text = L"10";
 			this->labelNum10->Size = System::Drawing::Size(20, 20);
 			this->labelNum10->Location = System::Drawing::Point(77 + 60 * 9, 535);
 
@@ -1361,7 +1361,6 @@ namespace DataVisualization {
 		/// </summary>
 private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
 	InitializeText();
-	InitializeRun(IArraysize);
 
 	if (thread->ThreadState == System::Threading::ThreadState::Stopped)
 	{
@@ -1377,6 +1376,7 @@ private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e
 		}
 
 		this->timer1->Stop();
+		timekeeping = 0;
 	}
 }
 private: System::Void Form_Closing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
@@ -1572,24 +1572,10 @@ private: void ThreadOfDraw(void)
 	}
 
 	SortFinished = true;
-	timekeeping = 0;
 	return;
 }
 private: void ClearView( /*The function is create object*/System::Drawing::Graphics^ myGraphics) {
 	myGraphics->Clear(this->pictureBoxAlgorithm->BackColor);
-}
-private: void InitializeRun( /*The function is create object*/vector<SortType> nums) {
-	this->Controls->Add(this->groupBox2);
-	this->label1->Text = nums[0].ToString();
-	this->label2->Text = nums[1].ToString();
-	this->label3->Text = nums[2].ToString();
-	this->label4->Text = nums[3].ToString();
-	this->label5->Text = nums[4].ToString();
-	this->label6->Text = nums[5].ToString();
-	this->label7->Text = nums[6].ToString();
-	this->label8->Text = nums[7].ToString();
-	this->label9->Text = nums[8].ToString();
-	this->label10->Text = nums[9].ToString();
 }
 
 private: void Shielding( /*The function is create object*/ ) {
