@@ -5,11 +5,13 @@ namespace Geometric
 {
 	//!\brief extern variable
 	//-------------------------------------------------------
-	HANDLE AMutex  = NULL;
+	HANDLE AMutex = NULL;
 	vector<int>	PoxXCircle = RandNumbers(400);
 	vector<int>	PoxYCircle = RandNumbers(360);
-	vector<int> DirectionXCircle = RandNumbers(20);
-	vector<int> DirectionYCircle = RandNumbers(20);
+	vector<int> DirectionXCircle = RandNumbers(30);
+	vector<int> DirectionYCircle = RandNumbers(30);
+	vector<bool> Collect(Circlesize, true);
+
 
 	inline vector<int> RandNumbers(int value)
 	{
@@ -24,7 +26,7 @@ namespace Geometric
 	}
 
 	/*
-		class Object
+	class Object
 	*/
 	bool Object::DrawCylindrical(System::Drawing::Graphics^ myGraphics)
 	{
@@ -77,13 +79,13 @@ namespace Geometric
 	void Object::Move(/*the function change circle position*/)
 	{
 		/*
-			-------------------------------------------------------------
-			|															|
-			|		                   |								|
-			|	                      -0-								|
-			|		                   |								|
-			|															|
-			------------------------------------------------------------
+		-------------------------------------------------------------
+		|															|
+		|		                   |								|
+		|	                      -0-								|
+		|		                   |								|
+		|															|
+		------------------------------------------------------------
 		*/
 		while (true)
 		{
@@ -106,7 +108,7 @@ namespace Geometric
 
 				Collision collision(PoxXCircle, PoxYCircle);
 				vector<int> CollsionAboutCircle = collision.CollsionAboutCircle(Circlesize);
-				
+
 				//! collision detection
 				//! here will use several different collision detection algorithm
 				//! Elastic change the speed
@@ -117,65 +119,76 @@ namespace Geometric
 						continue;
 					if (!collision.AlgorithmFirst(CollsionAboutCircle, i * 2, iIndex * 2, Circlesize))								     //!!!
 					{
+						/* The First treament */
+						Collect[i] = false;
+
+						/* The Second treatment */
+						/*------------------------------------------------------------------------------------------------------------------------
+						------------------------------------------------------------------------------------------------------------------------
 						double degreeFirst = (PoxXCircle[i] - PoxXCircle[iIndex]) == 0 ?
-							Math::Atan((PoxYCircle[i] - PoxYCircle[iIndex]) / (PoxXCircle[i] - PoxXCircle[iIndex] + 0.1))
-							: Math::Atan((PoxYCircle[i] - PoxYCircle[iIndex]) / (PoxXCircle[i] - PoxXCircle[iIndex] + 0.1));
+						Math::Atan((PoxYCircle[i] - PoxYCircle[iIndex]) / (PoxXCircle[i] - PoxXCircle[iIndex] + 0.1))
+						: Math::Atan((PoxYCircle[i] - PoxYCircle[iIndex]) / (PoxXCircle[i] - PoxXCircle[iIndex] + 0.1));
 
 						if (PoxXCircle[i] > PoxXCircle[iIndex])
 						{
-							DirectionXCircle[i] = Math::Cos(degreeFirst) + 3;
-							DirectionYCircle[i] = Math::Sin(degreeFirst) + 3;
+						DirectionXCircle[i] = Math::Cos(degreeFirst) + 3;
+						DirectionYCircle[i] = Math::Sin(degreeFirst) + 3;
 
-							PoxXCircle[i] += DirectionXCircle[i];
-							PoxYCircle[i] += DirectionYCircle[i];
+						PoxXCircle[i] += DirectionXCircle[i];
+						PoxYCircle[i] += DirectionYCircle[i];
 
-							PoxXCircle[iIndex] += DirectionXCircle[iIndex];
-							PoxYCircle[iIndex] += DirectionYCircle[iIndex];
+						PoxXCircle[iIndex] += DirectionXCircle[iIndex];
+						PoxYCircle[iIndex] += DirectionYCircle[iIndex];
 						}
 						else
 						{
-							DirectionXCircle[i] = -Math::Cos(degreeFirst) - 3;
-							DirectionYCircle[i] = -Math::Sin(degreeFirst) - 3;
+						DirectionXCircle[i] = -Math::Cos(degreeFirst) - 3;
+						DirectionYCircle[i] = -Math::Sin(degreeFirst) - 3;
 
-							PoxXCircle[i] += DirectionXCircle[i];
-							PoxYCircle[i] += DirectionYCircle[i];
+						PoxXCircle[i] += DirectionXCircle[i];
+						PoxYCircle[i] += DirectionYCircle[i];
 
-							PoxXCircle[iIndex] += DirectionXCircle[iIndex];
-							PoxYCircle[iIndex] += DirectionYCircle[iIndex];
+						PoxXCircle[iIndex] += DirectionXCircle[iIndex];
+						PoxYCircle[iIndex] += DirectionYCircle[iIndex];
 						}
 
-						double degreeSecond = (PoxXCircle[iIndex] - PoxXCircle[i])==0?
-							Math::Atan((PoxYCircle[iIndex] - PoxYCircle[i]) / (PoxXCircle[iIndex] - PoxXCircle[i] + 0.1))
-							: Math::Atan((PoxYCircle[iIndex] - PoxYCircle[i]) / (PoxXCircle[iIndex] - PoxXCircle[i]));
+						double degreeSecond = (PoxXCircle[iIndex] - PoxXCircle[i]) == 0 ?
+						Math::Atan((PoxYCircle[iIndex] - PoxYCircle[i]) / (PoxXCircle[iIndex] - PoxXCircle[i] + 0.1))
+						: Math::Atan((PoxYCircle[iIndex] - PoxYCircle[i]) / (PoxXCircle[iIndex] - PoxXCircle[i]));
 
 						if (PoxXCircle[iIndex] > PoxXCircle[i])
 						{
-							DirectionXCircle[iIndex] = Math::Cos(degreeSecond) + 3;
-							DirectionYCircle[iIndex] = Math::Sin(degreeSecond) + 3;
+						DirectionXCircle[iIndex] = Math::Cos(degreeSecond) + 3;
+						DirectionYCircle[iIndex] = Math::Sin(degreeSecond) + 3;
 
-							PoxXCircle[i] += DirectionXCircle[i];
-							PoxYCircle[i] += DirectionYCircle[i];
+						PoxXCircle[i] += DirectionXCircle[i];
+						PoxYCircle[i] += DirectionYCircle[i];
 
-							PoxXCircle[iIndex] += DirectionXCircle[iIndex];
-							PoxYCircle[iIndex] += DirectionYCircle[iIndex];
+						PoxXCircle[iIndex] += DirectionXCircle[iIndex];
+						PoxYCircle[iIndex] += DirectionYCircle[iIndex];
 						}
 						else
 						{
-							DirectionXCircle[iIndex] = -Math::Cos(degreeSecond) - 3;
-							DirectionYCircle[iIndex] = -Math::Sin(degreeSecond) - 3;
+						DirectionXCircle[iIndex] = -Math::Cos(degreeSecond) - 3;
+						DirectionYCircle[iIndex] = -Math::Sin(degreeSecond) - 3;
 
-							PoxXCircle[i] += DirectionXCircle[i];
-							PoxYCircle[i] += DirectionYCircle[i];
+						PoxXCircle[i] += DirectionXCircle[i];
+						PoxYCircle[i] += DirectionYCircle[i];
 
-							PoxXCircle[iIndex] += DirectionXCircle[iIndex];
-							PoxYCircle[iIndex] += DirectionYCircle[iIndex];
+						PoxXCircle[iIndex] += DirectionXCircle[iIndex];
+						PoxYCircle[iIndex] += DirectionYCircle[iIndex];
 						}
+						}
+
+						-----------------------------------------------------------------------------------------
+						-----------------------------------------------------------------------------------------
+						*/
 					}
 				}
 
 				//! ---------------------------end--------------------------------------
 			}
-		
+
 			//unlock
 			Sleep(6);
 			ReleaseMutex(AMutex);
@@ -183,7 +196,7 @@ namespace Geometric
 	}
 
 	/*
-		Collision
+	Collision
 	*/
 
 	vector<int> Collision::CollsionAboutCircle(const int size)
@@ -199,18 +212,18 @@ namespace Geometric
 		return PosCenter;
 	}
 
-	bool Collision::AlgorithmFirst(vector<int> mycenter, int index, int Others,const int size)
+	bool Collision::AlgorithmFirst(vector<int> mycenter, int index, int Others, const int size)
 	{
 		if (sqrt(pow(mycenter[index] - mycenter[Others], 2) + pow(mycenter[index + 1] - mycenter[Others + 1], 2)) <= CircleW)
 		{
 			return false;
 		}
-	
+
 		return true;
 	}
 
 	/*
-		class GeoCircle
+	class GeoCircle
 	*/
 
 	const int GeoCircle::UppeLeftx() const
@@ -240,4 +253,4 @@ namespace Geometric
 		CircleStruct.push_back(UppeLefty() + height() / 2);
 		return CircleStruct;
 	}
-}   
+}

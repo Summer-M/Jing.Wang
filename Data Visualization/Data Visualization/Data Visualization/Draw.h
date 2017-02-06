@@ -20,11 +20,12 @@ namespace Geometric
 	//|					About The graphics transformation				   |
 	// --------------------------------------------------------------------
 	
-	extern	HANDLE		AMutex;
-	extern	vector<int>	PoxXCircle;
-	extern	vector<int>	PoxYCircle;
-	extern	vector<int>	DirectionXCircle;
-	extern	vector<int>	DirectionYCircle;
+	extern	HANDLE		 AMutex;
+	extern	vector<int>	 PoxXCircle;
+	extern	vector<int>	 PoxYCircle;
+	extern	vector<int>	 DirectionXCircle;
+	extern	vector<int>	 DirectionYCircle;
+	extern  vector<bool> Collect;
 
 	class Object
 	{

@@ -1759,7 +1759,7 @@ private: void ReadyGo()
 private: System::Void pictureBoxAlgorithm_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e)
 {
 	System::Drawing::Brush^  brush;
-	System::Drawing::Graphics^  AloGraphics =	e->Graphics;
+	System::Drawing::Graphics^  AloGraphics = e->Graphics;
 	System::Drawing::Bitmap^ bitmap = gcnew System::Drawing::Bitmap(this->pictureBoxAlgorithm->Width, this->pictureBoxAlgorithm->Height);
 	System::Drawing::Bitmap^ canvas = gcnew System::Drawing::Bitmap(this->pictureBoxAlgorithm->Width, this->pictureBoxAlgorithm->Height);
 	AloGraphics->FromImage(bitmap);
@@ -1770,20 +1770,14 @@ private: System::Void pictureBoxAlgorithm_Paint(System::Object^  sender, System:
 
 	for (size_t i = 0; i < Circlesize; i++)
 	{
-		if(i==0)
-	 		brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::DarkBlue));
-		else if(i==1)
-			brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::GreenYellow));
-		else if (i == 2)
-			brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::Pink));
-		else if (i == 3)
-			brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::Crimson));
-		else if (i == 4)
-			brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::LightSalmon));
+		if (Collect[i])
+			brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::DeepSkyBlue));
 		else
-			brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::MediumSpringGreen));
-
+			brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::Red));
+	 	
 		AloGraphics->FillEllipse(brush, PoxXCircle[i], PoxYCircle[i], CircleW, CircleH);
+		
+		Collect[i] = true;
 	}
 	
 	AloGraphics->DrawImage(bitmap, 0, 0);
