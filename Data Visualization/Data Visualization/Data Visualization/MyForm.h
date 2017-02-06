@@ -1362,6 +1362,12 @@ namespace DataVisualization {
 private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
 	InitializeText();
 	InitializeRun(IArraysize);
+
+	if (thread->ThreadState == System::Threading::ThreadState::Stopped)
+	{
+		Opening();
+		this->timer1->Stop();
+	}
 }
 private: System::Void Form_Closing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
 	
@@ -1488,6 +1494,7 @@ private: void Go( /*The function is create object*/ MyStruct<SortType> SortInfo 
 	{
 		try
 		{
+			Shielding();
 			thread = gcnew Thread(gcnew ThreadStart(this, &MyForm::ThreadOfDraw));
 			hThread1 = CreateThread(NULL, 0, ThreadInSort.ThreadOfSort, &SortInfo, 0, NULL);
 
@@ -1538,7 +1545,6 @@ private: void ThreadOfDraw(void)
 	}
 
 	SortFinished = true;
-	timer1->Stop();
 	timekeeping = 0;
 	return;
 }
@@ -1558,6 +1564,35 @@ private: void InitializeRun( /*The function is create object*/vector<SortType> n
 	this->label9->Text = nums[8].ToString();
 	this->label10->Text = nums[9].ToString();
 }
+
+private: void Shielding( /*The function is create object*/ ) {
+	
+	this->Bubble->Enabled = false;
+	this->Select->Enabled = false;
+	this->Insert->Enabled = false;
+	this->Shell->Enabled = false;
+	this->Quick->Enabled = false;
+	this->Heap->Enabled = false;
+	this->Merge->Enabled = false;
+	this->format1->Enabled = false;
+	this->format2->Enabled = false;
+	this->format3->Enabled = false;
+}
+
+private: void Opening( /*The function is create object*/) {
+
+	this->Bubble->Enabled = true;
+	this->Select->Enabled = true;
+	this->Insert->Enabled = true;
+	this->Shell->Enabled = true;
+	this->Quick->Enabled = true;
+	this->Heap->Enabled = true;
+	this->Merge->Enabled = true;
+	this->format1->Enabled = true;
+	this->format2->Enabled = true;
+	this->format3->Enabled = true;
+}
+
 private: void InitializeText(/*The function is update time*/)
 {
 	timekeeping += 50;
