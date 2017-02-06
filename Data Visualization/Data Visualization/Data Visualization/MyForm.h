@@ -1533,41 +1533,60 @@ private: void ThreadOfDraw(void)
 
 		timer1->Start();
 
-		try
+		// choose point
+		if (this->format1->Checked)
 		{
-			Geometric::Object arrow;
-			vector<long long>::iterator SearchFirst;
+			timer1->Start();
 
-			if (ExchangeIndex[0]<IArraysize.size() && ExchangeIndex[1]<IArraysize.size())
-				SearchFirst = std::find(IArraysize.begin(), IArraysize.end(), IArraysize[ExchangeIndex[0]]);
-
-			if (SearchFirst != IArraysize.end())
+			for (size_t i = 0; i < 100; i++)
 			{
-				System::Drawing::Point Pt1(60 * ExchangeIndex[0] + 75, 185 - IArraysize[ExchangeIndex[0]]);
-				System::Drawing::Point Pt2(60 * ExchangeIndex[0] + 75, 100 - IArraysize[ExchangeIndex[0]]);
-				System::Drawing::Point Pt3(60 * ExchangeIndex[1] + 75, 100 - IArraysize[ExchangeIndex[0]]);
-				System::Drawing::Point Pt4(60 * ExchangeIndex[1] + 75, 185 - IArraysize[ExchangeIndex[1]]);
-				arrow.DrawArrow(myGraphics, Pt1, Pt2, Pt3, Pt4);
+				Geometric::Object object(10 * i, IArraysize[i]);
+				object.DrawPoints(myGraphics);
 			}
+
+			//unlock
+			Sleep(SleepTime);
 		}
-		catch (const std::exception&)
+		// choose others
+		else if (this->format2->Checked)
 		{
-			return;
+			try
+			{
+				Geometric::Object arrow;
+				vector<long long>::iterator SearchFirst;
+
+				if (ExchangeIndex[0]<IArraysize.size() && ExchangeIndex[1]<IArraysize.size())
+					SearchFirst = std::find(IArraysize.begin(), IArraysize.end(), IArraysize[ExchangeIndex[0]]);
+
+				if (SearchFirst != IArraysize.end())
+				{
+					System::Drawing::Point Pt1(60 * ExchangeIndex[0] + 75, 185 - IArraysize[ExchangeIndex[0]]);
+					System::Drawing::Point Pt2(60 * ExchangeIndex[0] + 75, 100 - IArraysize[ExchangeIndex[0]]);
+					System::Drawing::Point Pt3(60 * ExchangeIndex[1] + 75, 100 - IArraysize[ExchangeIndex[0]]);
+					System::Drawing::Point Pt4(60 * ExchangeIndex[1] + 75, 185 - IArraysize[ExchangeIndex[1]]);
+					arrow.DrawArrow(myGraphics, Pt1, Pt2, Pt3, Pt4);
+				}
+			}
+			catch (const std::exception&)
+			{
+				return;
+			}
+
+			for (size_t i = 0; i < 10; i++)
+			{
+				Geometric::Object object(60 * i, IArraysize[i]);
+				if (i == ExchangeIndex[0] || i == ExchangeIndex[1])
+					object.DrawCylindrical(myGraphics, brushChange);
+				else
+					object.DrawCylindrical(myGraphics, brush);
+
+				object.DrawText(myGraphics, IArraysize[i].ToString());
+			}
+
+			//unlock
+			Sleep(SleepTime);
 		}
 
-		for (size_t i = 0; i < 10; i++)
-		{
-			Geometric::Object object(60 * i, IArraysize[i]);
-			if (i == ExchangeIndex[0] || i == ExchangeIndex[1])
-				object.DrawCylindrical(myGraphics, brushChange);
-			else
-				object.DrawCylindrical(myGraphics, brush);
-
-			object.DrawText(myGraphics, IArraysize[i].ToString());
-		}
-
-		//unlock
-		Sleep(500);
 		ReleaseMutex(HMutex);
 	}
 

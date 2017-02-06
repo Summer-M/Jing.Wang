@@ -82,7 +82,7 @@ namespace Process
 						IArraysize = array;
 
 						//unlock	
-						Sleep(500);
+						Sleep(SleepTime);
 						ReleaseMutex(HMutex);
 
 						//------------------------------------------------------
@@ -123,7 +123,7 @@ namespace Process
 				IArraysize = array;
 
 				//unlock
-				Sleep(500);
+				Sleep(SleepTime);
 				ReleaseMutex(HMutex);
 			}
 
@@ -154,7 +154,7 @@ namespace Process
 				IArraysize = array;
 
 				//unlock
-				Sleep(500);
+				Sleep(SleepTime);
 				ReleaseMutex(HMutex);
 			}
 
@@ -189,7 +189,7 @@ namespace Process
 					IArraysize = array;
 
 					//unlock
-					Sleep(500);
+					Sleep(SleepTime);
 					ReleaseMutex(HMutex);
 				}
 

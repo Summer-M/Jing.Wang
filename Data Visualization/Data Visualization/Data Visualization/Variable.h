@@ -32,7 +32,8 @@ using namespace std;
 //T InSort<T,n>::IArraysize;
 
 //! define
-#define SortType long long
+#define SortType  long long
+#define SleepTime 50
 
 //! the statement
 static std::vector<SortType> IArraysize;
