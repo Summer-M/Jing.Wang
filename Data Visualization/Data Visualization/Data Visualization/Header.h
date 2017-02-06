@@ -19,6 +19,7 @@ namespace Process
 	// extern 
 	extern	HANDLE				HMutex;
 	extern	bool				SortFinished;
+	extern  vector<int>			ExchangeIndex;
 	
 	/*
 		the part of this namespace is used for sort
@@ -71,15 +72,22 @@ namespace Process
 						iMimddle = array[i];
 						array[i] = array[j];
 						array[j] = iMimddle;
+
+						//------------------------------------------------------
+
+						ExchangeIndex[0] = i;
+						ExchangeIndex[1] = j;
+
+						//update IArraysize
+						IArraysize = array;
+
+						//unlock	
+						Sleep(500);
+						ReleaseMutex(HMutex);
+
+						//------------------------------------------------------
 					}
 				}
-
-				// update IArraysize
-				IArraysize = array;
-
-				//unlock
-				Sleep(50);
-				ReleaseMutex(HMutex);
 			}
 
 			SortFinished = false;
@@ -98,7 +106,7 @@ namespace Process
 				index = i;
 				for (size_t j = i + 1; j <= array.size() - 1; j++)
 				{
-					if (array[index]>array[j])
+					if (array[index] > array[j])
 					{
 						index = j;
 					}
@@ -108,11 +116,14 @@ namespace Process
 				array[index] = array[i];
 				array[i] = iMiddle;
 
+				ExchangeIndex[0] = index;
+				ExchangeIndex[1] = i;
+
 				// update IArraysize
 				IArraysize = array;
 
 				//unlock
-				Sleep(50);
+				Sleep(500);
 				ReleaseMutex(HMutex);
 			}
 
@@ -129,7 +140,7 @@ namespace Process
 				WaitForSingleObject(HMutex, INFINITE);
 
 				temp = array[i];
-				for (j = i; j > 0 && array[j - 1]>temp; j--)
+				for (j = i; j > 0 && array[j - 1] > temp; j--)
 				{
 					array[j] = array[j - 1];
 				}
@@ -137,10 +148,13 @@ namespace Process
 				array[j] = temp;
 
 				// update IArraysize
+				ExchangeIndex[0] = i;
+				ExchangeIndex[1] = j;
+
 				IArraysize = array;
 
 				//unlock
-				Sleep(50);
+				Sleep(500);
 				ReleaseMutex(HMutex);
 			}
 
@@ -175,7 +189,7 @@ namespace Process
 					IArraysize = array;
 
 					//unlock
-					Sleep(50);
+					Sleep(500);
 					ReleaseMutex(HMutex);
 				}
 

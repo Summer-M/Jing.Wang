@@ -47,9 +47,23 @@ namespace Geometric
 		double OffsetX;
 		double OffsetW;
 	public:
+		//!\brief draw text
+		bool Object::DrawText(System::Drawing::Graphics^ myGraphics, System::String^ sText);
+
 		//!\brief draw rectangle
-		bool DrawCylindrical(System::Drawing::Graphics^ myGraphics);
+		bool Object::DrawCylindrical(System::Drawing::Graphics^ myGraphics);
+
+		//!\brief draw rectangle
+		bool DrawCylindrical(System::Drawing::Graphics^ myGraphics, System::Drawing::Brush^  brush);
+
+		//!\brief draw arrow
+		bool DrawArrow(System::Drawing::Graphics^ myGraphics, System::Drawing::Point Pt1,
+			System::Drawing::Point Pt2, System::Drawing::Point Pt3, System::Drawing::Point Pt4);
+
+		//!\brief draw points
 		bool DrawPoints(System::Drawing::Graphics^ myGraphics);
+
+		//!\brief draw circle
 		bool DrawCircle(System::Drawing::Graphics^ myGraphics);
 
 		//!\brief move my object

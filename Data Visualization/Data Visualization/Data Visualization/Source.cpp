@@ -8,6 +8,7 @@ namespace Process
 
 	HANDLE HMutex = NULL;
 	bool SortFinished = true;
+	vector<int> ExchangeIndex(2);
 
 	//-------------------------------------------------------
 

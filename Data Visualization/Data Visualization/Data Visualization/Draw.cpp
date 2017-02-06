@@ -28,14 +28,66 @@ namespace Geometric
 	/*
 	class Object
 	*/
+	bool Object::DrawText(System::Drawing::Graphics^ myGraphics, System::String^ sText)
+	{
+		try
+		{
+			myGraphics->SmoothingMode = System::Drawing::Drawing2D::SmoothingMode::AntiAlias;
+			System::Drawing::Brush^  brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::Black);
+			System::Drawing::Font^   font = gcnew System::Drawing::Font(L"Microsoft YaHei", 9);
+			myGraphics->DrawString(sText, font, brush, int(PosX + OffsetX + 3), int(PosY - OffsetW - 15));
+			//myGraphics->DrawRectangle(pen, PosX + OffsetX, PosY - OffsetW, Width, Height + OffsetW);
+			return true;
+		}
+		catch (const std::exception&)
+		{
+			return false;
+		}
+	}
+
 	bool Object::DrawCylindrical(System::Drawing::Graphics^ myGraphics)
 	{
 		try
 		{
+			myGraphics->SmoothingMode = System::Drawing::Drawing2D::SmoothingMode::AntiAlias;
 			System::Drawing::Pen^  pen = gcnew System::Drawing::Pen(System::Drawing::Color::Color::Black, 1);
 			System::Drawing::Brush^  brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::DarkTurquoise);
 			myGraphics->FillRectangle(brush, int(PosX + OffsetX), int(PosY - OffsetW), int(Width), int(Height + OffsetW));
 			//myGraphics->DrawRectangle(pen, PosX + OffsetX, PosY - OffsetW, Width, Height + OffsetW);
+			return true;
+		}
+		catch (const std::exception&)
+		{
+			return false;
+		}
+	}
+
+	bool Object::DrawCylindrical(System::Drawing::Graphics^ myGraphics, System::Drawing::Brush^  brush)
+	{
+		try
+		{
+			myGraphics->SmoothingMode = System::Drawing::Drawing2D::SmoothingMode::AntiAlias;
+			System::Drawing::Pen^  pen = gcnew System::Drawing::Pen(System::Drawing::Color::Color::Black, 1);
+			myGraphics->FillRectangle(brush, int(PosX + OffsetX), int(PosY - OffsetW), int(Width), int(Height + OffsetW));
+			//myGraphics->DrawRectangle(pen, PosX + OffsetX, PosY - OffsetW, Width, Height + OffsetW);
+			return true;
+		}
+		catch (const std::exception&)
+		{
+			return false;
+		}
+	}
+
+	bool Object::DrawArrow(System::Drawing::Graphics^ myGraphics, System::Drawing::Point Pt1,
+		System::Drawing::Point Pt2, System::Drawing::Point Pt3, System::Drawing::Point Pt4)
+	{
+		try
+		{
+			System::Drawing::Pen^  pen = gcnew System::Drawing::Pen(System::Drawing::Color::Color::Black, 2);
+			myGraphics->SmoothingMode = System::Drawing::Drawing2D::SmoothingMode::AntiAlias;
+			myGraphics->DrawLine(pen, Pt1, Pt2);
+			myGraphics->DrawLine(pen, Pt2, Pt3);
+			myGraphics->DrawLine(pen, Pt3, Pt4);
 			return true;
 		}
 		catch (const std::exception&)
