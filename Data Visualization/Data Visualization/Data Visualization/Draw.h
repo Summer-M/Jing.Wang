@@ -27,14 +27,39 @@ namespace Geometric
 	extern	vector<int>	 DirectionYCircle;
 	extern  vector<bool> Collect;
 
+	template <typename T>
+	struct MyRectangle
+	{
+		SortType RectangleX;
+		SortType RectangleY;
+		SortType RectangleWidth;
+		SortType RectangleHeight;
+	};
+
+	template <typename T>
+	struct MyText
+	{
+		SortType TextX;
+		SortType TextY;
+	};
+
+	template <typename T>
+	struct DottedLine
+	{
+		SortType Point1X;
+		SortType Point1Y;
+		SortType Point2X;
+		SortType Point2Y;
+	};
+
 	class Object
 	{
 	public:
-		enum {/* the Cylindrical */ PosX = 65,PosY = 200,Width = 20,Height = 150 /*the Point*/ , PosX1 = 30,PosY1 = 400};
+		enum {/* the Cylindrical */ PosX = 65, PosY = 305, Width = 20, Height = 250 /*the Point*/, PosX1 = 30, PosY1 = 400 };
 		Object(){};
-		Object(double offX,double width)
-			:OffsetX(0.00),
-			 OffsetW(0.00)
+		Object(SortType offX, SortType width)
+			:OffsetX(0),
+			 OffsetW(0)
 		{
 			OffsetX = offX;
 			OffsetW = width;
@@ -44,21 +69,17 @@ namespace Geometric
 
 	private:
 		//my code
-		double OffsetX;
-		double OffsetW;
+		SortType OffsetX;
+		SortType OffsetW;
 	public:
 		//!\brief draw text
-		bool Object::DrawText(System::Drawing::Graphics^ myGraphics, System::String^ sText);
+		MyText<SortType> Object::DrawText();
 
 		//!\brief draw rectangle
-		bool Object::DrawCylindrical(System::Drawing::Graphics^ myGraphics);
+		MyRectangle<SortType> Object::DrawCylindrical();
 
-		//!\brief draw rectangle
-		bool DrawCylindrical(System::Drawing::Graphics^ myGraphics, System::Drawing::Brush^  brush);
-
-		//!\brief draw arrow
-		bool DrawArrow(System::Drawing::Graphics^ myGraphics, System::Drawing::Point Pt1,
-			System::Drawing::Point Pt2, System::Drawing::Point Pt3, System::Drawing::Point Pt4);
+		//!\brief draw dotted line
+		DottedLine<SortType> Object::DrawDottedLine();
 
 		//!\brief draw points
 		bool DrawPoints(System::Drawing::Graphics^ myGraphics);

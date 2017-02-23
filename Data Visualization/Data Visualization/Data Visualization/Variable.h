@@ -33,11 +33,13 @@ using namespace std;
 
 //! define
 #define SortType  long long
-#define SleepTime 50
+#define RECTANGULAR_SPACE  60
+#define RECTANGULAR_NUMBER 13
 
 //! the statement
 static std::vector<SortType> IArraysize;
-
+static vector<SortType> Every_Step_Of_The_Change;
+static vector< vector<SortType> > Every_Step_Of_The_Value;
 // --------------------------------------------------------------------
 //|					      About LinkedList						       |
 // --------------------------------------------------------------------
@@ -62,9 +64,9 @@ static std::vector<SortType> IArraysize;
 /*
 	Draw the basic warrior
 */
-#define Circlesize	30
-#define CircleW		25
-#define CircleH		25
+#define Circlesize	40
+#define CircleW		5
+#define CircleH		5
 
 
 

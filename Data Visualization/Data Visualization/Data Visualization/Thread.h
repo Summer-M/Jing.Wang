@@ -11,26 +11,53 @@ template <class T>
 class MYThread
 {
 public:
-	MYThread() {};
-	~MYThread() {};
-	
-private:
-	// my code
-public:
-	static DWORD WINAPI ThreadOfSort(LPVOID lpParam)
+	MYThread(unsigned int sort, vector<T> nums, string Model)
 	{
-		Process::Sort<T> *sort = (Process::Sort<T>*)lpParam;
-		MyStruct<T> *sortstruct = (MyStruct<T>*)lpParam;
+		sortindex = sort;
+		sortnums = nums;
+		modelinSort = Model;
+	};
+	~MYThread() {};
 
-		switch (sortstruct->SortIndex)
+public:
+	// my code
+	static unsigned int sortindex;
+	static vector<T>    sortnums;
+	static string modelinSort;
+
+public:
+	static unsigned int _stdcall ThreadOfSort(LPVOID lpParam)
+	{
+		Process::Sort<T> sort(modelinSort);
+		switch (sortindex)
 		{
-		case 0:	sort->Bubble(sortstruct->nums); break;
-		case 1: sort->Select(sortstruct->nums); break;
-		case 2: sort->Insert(sortstruct->nums); break;
-		case 3: sort->Shell(sortstruct->nums);  break;
-		case 4: sort->Quick(sortstruct->nums);  break;
-		case 5: sort->Heap(sortstruct->nums);   break;
-		case 6: sort->Merge(sortstruct->nums);  break;
+		case 0:
+		{
+			sort.Bubble(sortnums);
+		}
+
+		break;
+
+		case 1:
+		{
+			sort.Select(sortnums);
+		}
+
+		break;
+
+		case 2:
+		{
+			sort.Insert(sortnums);
+		}
+
+		break;
+
+		case 3:
+		{
+			sort.Shell(sortnums);
+		}
+
+		break;
 
 		default:
 			break;

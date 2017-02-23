@@ -20,6 +20,7 @@ namespace Process
 	extern	HANDLE				HMutex;
 	extern	bool				SortFinished;
 	extern  vector<int>			ExchangeIndex;
+	extern  int                 SleepTime;
 	
 	/*
 		the part of this namespace is used for sort
@@ -36,25 +37,27 @@ namespace Process
 	class Sort
 	{
 	public:
-		enum {size = 10,othersize = 100};
+		enum { size = 13, othersize = 100 };
 		Sort(vector<DataType> Object)
-			:array(0)
 			//IArraysize(size)
 		{
-			array = Object;0
-			IArraysize<int,1> = Object;
+			IArraysize<int, 1> = Object;
 		};
+		Sort(string Model)
+		{
+			ModelInModel = Model;;
+		}
 		~Sort() {};
 
 	private:
 		//!\brief no code
 	public:
 		//!\brief passing parameters
-		vector<DataType> array;
-
-	public:	
+		// vector<DataType> array;
+		string ModelInModel;
+	public:
 		//!\brief thread
-	
+
 	public:
 		//Bubble
 		void Bubble(vector<DataType> array)
@@ -62,8 +65,6 @@ namespace Process
 			int iMimddle;
 			for (size_t i = 0; i < array.size(); i++)
 			{
-				//lock
-				WaitForSingleObject(HMutex, INFINITE);
 
 				for (size_t j = i + 1; j < array.size(); j++)
 				{
@@ -73,19 +74,29 @@ namespace Process
 						array[i] = array[j];
 						array[j] = iMimddle;
 
-						//------------------------------------------------------
+						if (ModelInModel == "Normal")
+						{
+							//lock
+							WaitForSingleObject(HMutex, INFINITE);
 
-						ExchangeIndex[0] = i;
-						ExchangeIndex[1] = j;
+							//----------------------------------------------------------------------------------
+							ExchangeIndex[0] = i;
+							ExchangeIndex[1] = j;
 
-						//update IArraysize
-						IArraysize = array;
+							//update IArraysize
+							IArraysize = array;
+							//----------------------------------------------------------------------------------
 
-						//unlock	
-						Sleep(SleepTime);
-						ReleaseMutex(HMutex);
-
-						//------------------------------------------------------
+							//unlock	
+							Sleep(SleepTime);
+							ReleaseMutex(HMutex);
+						}
+						else if (ModelInModel == "Step")
+						{
+							Every_Step_Of_The_Change.push_back(i);
+							Every_Step_Of_The_Change.push_back(j);
+							Every_Step_Of_The_Value.push_back(array);
+						}
 					}
 				}
 			}
@@ -100,9 +111,6 @@ namespace Process
 			int iMiddle;
 			for (size_t i = 0; i < array.size(); i++)
 			{
-				//lock
-				WaitForSingleObject(HMutex, INFINITE);
-
 				index = i;
 				for (size_t j = i + 1; j <= array.size() - 1; j++)
 				{
@@ -116,15 +124,29 @@ namespace Process
 				array[index] = array[i];
 				array[i] = iMiddle;
 
-				ExchangeIndex[0] = index;
-				ExchangeIndex[1] = i;
+				if (ModelInModel == "Normal")
+				{
+					//lock
+					WaitForSingleObject(HMutex, INFINITE);
 
-				// update IArraysize
-				IArraysize = array;
+					//----------------------------------------------------------------------------------
+					ExchangeIndex[0] = index;
+					ExchangeIndex[1] = i;
 
-				//unlock
-				Sleep(SleepTime);
-				ReleaseMutex(HMutex);
+					//update IArraysize
+					IArraysize = array;
+					//----------------------------------------------------------------------------------
+
+					//unlock	
+					Sleep(SleepTime);
+					ReleaseMutex(HMutex);
+				}
+				else if (ModelInModel == "Step")
+				{
+					Every_Step_Of_The_Change.push_back(index);
+					Every_Step_Of_The_Change.push_back(i);
+					Every_Step_Of_The_Value.push_back(array);
+				}
 			}
 
 			SortFinished = false;
@@ -136,9 +158,6 @@ namespace Process
 			int temp, j;
 			for (size_t i = 1; i < array.size(); i++)
 			{
-				//lock
-				WaitForSingleObject(HMutex, INFINITE);
-
 				temp = array[i];
 				for (j = i; j > 0 && array[j - 1] > temp; j--)
 				{
@@ -147,15 +166,29 @@ namespace Process
 
 				array[j] = temp;
 
-				// update IArraysize
-				ExchangeIndex[0] = i;
-				ExchangeIndex[1] = j;
+				if (ModelInModel == "Normal")
+				{
+					//lock
+					WaitForSingleObject(HMutex, INFINITE);
 
-				IArraysize = array;
+					//----------------------------------------------------------------------------------
+					ExchangeIndex[0] = i;
+					ExchangeIndex[1] = j;
 
-				//unlock
-				Sleep(SleepTime);
-				ReleaseMutex(HMutex);
+					//update IArraysize
+					IArraysize = array;
+					//----------------------------------------------------------------------------------
+
+					//unlock	
+					Sleep(SleepTime);
+					ReleaseMutex(HMutex);
+				}
+				else if (ModelInModel == "Step")
+				{
+					Every_Step_Of_The_Change.push_back(i);
+					Every_Step_Of_The_Change.push_back(j);
+					Every_Step_Of_The_Value.push_back(array);
+				}
 			}
 
 			SortFinished = false;
@@ -171,9 +204,6 @@ namespace Process
 			{
 				for (size_t i = gap; i < array.size(); i++)
 				{
-					// lock
-					WaitForSingleObject(HMutex, INFINITE);
-
 					temp = array[i];
 					j = i - gap;
 
@@ -185,12 +215,29 @@ namespace Process
 
 					array[j + gap] = temp;
 
-					// update IArraysize
-					IArraysize = array;
+					if (ModelInModel == "Normal")
+					{
+						//lock
+						WaitForSingleObject(HMutex, INFINITE);
 
-					//unlock
-					Sleep(SleepTime);
-					ReleaseMutex(HMutex);
+						//----------------------------------------------------------------------------------
+						ExchangeIndex[0] = i;
+						ExchangeIndex[1] = j + gap;
+
+						//update IArraysize
+						IArraysize = array;
+						//----------------------------------------------------------------------------------
+
+						//unlock	
+						Sleep(SleepTime);
+						ReleaseMutex(HMutex);
+					}
+					else if (ModelInModel == "Step")
+					{
+						Every_Step_Of_The_Change.push_back(i);
+						Every_Step_Of_The_Change.push_back(j + gap);
+						Every_Step_Of_The_Value.push_back(array);
+					}
 				}
 
 				gap /= 2;
@@ -223,7 +270,7 @@ namespace Process
 //! \brief Process rand test-numbers 
 //---------------------------------------------------------------------------
 	template <typename DataType>
-	vector<DataType> RandNumbers()					// 10
+	vector<DataType> RandNumbers()					// 13
 	{
 		vector<DataType> RandNumber;
 		srand((unsigned int)time(NULL));

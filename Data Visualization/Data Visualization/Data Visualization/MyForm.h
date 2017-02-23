@@ -26,10 +26,9 @@ namespace DataVisualization {
 	{
 	public:
 		MyForm(void)
-			:thread(nullptr),
-			 hThread1(NULL),
-			 hThread2(NULL),
-			 timekeeping(0)
+			 :SortStep(0),
+			  timekeeping(0),
+			  Endpattern(true)
 		{
 			//Initiallization
 			InitializeComponent();
@@ -43,9 +42,24 @@ namespace DataVisualization {
 			//
 			//TODO: Add the constructor code here
 			//
-		    myGraphics = this->pictureBox1->CreateGraphics();
-			thread = gcnew Thread(gcnew ThreadStart(this, &MyForm::ThreadOfDraw));
-			thread = gcnew Thread(gcnew ThreadStart(this, &MyForm::ThreadOfDraw));
+			//about repaint
+			bitmap = gcnew System::Drawing::Bitmap(this->pictureBox1->Width, this->pictureBox1->Height);
+
+			//about rectangular
+			canvas = gcnew System::Drawing::Bitmap(this->pictureBox1->Width, this->pictureBox1->Height);
+			brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::DarkTurquoise);
+			brushChange = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::Red);
+
+			//about DottedLine
+			pen = gcnew System::Drawing::Pen(System::Drawing::Color::Color::Black, 2);
+			penDottedLine = gcnew System::Drawing::Pen(System::Drawing::Color::Color::Gray, 2);
+			penDottedLine->DashStyle = System::Drawing::Drawing2D::DashStyle::Dot;
+
+			//about coordinates
+			penCoordinates = gcnew System::Drawing::Pen(System::Drawing::Color::Color::Black, 1);
+
+			//about text
+			font = gcnew System::Drawing::Font(L"Microsoft YaHei", 9);
 		}
 
 	protected:
@@ -70,18 +84,30 @@ namespace DataVisualization {
 	private: System::Windows::Forms::GroupBox^  groupBox1;
 
 	//sort
+	private: System::Windows::Forms::Button^	  Start;
+	private: System::Windows::Forms::Button^	  Quit;
 	private: System::Windows::Forms::RadioButton^ format1;
 	private: System::Windows::Forms::RadioButton^ format2;
+	private: System::Windows::Forms::RadioButton^ format1model;
+	private: System::Windows::Forms::RadioButton^ format2model;
+	private: System::Windows::Forms::GroupBox^	  groupBoxperform;
 	private: System::Windows::Forms::GroupBox^	  groupBox2;
 	private: System::Windows::Forms::GroupBox^	  groupBox3;
-	private: System::Windows::Forms::Button^	  Bubble;
-	private: System::Windows::Forms::Button^	  Select;
-	private: System::Windows::Forms::Button^	  Insert;
-	private: System::Windows::Forms::Button^	  Shell;
-	private: System::Windows::Forms::Button^	  Quick;
-	private: System::Windows::Forms::Button^	  Heap;
-	private: System::Windows::Forms::Button^	  Merge;
+	private: System::Windows::Forms::GroupBox^	  groupBoxsort;
+	private: System::Windows::Forms::GroupBox^	  groupBoxsortmodel;
+	private: System::Windows::Forms::GroupBox^	  groupBoxsortStepmodel;
+	private: System::Windows::Forms::Button^	  Backward;
+	private: System::Windows::Forms::Button^	  Forward;
 	private: System::Windows::Forms::TextBox^	  Time;
+	private: System::Windows::Forms::TextBox^	  ExchangeInfo;
+
+	private: System::Windows::Forms::RadioButton^ Bubble;
+	private: System::Windows::Forms::RadioButton^ Select;
+	private: System::Windows::Forms::RadioButton^ Insert;
+	private: System::Windows::Forms::RadioButton^ Shell;
+	private: System::Windows::Forms::RadioButton^ Quick;
+	private: System::Windows::Forms::RadioButton^ Heap;
+	private: System::Windows::Forms::RadioButton^ Merge;
 
 	private: System::Windows::Forms::Label^	 label1;
 	private: System::Windows::Forms::Label^	 label2;
@@ -93,17 +119,10 @@ namespace DataVisualization {
 	private: System::Windows::Forms::Label^  label8;
 	private: System::Windows::Forms::Label^  label9;
 	private: System::Windows::Forms::Label^  label10;
+	private: System::Windows::Forms::Label^  label11;
+	private: System::Windows::Forms::Label^  label12;
+	private: System::Windows::Forms::Label^  label13;
 
-	private: System::Windows::Forms::Label^	 labelNum1;
-	private: System::Windows::Forms::Label^	 labelNum2;
-	private: System::Windows::Forms::Label^	 labelNum3;
-	private: System::Windows::Forms::Label^	 labelNum4;
-	private: System::Windows::Forms::Label^	 labelNum5;
-	private: System::Windows::Forms::Label^	 labelNum6;
-	private: System::Windows::Forms::Label^  labelNum7;
-	private: System::Windows::Forms::Label^  labelNum8;
-	private: System::Windows::Forms::Label^  labelNum9;
-	private: System::Windows::Forms::Label^  labelNum10;
 	private: System::ComponentModel::IContainer^  components;
 	private: System::Windows::Forms::Timer^  timer1;
 
@@ -179,11 +198,33 @@ namespace DataVisualization {
 		/// Required designer variable.
 		/// </summary>
 		//sort
+		//about repaint
+		System::Drawing::Bitmap^   bitmap;
 		System::Drawing::Graphics^ myGraphics;				// draw	
-		System::Threading::Thread^ thread;                  // thread for update Draw
 		HANDLE hThread1;									// thread for update sort
-		long long timekeeping;								// time for update sort
 
+		//about rectangular
+		System::Drawing::Bitmap^ canvas;					// board
+		System::Drawing::Brush^  brush;					   // when don't data interchange
+		System::Drawing::Brush^  brushChange;				// when data interchange
+		System::Drawing::Pen^    pen;						// line 
+
+	    //about DottedLine
+		System::Drawing::Pen^    penDottedLine;				// dotted line
+
+		//about coordinates
+		System::Drawing::Pen^    penCoordinates;			// coordinates 
+
+		//about text
+		System::Drawing::Font^   font;						// text data
+
+		//about step pattern
+		unsigned int SortStep;							    // the step of sort
+		bool  Endpattern;									// exit single-step mode
+
+		//about time
+		unsigned int timekeeping;
+		
 		//Algorithm
 		System::Threading::Thread^ threadAlgorithm;			// thread for update Draw
 		HANDLE hThread2;									// thread for update move object in Algorithm
@@ -204,6 +245,7 @@ namespace DataVisualization {
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 			this->menuStrip1->SuspendLayout();
+			this->SuspendLayout();
 			// 
 			// menuStrip1
 			// 
@@ -214,7 +256,7 @@ namespace DataVisualization {
 			});
 			this->menuStrip1->Location = System::Drawing::Point(0, 0);
 			this->menuStrip1->Name = L"menuStrip1";
-			this->menuStrip1->Size = System::Drawing::Size(860, 25);
+			this->menuStrip1->Size = System::Drawing::Size(1084, 25);
 			this->menuStrip1->TabIndex = 0;
 			this->menuStrip1->Text = L"menuStrip1";
 			// 
@@ -247,13 +289,20 @@ namespace DataVisualization {
 			this->comboBox1->Font = (gcnew System::Drawing::Font(L"Segoe UI Emoji", 10.5F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->comboBox1->FormattingEnabled = true;
-			this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(4) { L"Sort", L"LinkedList", L"Tree" ,L"Algorithm"});
-			this->comboBox1->Location = System::Drawing::Point(692, 28);
+			this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(4) { L"Sort", L"LinkedList", L"Tree", L"Algorithm" });
+			this->comboBox1->Location = System::Drawing::Point(916, 28);
 			this->comboBox1->Name = L"comboBox1";
-			this->comboBox1->Size = System::Drawing::Size(156, 27);
-			this->comboBox1->Text = L"Sort";
+			this->comboBox1->Size = System::Drawing::Size(163, 27);
 			this->comboBox1->TabIndex = 2;
 			this->comboBox1->SelectedIndexChanged += gcnew System::EventHandler(this, &MyForm::comboBox1_SelectedIndexChanged);
+			// 
+			// groupBox1
+			// 
+			this->groupBox1->Location = System::Drawing::Point(0, 0);
+			this->groupBox1->Name = L"groupBox1";
+			this->groupBox1->Size = System::Drawing::Size(200, 100);
+			this->groupBox1->TabIndex = 0;
+			this->groupBox1->TabStop = false;
 			// 
 			// timer1
 			// 
@@ -261,18 +310,12 @@ namespace DataVisualization {
 			this->timer1->Tick += gcnew System::EventHandler(this, &MyForm::timer1_Tick);
 			// 
 			// MyForm
-			//
-			this->SetStyle(System::Windows::Forms::ControlStyles::OptimizedDoubleBuffer
-				| System::Windows::Forms::ControlStyles::ResizeRedraw
-				| System::Windows::Forms::ControlStyles::Selectable
-				| System::Windows::Forms::ControlStyles::AllPaintingInWmPaint
-				| System::Windows::Forms::ControlStyles::UserPaint
-				| System::Windows::Forms::ControlStyles::SupportsTransparentBackColor,
-				true);
+			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->BackColor = System::Drawing::Color::White;
-			this->ClientSize = System::Drawing::Size(860, 622);
+			this->ClientSize = System::Drawing::Size(1084, 907);
 			this->Controls->Add(this->comboBox1);
 			this->Controls->Add(this->menuStrip1);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
@@ -281,11 +324,11 @@ namespace DataVisualization {
 			this->MinimizeBox = false;
 			this->Name = L"MyForm";
 			this->Text = L"Data Visualization";
-			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &MyForm::Form_Closing);
 			this->menuStrip1->ResumeLayout(false);
 			this->menuStrip1->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
+
 		}
 
 #pragma region Sort
@@ -300,16 +343,28 @@ namespace DataVisualization {
 			//
 			this->format1 = (gcnew System::Windows::Forms::RadioButton());
 			this->format2 = (gcnew System::Windows::Forms::RadioButton());
+			this->format1model = (gcnew System::Windows::Forms::RadioButton());
+			this->format2model = (gcnew System::Windows::Forms::RadioButton());
+			this->groupBoxperform = (gcnew System::Windows::Forms::GroupBox());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
 			this->groupBox3 = (gcnew System::Windows::Forms::GroupBox());
-			this->Bubble = (gcnew System::Windows::Forms::Button());
-			this->Select = (gcnew System::Windows::Forms::Button());
-			this->Insert = (gcnew System::Windows::Forms::Button());
-			this->Shell = (gcnew System::Windows::Forms::Button());
-			this->Quick = (gcnew System::Windows::Forms::Button());
-			this->Heap = (gcnew System::Windows::Forms::Button());
-			this->Merge = (gcnew System::Windows::Forms::Button());
-			this->Time = (gcnew System::Windows::Forms::TextBox());
+			this->groupBoxsort = (gcnew System::Windows::Forms::GroupBox());
+			this->groupBoxsortmodel = (gcnew System::Windows::Forms::GroupBox());
+			this->groupBoxsortStepmodel = (gcnew System::Windows::Forms::GroupBox());
+			this->Start = (gcnew System::Windows::Forms::Button());
+			this->Quit = (gcnew System::Windows::Forms::Button());
+			this->Backward = (gcnew System::Windows::Forms::Button());
+			this->Forward = (gcnew System::Windows::Forms::Button());
+			this->Bubble = (gcnew System::Windows::Forms::RadioButton());
+			this->Select = (gcnew System::Windows::Forms::RadioButton());
+			this->Insert = (gcnew System::Windows::Forms::RadioButton());
+			this->Shell = (gcnew System::Windows::Forms::RadioButton());
+			this->Quick = (gcnew System::Windows::Forms::RadioButton());
+			this->Heap = (gcnew System::Windows::Forms::RadioButton());
+			this->Merge = (gcnew System::Windows::Forms::RadioButton());
+			this->Time = (gcnew System::Windows::Forms::TextBox());	
+			this->ExchangeInfo = (gcnew System::Windows::Forms::TextBox());
+
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			this->SuspendLayout();
@@ -324,36 +379,26 @@ namespace DataVisualization {
 			this->label8 = (gcnew System::Windows::Forms::Label());
 			this->label9 = (gcnew System::Windows::Forms::Label());
 			this->label10 = (gcnew System::Windows::Forms::Label());
-
-			this->labelNum1 = (gcnew System::Windows::Forms::Label());
-			this->labelNum2 = (gcnew System::Windows::Forms::Label());
-			this->labelNum3 = (gcnew System::Windows::Forms::Label());
-			this->labelNum4 = (gcnew System::Windows::Forms::Label());
-			this->labelNum5 = (gcnew System::Windows::Forms::Label());
-			this->labelNum6 = (gcnew System::Windows::Forms::Label());
-			this->labelNum7 = (gcnew System::Windows::Forms::Label());
-			this->labelNum8 = (gcnew System::Windows::Forms::Label());
-			this->labelNum9 = (gcnew System::Windows::Forms::Label());
-			this->labelNum10 = (gcnew System::Windows::Forms::Label());
-
-			this->format1 = (gcnew System::Windows::Forms::RadioButton());
-			this->format2 = (gcnew System::Windows::Forms::RadioButton());
+			this->label11 = (gcnew System::Windows::Forms::Label());
+			this->label12 = (gcnew System::Windows::Forms::Label());
+			this->label13 = (gcnew System::Windows::Forms::Label());
 
 			// 
 			// groupBox1
 			// 
 			this->groupBox1->BackColor = System::Drawing::SystemColors::Control;
-			this->groupBox1->Location = System::Drawing::Point(692, 56);
+			this->groupBox1->Location = System::Drawing::Point(915, 60);
 			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(156, 565);
+			this->groupBox1->Size = System::Drawing::Size(165, 845);
 			this->groupBox1->TabIndex = 3;
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Class";
 			//
 			// select
 			//
+			this->format1->Enabled = false;
 			this->format1->AutoSize = true;
-			this->format1->Location = System::Drawing::Point(12, 22);
+			this->format1->Location = System::Drawing::Point(18, 22);
 			this->format1->Name = L"format1";
 			this->format1->Size = System::Drawing::Size(95, 16);
 			this->format1->TabIndex = 0;
@@ -362,7 +407,7 @@ namespace DataVisualization {
 			this->format1->UseVisualStyleBackColor = true;
 
 			this->format2->AutoSize = true;
-			this->format2->Location = System::Drawing::Point(12, 50);
+			this->format2->Location = System::Drawing::Point(18, 50);
 			this->format2->Name = L"format2";
 			this->format2->Size = System::Drawing::Size(95, 16);
 			this->format2->TabIndex = 0;
@@ -370,14 +415,74 @@ namespace DataVisualization {
 			this->format2->Text = L"Cylindrical";
 			this->format2->UseVisualStyleBackColor = true;
 
-			this->groupBox3->Text = L"Select";
-			this->groupBox3->Size = System::Drawing::Size(145, 80);
-			this->groupBox3->Location = System::Drawing::Point(5, 370);
+			this->format1model->AutoSize = true;
+			this->format1model->Location = System::Drawing::Point(18, 22);
+			this->format1model->Name = L"format1model";
+			this->format1model->Size = System::Drawing::Size(95, 16);
+			this->format1model->TabIndex = 0;
+			this->format1model->TabStop = true;
+			this->format1model->Text = L"Normal";
+			this->format1model->UseVisualStyleBackColor = true;
+
+			this->format2model->AutoSize = true;
+			this->format2model->Location = System::Drawing::Point(18, 50);
+			this->format2model->Name = L"format2model";
+			this->format2model->Size = System::Drawing::Size(95, 16);
+			this->format2model->TabIndex = 0;
+			this->format2model->TabStop = true;
+			this->format2model->Text = L"Setp Model";
+			this->format2model->UseVisualStyleBackColor = true;
 
 			this->groupBox2->Text = L"";
 			this->groupBox2->Visible = false;
-			this->groupBox2->Size = System::Drawing::Size(682, 600);
+			this->groupBox2->Size = System::Drawing::Size(906, 885);
 			this->groupBox2->Location = System::Drawing::Point(5, 20);
+
+			this->groupBoxperform->Text = L"Operation";
+			this->groupBoxperform->Visible = true;
+			this->groupBoxperform->Size = System::Drawing::Size(155, 100);
+			this->groupBoxperform->Location = System::Drawing::Point(5, 20);
+
+			this->groupBoxsort->Text = L"Sort";
+			this->groupBoxsort->Visible = true;
+			this->groupBoxsort->Size = System::Drawing::Size(155, 250);
+			this->groupBoxsort->Location = System::Drawing::Point(5, 140);
+
+			this->groupBox3->Text = L"Select";
+			this->groupBox3->Size = System::Drawing::Size(155, 80);
+			this->groupBox3->Location = System::Drawing::Point(5, 410);
+
+			this->groupBoxsortmodel->Text = L"Model";
+			this->groupBoxsortmodel->Visible = true;
+			this->groupBoxsortmodel->Size = System::Drawing::Size(155, 80);
+			this->groupBoxsortmodel->Location = System::Drawing::Point(5, 510); 
+
+			this->groupBoxsortStepmodel->Text = L"Setp Model";
+			this->groupBoxsortStepmodel->Visible = true;
+			this->groupBoxsortStepmodel->Size = System::Drawing::Size(155, 80);
+			this->groupBoxsortStepmodel->Location = System::Drawing::Point(5, 610);
+
+			this->Backward->Enabled = false;
+			this->Backward->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 7.5F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(134)));
+			this->Backward->Location = System::Drawing::Point(55, 15);
+			this->Backward->Name = L"Backward";
+			this->Backward->Size = System::Drawing::Size(82, 23);
+			this->Backward->TabIndex = 7;
+			this->Backward->Text = L"Backward";
+			this->Backward->UseVisualStyleBackColor = true;
+			//this->Backward->Click += gcnew System::EventHandler(this, &MyForm::Backward_Click);
+
+			this->Forward->Enabled = false;
+			this->Forward->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 7.5F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(134)));
+			this->Forward->Location = System::Drawing::Point(55, 48);
+			this->Forward->Name = L"Forward";
+			this->Forward->Size = System::Drawing::Size(82, 23);
+			this->Forward->TabIndex = 7;
+			this->Forward->Text = L"Forward";
+			this->Forward->UseVisualStyleBackColor = true;
+			//this->Forward->Click += gcnew System::EventHandler(this, &MyForm::Forward_Click);
 			
 			// 
 			// pictureBox1
@@ -385,160 +490,160 @@ namespace DataVisualization {
 			this->pictureBox1->BackColor = System::Drawing::Color::White;
 			this->pictureBox1->Location = System::Drawing::Point(10, 10);
 			this->pictureBox1->Name = L"pictureBox1";
-			this->pictureBox1->Size = System::Drawing::Size(650, 448);
+			this->pictureBox1->Size = System::Drawing::Size(890, 565);
 			this->pictureBox1->TabIndex = 1;
 			this->pictureBox1->TabStop = false;
+			this->pictureBox1->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MyForm::pictureBox1_Paint);
 
 			//nums
-			this->label1->Text = L"";
+			this->label1->Text = L"0";
 			this->label1->Size = System::Drawing::Size(20, 20);
-			this->label1->Location = System::Drawing::Point(77 , 500);
+			this->label1->Location = System::Drawing::Point(77 , 600);
 
-			this->label2->Text = L"";
+			this->label2->Text = L"1";
 			this->label2->Size = System::Drawing::Size(20, 20);
-			this->label2->Location = System::Drawing::Point(77 + 60, 500);
+			this->label2->Location = System::Drawing::Point(77 + 60, 600);
 
-			this->label3->Text = L"";
+			this->label3->Text = L"2";
 			this->label3->Size = System::Drawing::Size(20, 20);
-			this->label3->Location = System::Drawing::Point(77 + 60 * 2, 500);
+			this->label3->Location = System::Drawing::Point(77 + 60 * 2, 600);
 
-			this->label4->Text = L"";
+			this->label4->Text = L"3";
 			this->label4->Size = System::Drawing::Size(20, 20);
-			this->label4->Location = System::Drawing::Point(77 + 60 * 3, 500);
+			this->label4->Location = System::Drawing::Point(77 + 60 * 3, 600);
 
-			this->label5->Text = L"";
+			this->label5->Text = L"4";
 			this->label5->Size = System::Drawing::Size(20, 20);
-			this->label5->Location = System::Drawing::Point(77 + 60 * 4, 500);
+			this->label5->Location = System::Drawing::Point(77 + 60 * 4, 600);
 
-			this->label6->Text = L"";
+			this->label6->Text = L"5";
 			this->label6->Size = System::Drawing::Size(20, 20);
-			this->label6->Location = System::Drawing::Point(77 + 60 * 5, 500);
+			this->label6->Location = System::Drawing::Point(77 + 60 * 5, 600);
 
-			this->label7->Text = L"";
+			this->label7->Text = L"6";
 			this->label7->Size = System::Drawing::Size(20, 20);
-			this->label7->Location = System::Drawing::Point(77 + 60 * 6, 500);
+			this->label7->Location = System::Drawing::Point(77 + 60 * 6, 600);
 
-			this->label8->Text = L"";
+			this->label8->Text = L"7";
 			this->label8->Size = System::Drawing::Size(20, 20);
-			this->label8->Location = System::Drawing::Point(77 + 60 * 7, 500);
+			this->label8->Location = System::Drawing::Point(77 + 60 * 7, 600);
 
-			this->label9->Text = L"";
+			this->label9->Text = L"8";
 			this->label9->Size = System::Drawing::Size(20, 20);
-			this->label9->Location = System::Drawing::Point(77 + 60 * 8, 500);
+			this->label9->Location = System::Drawing::Point(77 + 60 * 8, 600);
 
-			this->label10->Text = L"";
+			this->label10->Text = L"9";
 			this->label10->Size = System::Drawing::Size(20, 20);
-			this->label10->Location = System::Drawing::Point(77 + 60 * 9, 500);
+			this->label10->Location = System::Drawing::Point(77 + 60 * 9, 600);
 
-			//index
-			this->labelNum1->Text = L"1";
-			this->labelNum1->Size = System::Drawing::Size(20, 20);
-			this->labelNum1->Location = System::Drawing::Point(77, 535);
+			this->label11->Text = L"10";
+			this->label11->Size = System::Drawing::Size(20, 20);
+			this->label11->Location = System::Drawing::Point(77 + 60 * 10, 600);
 
-			this->labelNum2->Text = L"2";
-			this->labelNum2->Size = System::Drawing::Size(20, 20);
-			this->labelNum2->Location = System::Drawing::Point(77 + 60, 535);
+			this->label12->Text = L"11";
+			this->label12->Size = System::Drawing::Size(20, 20);
+			this->label12->Location = System::Drawing::Point(77 + 60 * 11, 600);
 
-			this->labelNum3->Text = L"3";
-			this->labelNum3->Size = System::Drawing::Size(20, 20);
-			this->labelNum3->Location = System::Drawing::Point(77 + 60 * 2, 535);
+			this->label13->Text = L"12";
+			this->label13->Size = System::Drawing::Size(20, 20);
+			this->label13->Location = System::Drawing::Point(77 + 60 * 12, 600);
 
-			this->labelNum4->Text = L"4";
-			this->labelNum4->Size = System::Drawing::Size(20, 20);
-			this->labelNum4->Location = System::Drawing::Point(77 + 60 * 3, 535);
+			//start
+			this->Start->Name = L"Start";
+			this->Start->Location = System::Drawing::Point(18, 20);
+			this->Start->Size = System::Drawing::Size(120, 25);
+			this->Start->Text = L"Start";
+			this->Start->Click += gcnew System::EventHandler(this, &MyForm::Start_Click);
 
-			this->labelNum5->Text = L"5";
-			this->labelNum5->Size = System::Drawing::Size(20, 20);
-			this->labelNum5->Location = System::Drawing::Point(77 + 60 * 4, 535);
-
-			this->labelNum6->Text = L"6";
-			this->labelNum6->Size = System::Drawing::Size(20, 20);
-			this->labelNum6->Location = System::Drawing::Point(77 + 60 * 5, 535);
-
-			this->labelNum7->Text = L"7";
-			this->labelNum7->Size = System::Drawing::Size(20, 20);
-			this->labelNum7->Location = System::Drawing::Point(77 + 60 * 6, 535);
-
-			this->labelNum8->Text = L"8";
-			this->labelNum8->Size = System::Drawing::Size(20, 20);
-			this->labelNum8->Location = System::Drawing::Point(77 + 60 * 7, 535);
-
-			this->labelNum9->Text = L"9";
-			this->labelNum9->Size = System::Drawing::Size(20, 20);
-			this->labelNum9->Location = System::Drawing::Point(77 + 60 * 8, 535);
-
-			this->labelNum10->Text = L"10";
-			this->labelNum10->Size = System::Drawing::Size(20, 20);
-			this->labelNum10->Location = System::Drawing::Point(77 + 60 * 9, 535);
+			//Quit
+			this->Quit->Name = L"Quit";
+			this->Quit->Location = System::Drawing::Point(18, 60);
+			this->Quit->Size = System::Drawing::Size(120, 25);
+			this->Quit->Text = L"Quit";
 
 			//bubble
 			this->Bubble->Name = L"Bubble";
-			this->Bubble->Location = System::Drawing::Point(20, 20);
+			this->Bubble->Location = System::Drawing::Point(18, 20);
 			this->Bubble->Size = System::Drawing::Size(120, 25);
 			this->Bubble->Text = L"Bubble";
-			this->Bubble->Click += gcnew System::EventHandler(this, &MyForm::Bubble_Click);
 
 			//select
 			this->Select->Name = L"Select";
-			this->Select->Location = System::Drawing::Point(20, 70);
+			this->Select->Location = System::Drawing::Point(18, 50);
 			this->Select->Size = System::Drawing::Size(120, 25);
 			this->Select->Text = L"Select";
-			this->Select->Click += gcnew System::EventHandler(this, &MyForm::Select_Click);
 
 			//insert
 			this->Insert->Name = L"Insert";
-			this->Insert->Location = System::Drawing::Point(20, 120);
+			this->Insert->Location = System::Drawing::Point(18, 80);
 			this->Insert->Size = System::Drawing::Size(120, 25);
 			this->Insert->Text = L"Insert";
-			this->Insert->Click += gcnew System::EventHandler(this, &MyForm::Insert_Click);
 			
 			//shell
 			this->Shell->Name = L"Shell";
-			this->Shell->Location = System::Drawing::Point(20, 170);
+			this->Shell->Location = System::Drawing::Point(18, 110);
 			this->Shell->Size = System::Drawing::Size(120, 25);
 			this->Shell->Text = L"Shell";
-			this->Shell->Click += gcnew System::EventHandler(this, &MyForm::Shell_Click);
 			
 			//quick
 			this->Quick->Name = L"Quick";
-			this->Quick->Location = System::Drawing::Point(20, 220);
+			this->Quick->Location = System::Drawing::Point(18, 140);
 			this->Quick->Size = System::Drawing::Size(120, 25);
 			this->Quick->Text = L"Quick";
-			this->Quick->Click += gcnew System::EventHandler(this, &MyForm::Quick_Click);
 
 			//heap
 			this->Heap->Name = L"Heap";
-			this->Heap->Location = System::Drawing::Point(20, 270);
+			this->Heap->Location = System::Drawing::Point(18, 170);
 			this->Heap->Size = System::Drawing::Size(120, 25);
 			this->Heap->Text = L"Heap";
-			this->Heap->Click += gcnew System::EventHandler(this, &MyForm::Heap_Click);
 
 			//merge
 			this->Merge->Name = L"Merge";
-			this->Merge->Location = System::Drawing::Point(20, 320);
+			this->Merge->Location = System::Drawing::Point(18, 200);
 			this->Merge->Size = System::Drawing::Size(120, 25);
 			this->Merge->Text = L"Merge";
-			this->Merge->Click += gcnew System::EventHandler(this, &MyForm::Merge_Click);
 
 			//time
 			this->Time->Name = L"Time";
-			this->Time->Location = System::Drawing::Point(5, 460);
-			this->Time->Size = System::Drawing::Size(145, 100);
+			this->Time->Location = System::Drawing::Point(5, 710);
+			this->Time->Size = System::Drawing::Size(155, 130);
 			this->Time->BackColor = System::Drawing::Color::White;
 			this->Time->Multiline = true;
 
-			this->groupBox1->Controls->Add(this->Bubble);
-			this->groupBox1->Controls->Add(this->Select);
-			this->groupBox1->Controls->Add(this->Insert);
-			this->groupBox1->Controls->Add(this->Shell);
-			this->groupBox1->Controls->Add(this->Quick);
-			this->groupBox1->Controls->Add(this->Heap);
-			this->groupBox1->Controls->Add(this->Merge);
-			this->groupBox1->Controls->Add(this->Time);
+			//ExchangeInfo
+			this->ExchangeInfo->Name = L"ExchangeInfo";
+			this->ExchangeInfo->Location = System::Drawing::Point(5, 710);
+			this->ExchangeInfo->Size = System::Drawing::Size(895, 170);
+			this->ExchangeInfo->BackColor = System::Drawing::Color::White;
+			this->ExchangeInfo->Multiline = true;
+
+			this->groupBoxperform->Controls->Add(this->Start);
+			this->groupBoxperform->Controls->Add(this->Quit);
+
+			this->groupBoxsort->Controls->Add(this->Bubble);
+			this->groupBoxsort->Controls->Add(this->Select);
+			this->groupBoxsort->Controls->Add(this->Insert);
+			this->groupBoxsort->Controls->Add(this->Shell);
+			this->groupBoxsort->Controls->Add(this->Quick);
+			this->groupBoxsort->Controls->Add(this->Heap);
+			this->groupBoxsort->Controls->Add(this->Merge);
+			this->groupBoxsort->Controls->Add(this->Time);
+
+			this->groupBoxsortmodel->Controls->Add(this->format1model);
+			this->groupBoxsortmodel->Controls->Add(this->format2model);
+
+			this->groupBoxsortStepmodel->Controls->Add(this->Backward);
+			this->groupBoxsortStepmodel->Controls->Add(this->Forward);
 
 			this->groupBox3->Controls->Add(this->format1);
 			this->groupBox3->Controls->Add(this->format2);
+
+			this->groupBox1->Controls->Add(this->groupBoxperform);
 			this->groupBox1->Controls->Add(this->groupBox3);
+			this->groupBox1->Controls->Add(this->groupBoxsortmodel);
+			this->groupBox1->Controls->Add(this->groupBoxsort);
+			this->groupBox1->Controls->Add(this->groupBoxsortStepmodel);
+			this->groupBox1->Controls->Add(this->Time);
 
 			this->groupBox2->Controls->Add(this->pictureBox1);
 			this->groupBox2->Controls->Add(this->label1);
@@ -551,17 +656,10 @@ namespace DataVisualization {
 			this->groupBox2->Controls->Add(this->label8);
 			this->groupBox2->Controls->Add(this->label9);
 			this->groupBox2->Controls->Add(this->label10);
-
-			this->groupBox2->Controls->Add(this->labelNum1);
-			this->groupBox2->Controls->Add(this->labelNum2);
-			this->groupBox2->Controls->Add(this->labelNum3);
-			this->groupBox2->Controls->Add(this->labelNum4);
-			this->groupBox2->Controls->Add(this->labelNum5);
-			this->groupBox2->Controls->Add(this->labelNum6);
-			this->groupBox2->Controls->Add(this->labelNum7);
-			this->groupBox2->Controls->Add(this->labelNum8);
-			this->groupBox2->Controls->Add(this->labelNum9);
-			this->groupBox2->Controls->Add(this->labelNum10);
+			this->groupBox2->Controls->Add(this->label11);
+			this->groupBox2->Controls->Add(this->label12);
+			this->groupBox2->Controls->Add(this->label13);
+			this->groupBox2->Controls->Add(this->ExchangeInfo);
 		}
 		void ShowSort(Void)
 		{
@@ -735,9 +833,9 @@ namespace DataVisualization {
 			// groupBox1
 			// 
 			this->groupBox5->BackColor = System::Drawing::SystemColors::Control;
-			this->groupBox5->Location = System::Drawing::Point(692, 56);
+			this->groupBox5->Location = System::Drawing::Point(757, 10);
 			this->groupBox5->Name = L"groupBox5";
-			this->groupBox5->Size = System::Drawing::Size(156, 565);
+			this->groupBox5->Size = System::Drawing::Size(150, 565);
 			this->groupBox5->TabIndex = 3;
 			this->groupBox5->TabStop = false;
 			this->groupBox5->Text = L"Class";
@@ -982,9 +1080,9 @@ namespace DataVisualization {
 			// groupBox1
 			// 
 			this->groupBox5Tree->BackColor = System::Drawing::SystemColors::Control;
-			this->groupBox5Tree->Location = System::Drawing::Point(692, 56);
+			this->groupBox5Tree->Location = System::Drawing::Point(757, 10);
 			this->groupBox5Tree->Name = L"groupBox5Tree";
-			this->groupBox5Tree->Size = System::Drawing::Size(156, 565);
+			this->groupBox5Tree->Size = System::Drawing::Size(150, 565);
 			this->groupBox5Tree->TabIndex = 3;
 			this->groupBox5Tree->TabStop = false;
 			this->groupBox5Tree->Text = L"Class";
@@ -1241,9 +1339,9 @@ namespace DataVisualization {
 			// groupBox1
 			// 
 			this->groupBox5Algorithm->BackColor = System::Drawing::SystemColors::Control;
-			this->groupBox5Algorithm->Location = System::Drawing::Point(692, 56);
+			this->groupBox5Algorithm->Location = System::Drawing::Point(757, 10);
 			this->groupBox5Algorithm->Name = L"groupBox5Algorithm";
-			this->groupBox5Algorithm->Size = System::Drawing::Size(156, 565);
+			this->groupBox5Algorithm->Size = System::Drawing::Size(150, 565);
 			this->groupBox5Algorithm->TabIndex = 3;
 			this->groupBox5Algorithm->TabStop = false;
 			this->groupBox5Algorithm->Text = L"Class";
@@ -1360,32 +1458,10 @@ namespace DataVisualization {
 		/// the contents of this method with the code editor.
 		/// </summary>
 private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
-	InitializeText();
-
-	if (thread->ThreadState == System::Threading::ThreadState::Stopped)
-	{
-		Opening();
-		
-		//finally update ui
-		ClearView(myGraphics);
-		for (size_t i = 0; i < 10; i++)
-		{
-			Geometric::Object object(60 * i, IArraysize[i]);
-			object.DrawCylindrical(myGraphics);
-			object.DrawText(myGraphics, IArraysize[i].ToString());
-		}
-
-		this->timer1->Stop();
-		timekeeping = 0;
-	}
+	this->pictureBox1->Invalidate();
 }
-private: System::Void Form_Closing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
-	
-	// exit thread and thread1
-	thread->Abort();
-	TerminateThread(hThread1, 0);
-	CloseHandle(hThread1);
-
+private: System::Void MyForm_Load(System::Object^  sender, System::EventArgs^  e) {
+	this->pictureBox1->Invalidate();
 }
 private: System::Void comboBox1_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 		comboBox1->Text = comboBox1->SelectedItem->ToString();
@@ -1404,69 +1480,274 @@ private: System::Void comboBox1_SelectedIndexChanged(System::Object^  sender, Sy
 	}
 #pragma region Event Drive
 
-
 #pragma region  "Sort"
 		 /// <summary>
 		 /// Some functions about the order.
 		 /// Including the thread and drive program
 		 /// </summary>
-private: System::Void Bubble_Click(System::Object^  sender, System::EventArgs^  e) {
-	ReadyForSort(0);
-}
-private: System::Void Select_Click(System::Object^  sender, System::EventArgs^  e) {
-	ReadyForSort(1);
-}
-private: System::Void Insert_Click(System::Object^  sender, System::EventArgs^  e) {
-	ReadyForSort(2);
-}
-private: System::Void Shell_Click(System::Object^  sender, System::EventArgs^  e) {
-	ReadyForSort(3);
-}
-private: System::Void Quick_Click(System::Object^  sender, System::EventArgs^  e) {
-	ReadyForSort(4);
-}
-private: System::Void Heap_Click(System::Object^  sender, System::EventArgs^  e) {
-	ReadyForSort(5);
-}
-private: System::Void Merge_Click(System::Object^  sender, System::EventArgs^  e) {
-	ReadyForSort(6);
-}
+private: System::Void Start_Click(System::Object^  sender, System::EventArgs^  e) {
 
-private: void ReadyForSort( /*The function is create object*/ const unsigned int SortIndex) {
-	
+		MyStruct<SortType> Sortstruct;
+
+		//the start sort
+		if (this->format1model->Checked)
+		{
+			// bubble
+			if (this->Bubble->Checked)
+			{
+				ReadyForSort(0);
+			}
+			// select
+			else if (this->Select->Checked)
+			{
+				ReadyForSort(1);
+			}
+			// insert
+			else if (this->Insert->Checked)
+			{
+				ReadyForSort(2);
+			}
+			//shell
+			else if (this->Shell->Checked)
+			{
+				ReadyForSort(3);
+			}
+			else if (this->Quick->Checked)
+			{
+				ReadyForSort(4);
+			}
+			else if (this->Heap->Checked)
+			{
+				ReadyForSort(5);
+			}
+			else if (this->Merge->Checked)
+			{
+				ReadyForSort(6);
+			}
+			else
+			{
+				MessageBox::Show("Please select a sorting way!", "Warning", MessageBoxButtons::OK, MessageBoxIcon::Information); 
+			}
+		}
+		else if (this->format2model->Checked)
+		{
+			// bubble
+			if (this->Bubble->Checked)
+			{
+				ReadyForSortUseSecondModel(0);
+			}
+			// select
+			else if (this->Select->Checked)
+			{
+				ReadyForSortUseSecondModel(1);
+			}
+			// insert
+			else if (this->Insert->Checked)
+			{
+				ReadyForSortUseSecondModel(2);
+			}
+			//shell
+			else if (this->Shell->Checked)
+			{
+				ReadyForSortUseSecondModel(3);
+			}
+			else if (this->Quick->Checked)
+			{
+				ReadyForSortUseSecondModel(4);
+			}
+			else if (this->Heap->Checked)
+			{
+				ReadyForSortUseSecondModel(5);
+			}
+			else if (this->Merge->Checked)
+			{
+				ReadyForSortUseSecondModel(6);
+			}
+			else
+			{
+				MessageBox::Show("Please select a sorting order!", "Warning", MessageBoxButtons::OK, MessageBoxIcon::Information);
+			}
+		}
+		else
+		{
+			MessageBox::Show("Please select a sorting pattern!", "Warning", MessageBoxButtons::OK, MessageBoxIcon::Information);
+		}
+	}
+private: System::Void pictureBox1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
+
+	myGraphics = e->Graphics;
+	myGraphics->FromImage(bitmap);
+	myGraphics->SmoothingMode = System::Drawing::Drawing2D::SmoothingMode::AntiAlias;
+
+	// draw sorting process
+	if (this->format1model->Checked)
+	{
+		Geometric::Object arrow;
+		vector<long long>::iterator SearchFirst;
+
+		//lock
+		WaitForSingleObject(Process::HMutex, INFINITE);
+
+		try
+		{
+			if (IArraysize.size() != 0 && SortFinished)
+			{
+				// update the line segment
+				System::Drawing::Point Pt1(RECTANGULAR_SPACE * ExchangeIndex[0] + 75, 185 - IArraysize[ExchangeIndex[0]]);
+				System::Drawing::Point Pt2(RECTANGULAR_SPACE * ExchangeIndex[0] + 75, 100 - IArraysize[ExchangeIndex[0]]);
+				System::Drawing::Point Pt3(RECTANGULAR_SPACE * ExchangeIndex[1] + 75, 100 - IArraysize[ExchangeIndex[0]]);
+				System::Drawing::Point Pt4(RECTANGULAR_SPACE * ExchangeIndex[1] + 75, 185 - IArraysize[ExchangeIndex[1]]);
+
+				myGraphics->DrawLine(pen, Pt1, Pt2);
+				myGraphics->DrawLine(pen, Pt2, Pt3);
+				myGraphics->DrawLine(pen, Pt3, Pt4);
+
+				// update cylindrical
+				for (size_t i = 0; i < RECTANGULAR_NUMBER; i++)
+				{
+					Geometric::Object object(RECTANGULAR_SPACE * i, IArraysize[i]);
+					if (i == ExchangeIndex[0] || i == ExchangeIndex[1])
+					{
+						brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::Red);
+						myGraphics->FillRectangle(brush, int(object.DrawCylindrical().RectangleX), int(object.DrawCylindrical().RectangleY),
+							int(object.DrawCylindrical().RectangleWidth), int(object.DrawCylindrical().RectangleHeight));
+					}
+
+					else
+					{
+						brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::DarkTurquoise);
+						myGraphics->FillRectangle(brush, int(object.DrawCylindrical().RectangleX), int(object.DrawCylindrical().RectangleY),
+							int(object.DrawCylindrical().RectangleWidth), int(object.DrawCylindrical().RectangleHeight));
+					}
+
+					//update dottedLine and text 
+					System::Drawing::Point Pt5(object.DrawDottedLine().Point1X, object.DrawDottedLine().Point1Y);
+					System::Drawing::Point Pt6(object.DrawDottedLine().Point2X, object.DrawDottedLine().Point2Y);
+
+					myGraphics->DrawLine(penDottedLine, Pt5, Pt6);
+					myGraphics->DrawString(IArraysize[i].ToString(), font, brush, float(object.DrawText().TextX), float(object.DrawText().TextY));
+				}
+
+				myGraphics->DrawImage(bitmap, 0, 0);
+				this->pictureBox1->Image = canvas;
+			}
+			else if (!SortFinished)
+			{
+				// finally update ui when thread is end.
+				for (size_t i = 0; i < RECTANGULAR_NUMBER; i++)
+				{
+					// update cylindrical
+					Geometric::Object object(RECTANGULAR_SPACE * i, IArraysize[i]);
+					brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::DarkTurquoise);
+					myGraphics->FillRectangle(brush, int(object.DrawCylindrical().RectangleX), int(object.DrawCylindrical().RectangleY),
+						int(object.DrawCylindrical().RectangleWidth), int(object.DrawCylindrical().RectangleHeight));
+
+					//update dottedLine and text 
+					System::Drawing::Point Pt5(object.DrawDottedLine().Point1X, object.DrawDottedLine().Point1Y);
+					System::Drawing::Point Pt6(object.DrawDottedLine().Point2X, object.DrawDottedLine().Point2Y);
+
+					myGraphics->DrawLine(penDottedLine, Pt5, Pt6);
+					myGraphics->DrawString(IArraysize[i].ToString(), font, brush, float(object.DrawText().TextX), float(object.DrawText().TextY));
+
+				}
+
+				// update controls
+				Opening();
+
+				// update data
+				this->timer1->Stop();
+				myGraphics->DrawImage(bitmap, 0, 0);
+			}
+		}
+		catch (const std::exception&)
+		{
+			return;
+		}
+
+		//unlock
+		ReleaseMutex(HMutex);
+	}
+	else if (this->format2model->Checked && Endpattern)
+	{
+		// update ui about the previous step
+		System::Drawing::Point Pt1(RECTANGULAR_SPACE * Every_Step_Of_The_Change[2 * SortStep] + 75, 185 - Every_Step_Of_The_Value.at(SortStep).at(Every_Step_Of_The_Change[2 * SortStep]));
+		System::Drawing::Point Pt2(RECTANGULAR_SPACE * Every_Step_Of_The_Change[2 * SortStep] + 75, 100 - Every_Step_Of_The_Value.at(SortStep).at(Every_Step_Of_The_Change[2 * SortStep]));
+		System::Drawing::Point Pt3(RECTANGULAR_SPACE * Every_Step_Of_The_Change[2 * SortStep + 1] + 75, 100 - Every_Step_Of_The_Value.at(SortStep).at(Every_Step_Of_The_Change[2 * SortStep]));
+		System::Drawing::Point Pt4(RECTANGULAR_SPACE * Every_Step_Of_The_Change[2 * SortStep + 1] + 75, 185 - Every_Step_Of_The_Value.at(SortStep).at(Every_Step_Of_The_Change[2 * SortStep + 1]));
+
+		myGraphics->DrawLine(pen, Pt1, Pt2);
+		myGraphics->DrawLine(pen, Pt2, Pt3);
+		myGraphics->DrawLine(pen, Pt3, Pt4);
+
+		for (size_t i = 0; i < RECTANGULAR_NUMBER; i++)
+		{
+			Geometric::Object object(RECTANGULAR_SPACE * i, Every_Step_Of_The_Value.at(SortStep).at(i));
+
+			if (i == Every_Step_Of_The_Change[2 * SortStep] || i == Every_Step_Of_The_Change[2 * SortStep + 1])
+			{
+				brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::Red);
+				myGraphics->FillRectangle(brush, int(object.DrawCylindrical().RectangleX), int(object.DrawCylindrical().RectangleY),
+					int(object.DrawCylindrical().RectangleWidth), int(object.DrawCylindrical().RectangleHeight));
+			}
+			else
+			{
+				brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::DarkTurquoise);
+				myGraphics->FillRectangle(brush, int(object.DrawCylindrical().RectangleX), int(object.DrawCylindrical().RectangleY),
+					int(object.DrawCylindrical().RectangleWidth), int(object.DrawCylindrical().RectangleHeight));
+			}
+
+			//update dottedLine and text 
+			System::Drawing::Point Pt5(object.DrawDottedLine().Point1X, object.DrawDottedLine().Point1Y);
+			System::Drawing::Point Pt6(object.DrawDottedLine().Point2X, object.DrawDottedLine().Point2Y);
+
+			myGraphics->DrawLine(penDottedLine, Pt5, Pt6);
+			myGraphics->DrawString(Every_Step_Of_The_Value.at(SortStep).at(i).ToString(), font, brush, float(object.DrawText().TextX), float(object.DrawText().TextY));
+		}
+
+		this->timer1->Stop();
+	}
+	else if (!Endpattern)
+	{
+		myGraphics->Clear(this->pictureBox1->BackColor);
+	}
+
+	// draw x-coordinate
+	for (size_t i = 0; i < RECTANGULAR_NUMBER; i++)
+	{
+		System::Drawing::Point Pt1(70 + RECTANGULAR_SPACE * i, this->pictureBox1->Height);
+		System::Drawing::Point Pt2(70 + RECTANGULAR_SPACE * i, this->pictureBox1->Height - 7);
+		myGraphics->DrawLine(penCoordinates, Pt1, Pt2);
+	}
+
+	// draw y-coordinate
+	for (size_t i = 0; i < RECTANGULAR_NUMBER - 1; i++)
+	{
+		System::Drawing::Point Pt1(0, 50 + RECTANGULAR_SPACE * i);
+		System::Drawing::Point Pt2(0 + 7, 50 + RECTANGULAR_SPACE * i);
+		myGraphics->DrawLine(penCoordinates, Pt1, Pt2);
+	}
+}
+private: void ReadyForSort( /* the function is create object */ const unsigned int SortIndex) {
+
 	MyStruct<SortType> Sortstruct;
 
 	try
 	{
 		// exit thread and thread1
-		thread->Abort();
 		while (true)
 		{
-			if (WaitForSingleObject(hThread1, 0) == WAIT_OBJECT_0 || hThread1==NULL)
+			if (WaitForSingleObject(hThread1, 0) == WAIT_OBJECT_0 || hThread1 == NULL)
 			{
+				//close the start button
+				Shielding();
+
 				IArraysize.clear();
+				SortFinished = true;
+				IArraysize = Sortstruct.nums = RandNumbers<SortType>();
+				Sortstruct.SortIndex = SortIndex;
 
-				//
-				if (this->format1->Checked)
-				{
-					IArraysize = Sortstruct.nums = RandNums<SortType>();
-					HiddenLabel();
-
-					Sortstruct.SortIndex = SortIndex;
-
-					//CloseHandle(hThread1);
-					Go(Sortstruct);
-				}
-				else if (this->format2->Checked)
-				{
-					IArraysize = Sortstruct.nums = RandNumbers<SortType>();
-					ShowLabel();
-
-					Sortstruct.SortIndex = SortIndex;
-
-					//CloseHandle(hThread1);
-					Go(Sortstruct);
-				}
+				//CloseHandle(hThread1);
+				Go(Sortstruct);
 
 				break;
 			}
@@ -1477,41 +1758,21 @@ private: void ReadyForSort( /*The function is create object*/ const unsigned int
 		return;
 	}
 }
-private: void Go( /*The function is create object*/ MyStruct<SortType> SortInfo ){
+private: void Go( /* the function is create object */ MyStruct<SortType> SortInfo) {
 
-	MYThread<SortType> ThreadInSort;
-	
-	// initialize object
-	if (this->format1->Checked)
-	{
-		for (size_t i = 0; i < 100; i++)
-		{
-			Geometric::Object object(2*i, SortInfo.nums[i]);
-			object.DrawPoints(myGraphics);
-		}
-	}
-	else if(this->format2->Checked)
-	{
-		for (size_t i = 0; i < 10; i++)
-		{
-			Geometric::Object object(60 * i, SortInfo.nums[i]);
-			object.DrawCylindrical(myGraphics);
-		}
-	}
-	
+	MYThread<SortType> ThreadInSort(SortInfo.SortIndex, SortInfo.nums, "Normal");
+	SleepTime = 150;
+
 	// start two thread ( First is sort,second is display )
 	if (SortInfo.nums.size() != NULL)
 	{
 		try
 		{
-			Shielding();
-			thread = gcnew Thread(gcnew ThreadStart(this, &MyForm::ThreadOfDraw));
-			hThread1 = CreateThread(NULL, 0, ThreadInSort.ThreadOfSort, &SortInfo, 0, NULL);
-
-			thread->Start();
-			timer1->Start();
-
 			HMutex = CreateMutex(NULL, FALSE, LPCWSTR("sort"));
+			HANDLE  HandleSort = (HANDLE)_beginthreadex(NULL, 0, ThreadInSort.ThreadOfSort, NULL, 0, NULL);
+
+			this->pictureBox1->Invalidate();
+			timer1->Start();
 		}
 		catch (const std::exception&)
 		{
@@ -1519,82 +1780,28 @@ private: void Go( /*The function is create object*/ MyStruct<SortType> SortInfo 
 		}
 	}
 }
-private: void ThreadOfDraw(void)
+
+private: void ReadyForSortUseSecondModel( /*the function is create object*/ const unsigned int SortIndex)
 {
-	// sorting objet 
-	while (SortFinished)
+	Shielding();
+	Endpattern = true;
+	SleepTime = 10;
+
+	MYThread<SortType> ThreadInSort(SortIndex, RandNumbers<SortType>(), "Step");
+
+	try
 	{
-		//lock
-		WaitForSingleObject(Process::HMutex, INFINITE);
-		ClearView(myGraphics);
+		HMutex = CreateMutex(NULL, FALSE, LPCWSTR("sort"));
+		HANDLE  HandleSort = (HANDLE)_beginthreadex(NULL, 0, ThreadInSort.ThreadOfSort, NULL, 0, NULL);
 
-		System::Drawing::Brush^  brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::DarkTurquoise);
-		System::Drawing::Brush^  brushChange = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::Red);
-
-		timer1->Start();
-
-		// choose point
-		if (this->format1->Checked)
-		{
-			timer1->Start();
-
-			for (size_t i = 0; i < 100; i++)
-			{
-				Geometric::Object object(10 * i, IArraysize[i]);
-				object.DrawPoints(myGraphics);
-			}
-
-			//unlock
-			Sleep(SleepTime);
-		}
-		// choose others
-		else if (this->format2->Checked)
-		{
-			try
-			{
-				Geometric::Object arrow;
-				vector<long long>::iterator SearchFirst;
-
-				if (ExchangeIndex[0]<IArraysize.size() && ExchangeIndex[1]<IArraysize.size())
-					SearchFirst = std::find(IArraysize.begin(), IArraysize.end(), IArraysize[ExchangeIndex[0]]);
-
-				if (SearchFirst != IArraysize.end())
-				{
-					System::Drawing::Point Pt1(60 * ExchangeIndex[0] + 75, 185 - IArraysize[ExchangeIndex[0]]);
-					System::Drawing::Point Pt2(60 * ExchangeIndex[0] + 75, 100 - IArraysize[ExchangeIndex[0]]);
-					System::Drawing::Point Pt3(60 * ExchangeIndex[1] + 75, 100 - IArraysize[ExchangeIndex[0]]);
-					System::Drawing::Point Pt4(60 * ExchangeIndex[1] + 75, 185 - IArraysize[ExchangeIndex[1]]);
-					arrow.DrawArrow(myGraphics, Pt1, Pt2, Pt3, Pt4);
-				}
-			}
-			catch (const std::exception&)
-			{
-				return;
-			}
-
-			for (size_t i = 0; i < 10; i++)
-			{
-				Geometric::Object object(60 * i, IArraysize[i]);
-				if (i == ExchangeIndex[0] || i == ExchangeIndex[1])
-					object.DrawCylindrical(myGraphics, brushChange);
-				else
-					object.DrawCylindrical(myGraphics, brush);
-
-				object.DrawText(myGraphics, IArraysize[i].ToString());
-			}
-
-			//unlock
-			Sleep(SleepTime);
-		}
-
-		ReleaseMutex(HMutex);
+		DWORD ReturnStatus = WaitForSingleObject(HandleSort, INFINITE);
+		if (ReturnStatus != WAIT_TIMEOUT)
+			this->timer1->Start();
 	}
-
-	SortFinished = true;
-	return;
-}
-private: void ClearView( /*The function is create object*/System::Drawing::Graphics^ myGraphics) {
-	myGraphics->Clear(this->pictureBoxAlgorithm->BackColor);
+	catch (const std::exception&)
+	{
+		return;
+	}
 }
 
 private: void Shielding( /*The function is create object*/ ) {
@@ -1610,7 +1817,6 @@ private: void Shielding( /*The function is create object*/ ) {
 	this->format2->Enabled = false;
 	this->format3->Enabled = false;
 }
-
 private: void Opening( /*The function is create object*/) {
 
 	this->Bubble->Enabled = true;
@@ -1624,7 +1830,6 @@ private: void Opening( /*The function is create object*/) {
 	this->format2->Enabled = true;
 	this->format3->Enabled = true;
 }
-
 private: void InitializeText(/*The function is update time*/)
 {
 	timekeeping += 50;
@@ -1639,7 +1844,6 @@ private: void ShowLabel( /*The function is create object*/){
 	this->groupBox2->Enabled = true;
 }
 #pragma endregion
-
 
 #pragma region "LinkedList"
 		 /// <summary>
@@ -1851,7 +2055,6 @@ private: System::Void pictureBoxAlgorithm_Paint(System::Object^  sender, System:
 	pictureBoxAlgorithm->BackgroundImage = canvas;
 
 	//unlock
-	Sleep(6);
 	ReleaseMutex(AMutex);
 }
 

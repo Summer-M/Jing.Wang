@@ -26,74 +26,69 @@ namespace Geometric
 	}
 
 	/*
-	class Object
+		class Object
 	*/
-	bool Object::DrawText(System::Drawing::Graphics^ myGraphics, System::String^ sText)
+
+	MyText<SortType> Object::DrawText()
 	{
+		MyText<SortType> mytext;
+
 		try
 		{
-			myGraphics->SmoothingMode = System::Drawing::Drawing2D::SmoothingMode::AntiAlias;
-			System::Drawing::Brush^  brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::Black);
-			System::Drawing::Font^   font = gcnew System::Drawing::Font(L"Microsoft YaHei", 9);
-			myGraphics->DrawString(sText, font, brush, int(PosX + OffsetX + 3), int(PosY - OffsetW - 15));
-			//myGraphics->DrawRectangle(pen, PosX + OffsetX, PosY - OffsetW, Width, Height + OffsetW);
-			return true;
+			mytext.TextX = PosX + OffsetX + 3;
+			mytext.TextY = PosY - 6 * OffsetW - 15;
+
+			return mytext;
 		}
 		catch (const std::exception&)
 		{
-			return false;
+			EXIT_FAILURE;
 		}
+
+		return mytext;
 	}
 
-	bool Object::DrawCylindrical(System::Drawing::Graphics^ myGraphics)
+	MyRectangle<SortType> Object::DrawCylindrical()
 	{
+		MyRectangle<SortType> Rectangle;
+
 		try
 		{
-			myGraphics->SmoothingMode = System::Drawing::Drawing2D::SmoothingMode::AntiAlias;
-			System::Drawing::Pen^  pen = gcnew System::Drawing::Pen(System::Drawing::Color::Color::Black, 1);
-			System::Drawing::Brush^  brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::DarkTurquoise);
-			myGraphics->FillRectangle(brush, int(PosX + OffsetX), int(PosY - OffsetW), int(Width), int(Height + OffsetW));
-			//myGraphics->DrawRectangle(pen, PosX + OffsetX, PosY - OffsetW, Width, Height + OffsetW);
-			return true;
+			Rectangle.RectangleX = PosX + OffsetX;
+			Rectangle.RectangleY = PosY - 6 * OffsetW;
+			Rectangle.RectangleWidth = Width;
+			Rectangle.RectangleHeight = Height + 6 * OffsetW;
+
+			return Rectangle;
 		}
 		catch (const std::exception&)
 		{
-			return false;
+			EXIT_FAILURE;
 		}
+
+		return Rectangle;
 	}
 
-	bool Object::DrawCylindrical(System::Drawing::Graphics^ myGraphics, System::Drawing::Brush^  brush)
+	DottedLine<SortType> Object::DrawDottedLine()
 	{
-		try
-		{
-			myGraphics->SmoothingMode = System::Drawing::Drawing2D::SmoothingMode::AntiAlias;
-			System::Drawing::Pen^  pen = gcnew System::Drawing::Pen(System::Drawing::Color::Color::Black, 1);
-			myGraphics->FillRectangle(brush, int(PosX + OffsetX), int(PosY - OffsetW), int(Width), int(Height + OffsetW));
-			//myGraphics->DrawRectangle(pen, PosX + OffsetX, PosY - OffsetW, Width, Height + OffsetW);
-			return true;
-		}
-		catch (const std::exception&)
-		{
-			return false;
-		}
-	}
+		// pt1->pt2 or pt2->pt1
+		DottedLine<SortType> dottedline;
 
-	bool Object::DrawArrow(System::Drawing::Graphics^ myGraphics, System::Drawing::Point Pt1,
-		System::Drawing::Point Pt2, System::Drawing::Point Pt3, System::Drawing::Point Pt4)
-	{
 		try
 		{
-			System::Drawing::Pen^  pen = gcnew System::Drawing::Pen(System::Drawing::Color::Color::Black, 2);
-			myGraphics->SmoothingMode = System::Drawing::Drawing2D::SmoothingMode::AntiAlias;
-			myGraphics->DrawLine(pen, Pt1, Pt2);
-			myGraphics->DrawLine(pen, Pt2, Pt3);
-			myGraphics->DrawLine(pen, Pt3, Pt4);
-			return true;
+			dottedline.Point1X = PosX + OffsetX;
+			dottedline.Point1Y = PosY - 6 * OffsetW;
+			dottedline.Point2X = 0;
+			dottedline.Point2Y = PosY - 6 * OffsetW;
+
+			return dottedline;
 		}
 		catch (const std::exception&)
 		{
-			return false;
+			EXIT_FAILURE;
 		}
+
+		return dottedline;
 	}
 
 	bool Object::DrawPoints(System::Drawing::Graphics^ myGraphics)
@@ -117,7 +112,7 @@ namespace Geometric
 		try
 		{
 			System::Drawing::Pen^  pen = gcnew System::Drawing::Pen(System::Drawing::Color::Color::Black, 1);
-			System::Drawing::Brush^  brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::DarkTurquoise);
+			System::Drawing::Brush^  brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::Black);
 			myGraphics->FillEllipse(brush, OffsetX, OffsetW, 80, 80);
 			//myGraphics->DrawEllipse(pen, PosX1 + OffsetX, PosY1 - OffsetW, 3, 3); 
 			return true;
