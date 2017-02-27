@@ -37,6 +37,7 @@ using namespace std;
 #define RECTANGULAR_NUMBER 13
 
 //! the statement
+static unsigned int StepInNormal(0);
 static std::vector<SortType> IArraysize;
 static vector<SortType> Every_Step_Of_The_Change;
 static vector< vector<SortType> > Every_Step_Of_The_Value;
@@ -56,17 +57,17 @@ static vector< vector<SortType> > Every_Step_Of_The_Value;
 	Draw the area
 */
 #
-#define  BELOW		665 
+#define  BELOW		890 
 #define  TOP		  0
 #define  LEFT		  0
-#define  RIGHT		585
+#define  RIGHT		870
 
 /*
 	Draw the basic warrior
 */
-#define Circlesize	40
-#define CircleW		5
-#define CircleH		5
+#define Circlesize	5
+#define CircleW		25
+#define CircleH		25
 
 
 

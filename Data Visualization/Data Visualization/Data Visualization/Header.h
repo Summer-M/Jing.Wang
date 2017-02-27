@@ -74,7 +74,7 @@ namespace Process
 						array[i] = array[j];
 						array[j] = iMimddle;
 
-						if (ModelInModel == "Normal")
+						if (ModelInModel == "normal")
 						{
 							//lock
 							WaitForSingleObject(HMutex, INFINITE);
@@ -85,13 +85,14 @@ namespace Process
 
 							//update IArraysize
 							IArraysize = array;
+							StepInNormal++;
 							//----------------------------------------------------------------------------------
 
 							//unlock	
 							Sleep(SleepTime);
 							ReleaseMutex(HMutex);
 						}
-						else if (ModelInModel == "Step")
+						else if (ModelInModel == "step partten")
 						{
 							Every_Step_Of_The_Change.push_back(i);
 							Every_Step_Of_The_Change.push_back(j);
@@ -124,7 +125,7 @@ namespace Process
 				array[index] = array[i];
 				array[i] = iMiddle;
 
-				if (ModelInModel == "Normal")
+				if (ModelInModel == "normal")
 				{
 					//lock
 					WaitForSingleObject(HMutex, INFINITE);
@@ -135,13 +136,14 @@ namespace Process
 
 					//update IArraysize
 					IArraysize = array;
+					StepInNormal++;
 					//----------------------------------------------------------------------------------
 
 					//unlock	
 					Sleep(SleepTime);
 					ReleaseMutex(HMutex);
 				}
-				else if (ModelInModel == "Step")
+				else if (ModelInModel == "step partten")
 				{
 					Every_Step_Of_The_Change.push_back(index);
 					Every_Step_Of_The_Change.push_back(i);
@@ -166,7 +168,7 @@ namespace Process
 
 				array[j] = temp;
 
-				if (ModelInModel == "Normal")
+				if (ModelInModel == "normal")
 				{
 					//lock
 					WaitForSingleObject(HMutex, INFINITE);
@@ -177,13 +179,14 @@ namespace Process
 
 					//update IArraysize
 					IArraysize = array;
+					StepInNormal++;
 					//----------------------------------------------------------------------------------
 
 					//unlock	
 					Sleep(SleepTime);
 					ReleaseMutex(HMutex);
 				}
-				else if (ModelInModel == "Step")
+				else if (ModelInModel == "step partten")
 				{
 					Every_Step_Of_The_Change.push_back(i);
 					Every_Step_Of_The_Change.push_back(j);
@@ -215,7 +218,7 @@ namespace Process
 
 					array[j + gap] = temp;
 
-					if (ModelInModel == "Normal")
+					if (ModelInModel == "normal")
 					{
 						//lock
 						WaitForSingleObject(HMutex, INFINITE);
@@ -226,13 +229,14 @@ namespace Process
 
 						//update IArraysize
 						IArraysize = array;
+						StepInNormal++;
 						//----------------------------------------------------------------------------------
 
 						//unlock	
 						Sleep(SleepTime);
 						ReleaseMutex(HMutex);
 					}
-					else if (ModelInModel == "Step")
+					else if (ModelInModel == "step partten")
 					{
 						Every_Step_Of_The_Change.push_back(i);
 						Every_Step_Of_The_Change.push_back(j + gap);

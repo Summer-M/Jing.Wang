@@ -28,6 +28,7 @@ namespace DataVisualization {
 		MyForm(void)
 			 :SortStep(0),
 			  timekeeping(0),
+			  selecttime(0),
 			  Endpattern(true)
 		{
 			//Initiallization
@@ -57,9 +58,12 @@ namespace DataVisualization {
 
 			//about coordinates
 			penCoordinates = gcnew System::Drawing::Pen(System::Drawing::Color::Color::Black, 1);
+			penCoordinates->DashStyle = System::Drawing::Drawing2D::DashStyle::DashDotDot;
 
 			//about text
 			font = gcnew System::Drawing::Font(L"Microsoft YaHei", 9);
+			stepfont = gcnew System::Drawing::Font(L"Microsoft YaHei", 10);
+			stepbrush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::Purple);
 		}
 
 	protected:
@@ -86,6 +90,7 @@ namespace DataVisualization {
 	//sort
 	private: System::Windows::Forms::Button^	  Start;
 	private: System::Windows::Forms::Button^	  Quit;
+	private: System::Windows::Forms::Button^	  Stepbutton;
 	private: System::Windows::Forms::RadioButton^ format1;
 	private: System::Windows::Forms::RadioButton^ format2;
 	private: System::Windows::Forms::RadioButton^ format1model;
@@ -127,6 +132,7 @@ namespace DataVisualization {
 	private: System::Windows::Forms::Timer^  timer1;
 
 	//LinkedList
+	private: System::Windows::Forms::GroupBox^	  groupBoxlist;
 	private: System::Windows::Forms::Label^	  labelOriginalData;
 	private: System::Windows::Forms::Label^	  labelResultData;
 	private: System::Windows::Forms::TextBox^	  OriginalData;
@@ -156,6 +162,7 @@ namespace DataVisualization {
 	private: System::Windows::Forms::GroupBox^	  groupBox4Tree;
 	private: System::Windows::Forms::GroupBox^	  groupBox5Tree;
 	private: System::Windows::Forms::GroupBox^	  groupBox6Tree;
+	private: System::Windows::Forms::GroupBox^	  groupBox7Tree;
 	private: System::Windows::Forms::Button^	  CreateTree;
 	private: System::Windows::Forms::Button^	  SearchTree;
 	private: System::Windows::Forms::Button^	  DeleteTree;
@@ -205,7 +212,7 @@ namespace DataVisualization {
 
 		//about rectangular
 		System::Drawing::Bitmap^ canvas;					// board
-		System::Drawing::Brush^  brush;					   // when don't data interchange
+		System::Drawing::Brush^  brush;					    // when don't data interchange
 		System::Drawing::Brush^  brushChange;				// when data interchange
 		System::Drawing::Pen^    pen;						// line 
 
@@ -217,6 +224,8 @@ namespace DataVisualization {
 
 		//about text
 		System::Drawing::Font^   font;						// text data
+		System::Drawing::Font^   stepfont;				    // steps data
+		System::Drawing::Brush^  stepbrush;					// when don't data interchange
 
 		//about step pattern
 		unsigned int SortStep;							    // the step of sort
@@ -228,6 +237,9 @@ namespace DataVisualization {
 		//Algorithm
 		System::Threading::Thread^ threadAlgorithm;			// thread for update Draw
 		HANDLE hThread2;									// thread for update move object in Algorithm
+
+		//
+		unsigned int selecttime;							// select
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -306,7 +318,7 @@ namespace DataVisualization {
 			// 
 			// timer1
 			// 
-			this->timer1->Interval = 6;
+			this->timer1->Interval = 100;
 			this->timer1->Tick += gcnew System::EventHandler(this, &MyForm::timer1_Tick);
 			// 
 			// MyForm
@@ -353,6 +365,7 @@ namespace DataVisualization {
 			this->groupBoxsortStepmodel = (gcnew System::Windows::Forms::GroupBox());
 			this->Start = (gcnew System::Windows::Forms::Button());
 			this->Quit = (gcnew System::Windows::Forms::Button());
+			this->Stepbutton = (gcnew System::Windows::Forms::Button());
 			this->Backward = (gcnew System::Windows::Forms::Button());
 			this->Forward = (gcnew System::Windows::Forms::Button());
 			this->Bubble = (gcnew System::Windows::Forms::RadioButton());
@@ -406,6 +419,7 @@ namespace DataVisualization {
 			this->format1->Text = L"Points";
 			this->format1->UseVisualStyleBackColor = true;
 
+			this->format2->Enabled = false;
 			this->format2->AutoSize = true;
 			this->format2->Location = System::Drawing::Point(18, 50);
 			this->format2->Name = L"format2";
@@ -421,7 +435,7 @@ namespace DataVisualization {
 			this->format1model->Size = System::Drawing::Size(95, 16);
 			this->format1model->TabIndex = 0;
 			this->format1model->TabStop = true;
-			this->format1model->Text = L"Normal";
+			this->format1model->Text = L"normal";
 			this->format1model->UseVisualStyleBackColor = true;
 
 			this->format2model->AutoSize = true;
@@ -430,7 +444,7 @@ namespace DataVisualization {
 			this->format2model->Size = System::Drawing::Size(95, 16);
 			this->format2model->TabIndex = 0;
 			this->format2model->TabStop = true;
-			this->format2model->Text = L"Setp Model";
+			this->format2model->Text = L"setp Model";
 			this->format2model->UseVisualStyleBackColor = true;
 
 			this->groupBox2->Text = L"";
@@ -440,49 +454,49 @@ namespace DataVisualization {
 
 			this->groupBoxperform->Text = L"Operation";
 			this->groupBoxperform->Visible = true;
-			this->groupBoxperform->Size = System::Drawing::Size(155, 100);
+			this->groupBoxperform->Size = System::Drawing::Size(155, 140);
 			this->groupBoxperform->Location = System::Drawing::Point(5, 20);
 
 			this->groupBoxsort->Text = L"Sort";
 			this->groupBoxsort->Visible = true;
-			this->groupBoxsort->Size = System::Drawing::Size(155, 250);
-			this->groupBoxsort->Location = System::Drawing::Point(5, 140);
+			this->groupBoxsort->Size = System::Drawing::Size(155, 240);
+			this->groupBoxsort->Location = System::Drawing::Point(5, 180);
 
 			this->groupBox3->Text = L"Select";
 			this->groupBox3->Size = System::Drawing::Size(155, 80);
-			this->groupBox3->Location = System::Drawing::Point(5, 410);
+			this->groupBox3->Location = System::Drawing::Point(5, 440);
 
 			this->groupBoxsortmodel->Text = L"Model";
 			this->groupBoxsortmodel->Visible = true;
 			this->groupBoxsortmodel->Size = System::Drawing::Size(155, 80);
-			this->groupBoxsortmodel->Location = System::Drawing::Point(5, 510); 
+			this->groupBoxsortmodel->Location = System::Drawing::Point(5, 550); 
 
 			this->groupBoxsortStepmodel->Text = L"Setp Model";
 			this->groupBoxsortStepmodel->Visible = true;
 			this->groupBoxsortStepmodel->Size = System::Drawing::Size(155, 80);
-			this->groupBoxsortStepmodel->Location = System::Drawing::Point(5, 610);
+			this->groupBoxsortStepmodel->Location = System::Drawing::Point(5, 650);
 
 			this->Backward->Enabled = false;
 			this->Backward->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 7.5F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(134)));
-			this->Backward->Location = System::Drawing::Point(55, 15);
+			this->Backward->Location = System::Drawing::Point(30, 15);
 			this->Backward->Name = L"Backward";
-			this->Backward->Size = System::Drawing::Size(82, 23);
+			this->Backward->Size = System::Drawing::Size(100, 23);
 			this->Backward->TabIndex = 7;
 			this->Backward->Text = L"Backward";
 			this->Backward->UseVisualStyleBackColor = true;
-			//this->Backward->Click += gcnew System::EventHandler(this, &MyForm::Backward_Click);
+			this->Backward->Click += gcnew System::EventHandler(this, &MyForm::Backward_Click);
 
 			this->Forward->Enabled = false;
 			this->Forward->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 7.5F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(134)));
-			this->Forward->Location = System::Drawing::Point(55, 48);
+			this->Forward->Location = System::Drawing::Point(30, 48);
 			this->Forward->Name = L"Forward";
-			this->Forward->Size = System::Drawing::Size(82, 23);
+			this->Forward->Size = System::Drawing::Size(100, 23);
 			this->Forward->TabIndex = 7;
 			this->Forward->Text = L"Forward";
 			this->Forward->UseVisualStyleBackColor = true;
-			//this->Forward->Click += gcnew System::EventHandler(this, &MyForm::Forward_Click);
+			this->Forward->Click += gcnew System::EventHandler(this, &MyForm::Forward_Click);
 			
 			// 
 			// pictureBox1
@@ -498,55 +512,55 @@ namespace DataVisualization {
 			//nums
 			this->label1->Text = L"0";
 			this->label1->Size = System::Drawing::Size(20, 20);
-			this->label1->Location = System::Drawing::Point(77 , 600);
+			this->label1->Location = System::Drawing::Point(80 , 620);
 
 			this->label2->Text = L"1";
 			this->label2->Size = System::Drawing::Size(20, 20);
-			this->label2->Location = System::Drawing::Point(77 + 60, 600);
+			this->label2->Location = System::Drawing::Point(80 + 60, 620);
 
 			this->label3->Text = L"2";
 			this->label3->Size = System::Drawing::Size(20, 20);
-			this->label3->Location = System::Drawing::Point(77 + 60 * 2, 600);
+			this->label3->Location = System::Drawing::Point(80 + 60 * 2, 620);
 
 			this->label4->Text = L"3";
 			this->label4->Size = System::Drawing::Size(20, 20);
-			this->label4->Location = System::Drawing::Point(77 + 60 * 3, 600);
+			this->label4->Location = System::Drawing::Point(80 + 60 * 3, 620);
 
 			this->label5->Text = L"4";
 			this->label5->Size = System::Drawing::Size(20, 20);
-			this->label5->Location = System::Drawing::Point(77 + 60 * 4, 600);
+			this->label5->Location = System::Drawing::Point(80 + 60 * 4, 620);
 
 			this->label6->Text = L"5";
 			this->label6->Size = System::Drawing::Size(20, 20);
-			this->label6->Location = System::Drawing::Point(77 + 60 * 5, 600);
+			this->label6->Location = System::Drawing::Point(80 + 60 * 5, 620);
 
 			this->label7->Text = L"6";
 			this->label7->Size = System::Drawing::Size(20, 20);
-			this->label7->Location = System::Drawing::Point(77 + 60 * 6, 600);
+			this->label7->Location = System::Drawing::Point(80 + 60 * 6, 620);
 
 			this->label8->Text = L"7";
 			this->label8->Size = System::Drawing::Size(20, 20);
-			this->label8->Location = System::Drawing::Point(77 + 60 * 7, 600);
+			this->label8->Location = System::Drawing::Point(80 + 60 * 7, 620);
 
 			this->label9->Text = L"8";
 			this->label9->Size = System::Drawing::Size(20, 20);
-			this->label9->Location = System::Drawing::Point(77 + 60 * 8, 600);
+			this->label9->Location = System::Drawing::Point(80 + 60 * 8, 620);
 
 			this->label10->Text = L"9";
 			this->label10->Size = System::Drawing::Size(20, 20);
-			this->label10->Location = System::Drawing::Point(77 + 60 * 9, 600);
+			this->label10->Location = System::Drawing::Point(80 + 60 * 9, 620);
 
 			this->label11->Text = L"10";
 			this->label11->Size = System::Drawing::Size(20, 20);
-			this->label11->Location = System::Drawing::Point(77 + 60 * 10, 600);
+			this->label11->Location = System::Drawing::Point(80 + 60 * 10, 620);
 
 			this->label12->Text = L"11";
 			this->label12->Size = System::Drawing::Size(20, 20);
-			this->label12->Location = System::Drawing::Point(77 + 60 * 11, 600);
+			this->label12->Location = System::Drawing::Point(80 + 60 * 11, 620);
 
 			this->label13->Text = L"12";
 			this->label13->Size = System::Drawing::Size(20, 20);
-			this->label13->Location = System::Drawing::Point(77 + 60 * 12, 600);
+			this->label13->Location = System::Drawing::Point(80 + 60 * 12, 620);
 
 			//start
 			this->Start->Name = L"Start";
@@ -560,53 +574,61 @@ namespace DataVisualization {
 			this->Quit->Location = System::Drawing::Point(18, 60);
 			this->Quit->Size = System::Drawing::Size(120, 25);
 			this->Quit->Text = L"Quit";
+			this->Quit->Click += gcnew System::EventHandler(this, &MyForm::Quit_Click);
+
+			//Step
+			this->Stepbutton->Enabled = false;
+			this->Stepbutton->Name = L"Stepbutton";
+			this->Stepbutton->Location = System::Drawing::Point(18, 100);
+			this->Stepbutton->Size = System::Drawing::Size(120, 25);
+			this->Stepbutton->Text = L"- The 0th Step -";
 
 			//bubble
-			this->Bubble->Name = L"Bubble";
+			this->Bubble->Name = L"bubble";
 			this->Bubble->Location = System::Drawing::Point(18, 20);
 			this->Bubble->Size = System::Drawing::Size(120, 25);
-			this->Bubble->Text = L"Bubble";
+			this->Bubble->Text = L"bubble";
 
 			//select
-			this->Select->Name = L"Select";
+			this->Select->Name = L"select";
 			this->Select->Location = System::Drawing::Point(18, 50);
 			this->Select->Size = System::Drawing::Size(120, 25);
-			this->Select->Text = L"Select";
+			this->Select->Text = L"select";
 
 			//insert
-			this->Insert->Name = L"Insert";
+			this->Insert->Name = L"insert";
 			this->Insert->Location = System::Drawing::Point(18, 80);
 			this->Insert->Size = System::Drawing::Size(120, 25);
-			this->Insert->Text = L"Insert";
+			this->Insert->Text = L"insert";
 			
 			//shell
-			this->Shell->Name = L"Shell";
+			this->Shell->Name = L"shell";
 			this->Shell->Location = System::Drawing::Point(18, 110);
 			this->Shell->Size = System::Drawing::Size(120, 25);
-			this->Shell->Text = L"Shell";
+			this->Shell->Text = L"shell";
 			
 			//quick
-			this->Quick->Name = L"Quick";
+			this->Quick->Name = L"quick";
 			this->Quick->Location = System::Drawing::Point(18, 140);
 			this->Quick->Size = System::Drawing::Size(120, 25);
-			this->Quick->Text = L"Quick";
+			this->Quick->Text = L"quick";
 
 			//heap
-			this->Heap->Name = L"Heap";
+			this->Heap->Name = L"heap";
 			this->Heap->Location = System::Drawing::Point(18, 170);
 			this->Heap->Size = System::Drawing::Size(120, 25);
-			this->Heap->Text = L"Heap";
+			this->Heap->Text = L"heap";
 
 			//merge
-			this->Merge->Name = L"Merge";
+			this->Merge->Name = L"merge";
 			this->Merge->Location = System::Drawing::Point(18, 200);
 			this->Merge->Size = System::Drawing::Size(120, 25);
-			this->Merge->Text = L"Merge";
+			this->Merge->Text = L"merge";
 
 			//time
 			this->Time->Name = L"Time";
-			this->Time->Location = System::Drawing::Point(5, 710);
-			this->Time->Size = System::Drawing::Size(155, 130);
+			this->Time->Location = System::Drawing::Point(5, 740);
+			this->Time->Size = System::Drawing::Size(155, 100);
 			this->Time->BackColor = System::Drawing::Color::White;
 			this->Time->Multiline = true;
 
@@ -619,6 +641,7 @@ namespace DataVisualization {
 
 			this->groupBoxperform->Controls->Add(this->Start);
 			this->groupBoxperform->Controls->Add(this->Quit);
+			this->groupBoxperform->Controls->Add(this->Stepbutton);
 
 			this->groupBoxsort->Controls->Add(this->Bubble);
 			this->groupBoxsort->Controls->Add(this->Select);
@@ -720,6 +743,7 @@ namespace DataVisualization {
 			this->groupBox4 = (gcnew System::Windows::Forms::GroupBox());
 			this->groupBox5 = (gcnew System::Windows::Forms::GroupBox());
 			this->groupBox6 = (gcnew System::Windows::Forms::GroupBox());
+			this->groupBoxlist = (gcnew System::Windows::Forms::GroupBox());
 			this->OriginalData = (gcnew System::Windows::Forms::TextBox());
 			this->ResultData = (gcnew System::Windows::Forms::TextBox());
 			this->labelOriginalData = (gcnew System::Windows::Forms::Label());
@@ -759,8 +783,8 @@ namespace DataVisualization {
 			this->format5->UseVisualStyleBackColor = true;
 
 			this->groupBox6->Text = L"Select";
-			this->groupBox6->Size = System::Drawing::Size(152, 110);
-			this->groupBox6->Location = System::Drawing::Point(2, 445);
+			this->groupBox6->Size = System::Drawing::Size(155, 110);
+			this->groupBox6->Location = System::Drawing::Point(5, 730);
 
 			//TextCreate
 			this->TextCreate->Name = L"TextCreate";
@@ -828,14 +852,22 @@ namespace DataVisualization {
 			this->InsertLink->Size = System::Drawing::Size(80, 25);
 			this->InsertLink->Text = L"Insert";
 			this->InsertLink->Click += gcnew System::EventHandler(this, &MyForm::InsertLink_Click);
+
+			//
+			//groupBoxlist
+			//
+			this->groupBoxlist->Text = L"Operation";
+			this->groupBoxlist->Visible = true;
+			this->groupBoxlist->Size = System::Drawing::Size(155, 400);
+			this->groupBoxlist->Location = System::Drawing::Point(5, 20);
 			
 			// 
 			// groupBox1
 			// 
 			this->groupBox5->BackColor = System::Drawing::SystemColors::Control;
-			this->groupBox5->Location = System::Drawing::Point(757, 10);
+			this->groupBox5->Location = System::Drawing::Point(915, 60);
 			this->groupBox5->Name = L"groupBox5";
-			this->groupBox5->Size = System::Drawing::Size(150, 565);
+			this->groupBox5->Size = System::Drawing::Size(165, 845);
 			this->groupBox5->TabIndex = 3;
 			this->groupBox5->TabStop = false;
 			this->groupBox5->Text = L"Class";
@@ -845,7 +877,7 @@ namespace DataVisualization {
 			// 
 			this->groupBox4->Location = System::Drawing::Point(5, 20);
 			this->groupBox4->Name = L"groupBox4";
-			this->groupBox4->Size = System::Drawing::Size(682, 600);
+			this->groupBox4->Size = System::Drawing::Size(906, 885);
 			this->groupBox4->TabIndex = 3;
 			this->groupBox4->TabStop = false;
 			
@@ -874,7 +906,7 @@ namespace DataVisualization {
 			this->OriginalData->ReadOnly = true;
 			this->OriginalData->Name = L"OriginalData";
 			this->OriginalData->Location = System::Drawing::Point(5, 30);
-			this->OriginalData->Size = System::Drawing::Size(670, 270);
+			this->OriginalData->Size = System::Drawing::Size(890, 270);
 			this->OriginalData->BackColor = System::Drawing::Color::White;
 			this->OriginalData->Multiline = true;
 			
@@ -884,7 +916,7 @@ namespace DataVisualization {
 			this->ResultData->ReadOnly = true;
 			this->ResultData->Name = L"ResultData";
 			this->ResultData->Location = System::Drawing::Point(5, 320);
-			this->ResultData->Size = System::Drawing::Size(670, 270);
+			this->ResultData->Size = System::Drawing::Size(890, 270);
 			this->ResultData->BackColor = System::Drawing::Color::White;
 			this->ResultData->Multiline = true;
 
@@ -893,18 +925,19 @@ namespace DataVisualization {
 			this->groupBox4->Controls->Add(labelOriginalData);
 			this->groupBox4->Controls->Add(labelResultData);
 
-			this->groupBox5->Controls->Add(Create);
-			this->groupBox5->Controls->Add(Search);
-			this->groupBox5->Controls->Add(Delete);
-			this->groupBox5->Controls->Add(Reverse);
-			this->groupBox5->Controls->Add(InsertLink);
-			this->groupBox5->Controls->Add(this->groupBox6);
+			this->groupBoxlist->Controls->Add(Create);
+			this->groupBoxlist->Controls->Add(Search);
+			this->groupBoxlist->Controls->Add(Delete);
+			this->groupBoxlist->Controls->Add(Reverse);
+			this->groupBoxlist->Controls->Add(InsertLink);
+			this->groupBoxlist->Controls->Add(TextCreate);
+			this->groupBoxlist->Controls->Add(TextSearch);
+			this->groupBoxlist->Controls->Add(TextDelete);
+			this->groupBoxlist->Controls->Add(TextReverse);
+			this->groupBoxlist->Controls->Add(TextInsert);
 
-			this->groupBox5->Controls->Add(TextCreate);
-			this->groupBox5->Controls->Add(TextSearch);
-			this->groupBox5->Controls->Add(TextDelete);
-			this->groupBox5->Controls->Add(TextReverse);
-			this->groupBox5->Controls->Add(TextInsert);
+			this->groupBox5->Controls->Add(this->groupBoxlist);
+			this->groupBox5->Controls->Add(this->groupBox6);
 
 			this->groupBox6->Controls->Add(format3);
 			this->groupBox6->Controls->Add(format4);
@@ -967,6 +1000,7 @@ namespace DataVisualization {
 			this->groupBox4Tree = (gcnew System::Windows::Forms::GroupBox());
 			this->groupBox5Tree = (gcnew System::Windows::Forms::GroupBox());
 			this->groupBox6Tree = (gcnew System::Windows::Forms::GroupBox());
+			this->groupBox7Tree = (gcnew System::Windows::Forms::GroupBox());
 			this->OriginalDataTree = (gcnew System::Windows::Forms::TextBox());
 			this->ResultDataTree = (gcnew System::Windows::Forms::TextBox());
 			this->labelOriginalDataTree = (gcnew System::Windows::Forms::Label());
@@ -1006,8 +1040,8 @@ namespace DataVisualization {
 			this->format5Tree->UseVisualStyleBackColor = true;
 
 			this->groupBox6Tree->Text = L"Select";
-			this->groupBox6Tree->Size = System::Drawing::Size(152, 110);
-			this->groupBox6Tree->Location = System::Drawing::Point(2, 445);
+			this->groupBox6Tree->Size = System::Drawing::Size(155, 110);
+			this->groupBox6Tree->Location = System::Drawing::Point(5, 730);
 
 			//TextCreate
 			this->TextCreateTree->Name = L"TextCreateTree";
@@ -1075,29 +1109,37 @@ namespace DataVisualization {
 			this->InsertLinkTree->Size = System::Drawing::Size(80, 25);
 			this->InsertLinkTree->Text = L"Insert Tree";
 			this->InsertLinkTree->Click += gcnew System::EventHandler(this, &MyForm::InsertLink_Click);
-
+			
+			//
+			//groupBox7Tree
+			//
+			this->groupBox7Tree->Text = L"Operation";
+			this->groupBox7Tree->Visible = true;
+			this->groupBox7Tree->Size = System::Drawing::Size(155, 400);
+			this->groupBox7Tree->Location = System::Drawing::Point(5, 20);
+			
 			// 
-			// groupBox1
+			// groupBox5Tree
 			// 
 			this->groupBox5Tree->BackColor = System::Drawing::SystemColors::Control;
-			this->groupBox5Tree->Location = System::Drawing::Point(757, 10);
+			this->groupBox5Tree->Location = System::Drawing::Point(915, 60);
 			this->groupBox5Tree->Name = L"groupBox5Tree";
-			this->groupBox5Tree->Size = System::Drawing::Size(150, 565);
+			this->groupBox5Tree->Size = System::Drawing::Size(165, 845);
 			this->groupBox5Tree->TabIndex = 3;
 			this->groupBox5Tree->TabStop = false;
 			this->groupBox5Tree->Text = L"Class";
 
 			// 
-			// groupBox4
+			// groupBox4Tree
 			// 
 			this->groupBox4Tree->Location = System::Drawing::Point(5, 20);
 			this->groupBox4Tree->Name = L"groupBox4Tree";
-			this->groupBox4Tree->Size = System::Drawing::Size(682, 600);
+			this->groupBox4Tree->Size = System::Drawing::Size(906, 885);
 			this->groupBox4Tree->TabIndex = 3;
 			this->groupBox4Tree->TabStop = false;
 
 			//
-			//
+			//labelOriginalDataTree
 			//
 			this->labelOriginalDataTree->Text = L"Original :";
 			this->labelOriginalDataTree->Name = L"labelOriginalDataTree";
@@ -1106,7 +1148,7 @@ namespace DataVisualization {
 			this->labelOriginalDataTree->Font = (gcnew System::Drawing::Font(L"Segoe UI Emoji", 10.5F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			//
-			//
+			//labelResultDataTree
 			//
 			this->labelResultDataTree->Text = L"Result :";
 			this->labelResultDataTree->Name = L"labelResultDataTree";
@@ -1121,7 +1163,7 @@ namespace DataVisualization {
 			this->OriginalDataTree->ReadOnly = true;
 			this->OriginalDataTree->Name = L"OriginalDataTree";
 			this->OriginalDataTree->Location = System::Drawing::Point(5, 30);
-			this->OriginalDataTree->Size = System::Drawing::Size(670, 270);
+			this->OriginalDataTree->Size = System::Drawing::Size(890, 270);
 			this->OriginalDataTree->BackColor = System::Drawing::Color::White;
 			this->OriginalDataTree->Multiline = true;
 
@@ -1131,7 +1173,7 @@ namespace DataVisualization {
 			this->ResultDataTree->ReadOnly = true;
 			this->ResultDataTree->Name = L"ResultDataTree";
 			this->ResultDataTree->Location = System::Drawing::Point(5, 320);
-			this->ResultDataTree->Size = System::Drawing::Size(670, 270);
+			this->ResultDataTree->Size = System::Drawing::Size(890, 270);
 			this->ResultDataTree->BackColor = System::Drawing::Color::White;
 			this->ResultDataTree->Multiline = true;
 
@@ -1140,18 +1182,19 @@ namespace DataVisualization {
 			this->groupBox4Tree->Controls->Add(labelOriginalDataTree);
 			this->groupBox4Tree->Controls->Add(labelResultDataTree);
 
-			this->groupBox5Tree->Controls->Add(CreateTree);
-			this->groupBox5Tree->Controls->Add(SearchTree);
-			this->groupBox5Tree->Controls->Add(DeleteTree);
-			this->groupBox5Tree->Controls->Add(ReverseTree);
-			this->groupBox5Tree->Controls->Add(InsertLinkTree);
-			this->groupBox5Tree->Controls->Add(this->groupBox6Tree);
+			this->groupBox7Tree->Controls->Add(CreateTree);
+			this->groupBox7Tree->Controls->Add(SearchTree);
+			this->groupBox7Tree->Controls->Add(DeleteTree);
+			this->groupBox7Tree->Controls->Add(ReverseTree);
+			this->groupBox7Tree->Controls->Add(InsertLinkTree);
+			this->groupBox7Tree->Controls->Add(TextCreateTree);
+			this->groupBox7Tree->Controls->Add(TextSearchTree);
+			this->groupBox7Tree->Controls->Add(TextDeleteTree);
+			this->groupBox7Tree->Controls->Add(TextReverseTree);
+			this->groupBox7Tree->Controls->Add(TextInsertTree);
 
-			this->groupBox5Tree->Controls->Add(TextCreateTree);
-			this->groupBox5Tree->Controls->Add(TextSearchTree);
-			this->groupBox5Tree->Controls->Add(TextDeleteTree);
-			this->groupBox5Tree->Controls->Add(TextReverseTree);
-			this->groupBox5Tree->Controls->Add(TextInsertTree);
+			this->groupBox5Tree->Controls->Add(this->groupBox6Tree);
+			this->groupBox5Tree->Controls->Add(this->groupBox7Tree);
 
 			this->groupBox6Tree->Controls->Add(format3Tree);
 			this->groupBox6Tree->Controls->Add(format4Tree);
@@ -1229,7 +1272,7 @@ namespace DataVisualization {
 			this->pictureBoxAlgorithm->BackColor = System::Drawing::Color::White;
 			this->pictureBoxAlgorithm->Location = System::Drawing::Point(8, 10);
 			this->pictureBoxAlgorithm->Name = L"pictureBoxAlgorithm";
-			this->pictureBoxAlgorithm->Size = System::Drawing::Size(667, 585);
+			this->pictureBoxAlgorithm->Size = System::Drawing::Size(890, 870);
 			this->pictureBoxAlgorithm->TabIndex = 1;
 			this->pictureBoxAlgorithm->TabStop = false;
 			this->pictureBoxAlgorithm->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MyForm::pictureBoxAlgorithm_Paint);
@@ -1339,9 +1382,9 @@ namespace DataVisualization {
 			// groupBox1
 			// 
 			this->groupBox5Algorithm->BackColor = System::Drawing::SystemColors::Control;
-			this->groupBox5Algorithm->Location = System::Drawing::Point(757, 10);
+			this->groupBox5Algorithm->Location = System::Drawing::Point(915, 60);
 			this->groupBox5Algorithm->Name = L"groupBox5Algorithm";
-			this->groupBox5Algorithm->Size = System::Drawing::Size(150, 565);
+			this->groupBox5Algorithm->Size = System::Drawing::Size(165, 845);
 			this->groupBox5Algorithm->TabIndex = 3;
 			this->groupBox5Algorithm->TabStop = false;
 			this->groupBox5Algorithm->Text = L"Class";
@@ -1351,7 +1394,7 @@ namespace DataVisualization {
 			// 
 			this->groupBox4Algorithm->Location = System::Drawing::Point(5, 20);
 			this->groupBox4Algorithm->Name = L"groupBox4Algorithm";
-			this->groupBox4Algorithm->Size = System::Drawing::Size(682, 600);
+			this->groupBox4Algorithm->Size = System::Drawing::Size(906, 885);
 			this->groupBox4Algorithm->TabIndex = 3;
 			this->groupBox4Algorithm->TabStop = false;
 
@@ -1458,7 +1501,53 @@ namespace DataVisualization {
 		/// the contents of this method with the code editor.
 		/// </summary>
 private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
-	this->pictureBox1->Invalidate();
+	switch (selecttime)
+	{
+	case 0:
+	     {
+			//lock
+			WaitForSingleObject(Process::HMutex, INFINITE);
+
+			this->pictureBox1->Invalidate();
+			this->Stepbutton->Text = The_digital_unit(StepInNormal + 1);
+
+			//unlock
+			ReleaseMutex(HMutex);
+	     }
+
+		 break;
+
+	case 1:
+		{
+			;
+		}
+
+		break;
+
+	case 2:
+		{
+			;
+		}
+	
+		break;
+	
+	case 3:
+		{
+			//lock
+			WaitForSingleObject(AMutex, INFINITE);
+
+			this->pictureBoxAlgorithm->Invalidate();
+			
+			//unlock
+			ReleaseMutex(AMutex);
+		}
+
+		break;
+
+	default:
+		break;
+	}
+	
 }
 private: System::Void MyForm_Load(System::Object^  sender, System::EventArgs^  e) {
 	this->pictureBox1->Invalidate();
@@ -1467,7 +1556,7 @@ private: System::Void comboBox1_SelectedIndexChanged(System::Object^  sender, Sy
 		comboBox1->Text = comboBox1->SelectedItem->ToString();
 
 		//SELECT
-		int index = comboBox1->SelectedIndex;
+		int index = selecttime = comboBox1->SelectedIndex;
 		switch (index)
 		{
 		case 0:ShowSort(); break;
@@ -1573,6 +1662,76 @@ private: System::Void Start_Click(System::Object^  sender, System::EventArgs^  e
 			MessageBox::Show("Please select a sorting pattern!", "Warning", MessageBoxButtons::OK, MessageBoxIcon::Information);
 		}
 	}
+private: System::Void Quit_Click(System::Object^  sender, System::EventArgs^  e) {
+	
+	if (this->format2model->Checked)
+	{
+		//clear
+		Every_Step_Of_The_Change.clear();
+		for (size_t i = 0; i < Every_Step_Of_The_Value.size(); i++)
+			Every_Step_Of_The_Value[i].clear();
+		Every_Step_Of_The_Value.clear();
+		SortStep = 0;
+
+		//exit current step mode and update ui
+		this->Stepbutton->Text = "- The 0th Step -";
+		Endpattern = !Endpattern;
+		this->pictureBox1->Invalidate();
+		Opening();
+	}
+	else
+	{
+		MessageBox::Show("Only for single step pattern", "warning", MessageBoxButtons::OK, MessageBoxIcon::Information);
+	}	
+}
+private: System::Void Backward_Click(System::Object^  sender, System::EventArgs^  e) {
+
+	   if (this->format2model->Checked)
+	   {
+		   if (this->Bubble->Checked || this->Select->Checked || this->Shell->Checked || this->Insert->Checked || this->Quick->Checked||this->Heap->Checked||this->Merge->Checked)
+		   {
+			   if (SortStep > 0)
+			   {
+				   SortStep--;
+				   this->pictureBox1->Invalidate();
+			   }
+			   else
+				   MessageBox::Show("This is the first step! If you want to quit,please click on the Quit this button.", "warning", MessageBoxButtons::OK, MessageBoxIcon::Information);
+		   }
+		   else
+		   {
+			   MessageBox::Show("please select the sort pattern in sort this part.", "warning", MessageBoxButtons::OK, MessageBoxIcon::Information);
+		   }
+	   }
+	   else
+	   {
+		   MessageBox::Show("please select the Step Pattern in Pattern this part.", "warning", MessageBoxButtons::OK, MessageBoxIcon::Information);
+	   }
+   }
+private: System::Void Forward_Click(System::Object^  sender, System::EventArgs^  e) {
+
+		if (this->format2model->Checked)
+		{
+			if (this->Bubble->Checked || this->Select->Checked || this->Shell->Checked || this->Insert->Checked || this->Quick->Checked || this->Heap->Checked || this->Merge->Checked)
+			{
+				if (SortStep < Every_Step_Of_The_Value.size() - 1)
+				{
+					SortStep++;
+					this->pictureBox1->Invalidate();
+				}
+				else
+					MessageBox::Show("This is the last step! If you want to quit,please click on the Quit this button.", "Warning", MessageBoxButtons::OK, MessageBoxIcon::Information);
+			}
+			else
+			{
+				MessageBox::Show("please select the sort pattern", "warning", MessageBoxButtons::OK, MessageBoxIcon::Information);
+			}
+		}
+		else
+		{
+			MessageBox::Show("please select the step pattern", "warning", MessageBoxButtons::OK, MessageBoxIcon::Information);
+		}
+	}
 private: System::Void pictureBox1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
 
 	myGraphics = e->Graphics;
@@ -1584,9 +1743,6 @@ private: System::Void pictureBox1_Paint(System::Object^  sender, System::Windows
 	{
 		Geometric::Object arrow;
 		vector<long long>::iterator SearchFirst;
-
-		//lock
-		WaitForSingleObject(Process::HMutex, INFINITE);
 
 		try
 		{
@@ -1626,10 +1782,11 @@ private: System::Void pictureBox1_Paint(System::Object^  sender, System::Windows
 
 					myGraphics->DrawLine(penDottedLine, Pt5, Pt6);
 					myGraphics->DrawString(IArraysize[i].ToString(), font, brush, float(object.DrawText().TextX), float(object.DrawText().TextY));
+					myGraphics->DrawString(The_digital_unit(StepInNormal + 1), stepfont, stepbrush, float(abs(Pt2.X - Pt3.X) / 2 + min(Pt2.X, Pt3.X) - 50), float(Pt2.Y - 25));
 				}
 
 				myGraphics->DrawImage(bitmap, 0, 0);
-				this->pictureBox1->Image = canvas;
+				//this->pictureBox1->Image = canvas;
 			}
 			else if (!SortFinished)
 			{
@@ -1656,6 +1813,7 @@ private: System::Void pictureBox1_Paint(System::Object^  sender, System::Windows
 
 				// update data
 				this->timer1->Stop();
+				StepInNormal = 0;
 				myGraphics->DrawImage(bitmap, 0, 0);
 			}
 		}
@@ -1663,9 +1821,6 @@ private: System::Void pictureBox1_Paint(System::Object^  sender, System::Windows
 		{
 			return;
 		}
-
-		//unlock
-		ReleaseMutex(HMutex);
 	}
 	else if (this->format2model->Checked && Endpattern)
 	{
@@ -1702,9 +1857,9 @@ private: System::Void pictureBox1_Paint(System::Object^  sender, System::Windows
 
 			myGraphics->DrawLine(penDottedLine, Pt5, Pt6);
 			myGraphics->DrawString(Every_Step_Of_The_Value.at(SortStep).at(i).ToString(), font, brush, float(object.DrawText().TextX), float(object.DrawText().TextY));
+			myGraphics->DrawString(The_digital_unit(SortStep + 1), stepfont, stepbrush, float(abs(Pt2.X - Pt3.X) / 2 + min(Pt2.X, Pt3.X) - 50), float(Pt2.Y - 25));
+			this->Stepbutton->Text = The_digital_unit(SortStep + 1);
 		}
-
-		this->timer1->Stop();
 	}
 	else if (!Endpattern)
 	{
@@ -1714,8 +1869,8 @@ private: System::Void pictureBox1_Paint(System::Object^  sender, System::Windows
 	// draw x-coordinate
 	for (size_t i = 0; i < RECTANGULAR_NUMBER; i++)
 	{
-		System::Drawing::Point Pt1(70 + RECTANGULAR_SPACE * i, this->pictureBox1->Height);
-		System::Drawing::Point Pt2(70 + RECTANGULAR_SPACE * i, this->pictureBox1->Height - 7);
+		System::Drawing::Point Pt1(75 + RECTANGULAR_SPACE * i, this->pictureBox1->Height);
+		System::Drawing::Point Pt2(75 + RECTANGULAR_SPACE * i, 0);
 		myGraphics->DrawLine(penCoordinates, Pt1, Pt2);
 	}
 
@@ -1723,7 +1878,7 @@ private: System::Void pictureBox1_Paint(System::Object^  sender, System::Windows
 	for (size_t i = 0; i < RECTANGULAR_NUMBER - 1; i++)
 	{
 		System::Drawing::Point Pt1(0, 50 + RECTANGULAR_SPACE * i);
-		System::Drawing::Point Pt2(0 + 7, 50 + RECTANGULAR_SPACE * i);
+		System::Drawing::Point Pt2(this->pictureBox1->Width, 50 + RECTANGULAR_SPACE * i);
 		myGraphics->DrawLine(penCoordinates, Pt1, Pt2);
 	}
 }
@@ -1760,8 +1915,7 @@ private: void ReadyForSort( /* the function is create object */ const unsigned i
 }
 private: void Go( /* the function is create object */ MyStruct<SortType> SortInfo) {
 
-	MYThread<SortType> ThreadInSort(SortInfo.SortIndex, SortInfo.nums, "Normal");
-	SleepTime = 150;
+	MYThread<SortType> ThreadInSort(SortInfo.SortIndex, SortInfo.nums, "normal");
 
 	// start two thread ( First is sort,second is display )
 	if (SortInfo.nums.size() != NULL)
@@ -1771,7 +1925,6 @@ private: void Go( /* the function is create object */ MyStruct<SortType> SortInf
 			HMutex = CreateMutex(NULL, FALSE, LPCWSTR("sort"));
 			HANDLE  HandleSort = (HANDLE)_beginthreadex(NULL, 0, ThreadInSort.ThreadOfSort, NULL, 0, NULL);
 
-			this->pictureBox1->Invalidate();
 			timer1->Start();
 		}
 		catch (const std::exception&)
@@ -1783,11 +1936,10 @@ private: void Go( /* the function is create object */ MyStruct<SortType> SortInf
 
 private: void ReadyForSortUseSecondModel( /*the function is create object*/ const unsigned int SortIndex)
 {
-	Shielding();
+	ShieldingModel();
 	Endpattern = true;
-	SleepTime = 10;
 
-	MYThread<SortType> ThreadInSort(SortIndex, RandNumbers<SortType>(), "Step");
+	MYThread<SortType> ThreadInSort(SortIndex, RandNumbers<SortType>(), "step partten");
 
 	try
 	{
@@ -1796,7 +1948,7 @@ private: void ReadyForSortUseSecondModel( /*the function is create object*/ cons
 
 		DWORD ReturnStatus = WaitForSingleObject(HandleSort, INFINITE);
 		if (ReturnStatus != WAIT_TIMEOUT)
-			this->timer1->Start();
+			this->pictureBox1->Invalidate();
 	}
 	catch (const std::exception&)
 	{
@@ -1807,15 +1959,35 @@ private: void ReadyForSortUseSecondModel( /*the function is create object*/ cons
 private: void Shielding( /*The function is create object*/ ) {
 	
 	this->Bubble->Enabled = false;
+	this->Quit->Enabled = false;
 	this->Select->Enabled = false;
 	this->Insert->Enabled = false;
 	this->Shell->Enabled = false;
 	this->Quick->Enabled = false;
 	this->Heap->Enabled = false;
 	this->Merge->Enabled = false;
+	this->format1model->Enabled = false;
+	this->format2model->Enabled = false;
 	this->format1->Enabled = false;
 	this->format2->Enabled = false;
 	this->format3->Enabled = false;
+}
+private: void ShieldingModel( /* the function is update widget */)
+{
+	this->Bubble->Enabled = false;
+	this->Quit->Enabled = true;
+	this->Select->Enabled = true;
+	this->Insert->Enabled = true;
+	this->Shell->Enabled = false;
+	this->Quick->Enabled = false;
+	this->Heap->Enabled = false;
+	this->Merge->Enabled = false;
+	this->format1model->Enabled = false;
+	this->format2model->Enabled = false;
+	this->format1->Enabled = false;
+	this->format2->Enabled = false;
+	this->Backward->Enabled = true;
+	this->Forward->Enabled = true;
 }
 private: void Opening( /*The function is create object*/) {
 
@@ -1826,14 +1998,28 @@ private: void Opening( /*The function is create object*/) {
 	this->Quick->Enabled = true;
 	this->Heap->Enabled = true;
 	this->Merge->Enabled = true;
-	this->format1->Enabled = true;
-	this->format2->Enabled = true;
+	this->format1->Enabled = false;
+	this->format2->Enabled = false;
 	this->format3->Enabled = true;
+	this->format1model->Enabled = true;
+	this->format2model->Enabled = true;
 }
 private: void InitializeText(/*The function is update time*/)
 {
 	timekeeping += 50;
 	this->Time->Text = timekeeping.ToString() + " ms ";
+}
+private: String^ The_digital_unit(const unsigned int steps)
+{
+	switch (steps)
+	{
+	case 1:	return "- The " + steps.ToString() + "st Step -";
+	case 2:	return "- The " + steps.ToString() + "nd Step -";
+	case 3:	return "- The " + steps.ToString() + "rd Step -";
+	default:
+		return "- The " + steps.ToString() + "th Step -";
+		break;
+	}
 }
 private: void HiddenLabel( /*The function is create object*/ ) {
 	//this->groupBox2->Enabled = false;  
@@ -2014,12 +2200,12 @@ private: System::Void CreateAlgorithm_Click(System::Object^  sender, System::Eve
 private: void ReadyGo()
 {
 	ThreadAboutAlgorithm threadaboutalgorithm;
-	myGraphics->SmoothingMode = System::Drawing::Drawing2D::SmoothingMode::AntiAlias;
-
+	this->timer1->Interval = 50;
 	try
 	{
-		hThread2 = CreateThread(NULL, 0, threadaboutalgorithm.ThreadOfA, NULL, 0, NULL);
+		hThread2 = (HANDLE)_beginthreadex(NULL, 0, threadaboutalgorithm.ThreadOfA, NULL, 0, NULL);
 		AMutex = CreateMutex(NULL, FALSE, LPCWSTR("Algorithm"));
+		this->timer1->Start();
 	}
 	catch (const std::exception&)
 	{
@@ -2035,10 +2221,6 @@ private: System::Void pictureBoxAlgorithm_Paint(System::Object^  sender, System:
 	System::Drawing::Bitmap^ canvas = gcnew System::Drawing::Bitmap(this->pictureBoxAlgorithm->Width, this->pictureBoxAlgorithm->Height);
 	AloGraphics->FromImage(bitmap);
 	AloGraphics->SmoothingMode = System::Drawing::Drawing2D::SmoothingMode::AntiAlias;
-
-	//lock
-	WaitForSingleObject(Geometric::AMutex, INFINITE);
-
 	for (size_t i = 0; i < Circlesize; i++)
 	{
 		if (Collect[i])
@@ -2052,10 +2234,6 @@ private: System::Void pictureBoxAlgorithm_Paint(System::Object^  sender, System:
 	}
 	
 	AloGraphics->DrawImage(bitmap, 0, 0);
-	pictureBoxAlgorithm->BackgroundImage = canvas;
-
-	//unlock
-	ReleaseMutex(AMutex);
 }
 
 #pragma endregion

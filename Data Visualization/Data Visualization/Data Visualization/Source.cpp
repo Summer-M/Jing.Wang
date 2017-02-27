@@ -9,7 +9,7 @@ namespace Process
 	HANDLE HMutex = NULL;
 	bool SortFinished = true;
 	vector<int> ExchangeIndex(2);
-	int SleepTime = 5;
+	int SleepTime = 100;
 
 	//-------------------------------------------------------
 

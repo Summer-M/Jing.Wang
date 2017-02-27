@@ -6,10 +6,10 @@ namespace Geometric
 	//!\brief extern variable
 	//-------------------------------------------------------
 	HANDLE AMutex = NULL;
-	vector<int>	PoxXCircle = RandNumbers(400);
-	vector<int>	PoxYCircle = RandNumbers(360);
-	vector<int> DirectionXCircle = RandNumbers(30);
-	vector<int> DirectionYCircle = RandNumbers(30);
+	vector<int>	PoxXCircle = RandNumbers(850);
+	vector<int>	PoxYCircle = RandNumbers(800);
+	vector<int> DirectionXCircle = RandNumbers(15);
+	vector<int> DirectionYCircle = RandNumbers(15);
 	vector<bool> Collect(Circlesize, true);
 
 
@@ -237,7 +237,7 @@ namespace Geometric
 			}
 
 			//unlock
-			Sleep(6);
+			Sleep(50);
 			ReleaseMutex(AMutex);
 		}
 	}

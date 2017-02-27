@@ -75,9 +75,9 @@ public:
 
 public:
 	// no code
-	static DWORD WINAPI ThreadOfA(LPVOID lpParam)
+	static unsigned int _stdcall ThreadOfA(LPVOID lpParam)
 	{
-		Geometric::Object *object = (Geometric::Object*)lpParam;
+		Geometric::Object *object;
 		object->Move();
 		return 0;
 	}
