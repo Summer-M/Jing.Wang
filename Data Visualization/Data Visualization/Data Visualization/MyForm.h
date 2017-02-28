@@ -37,8 +37,8 @@ namespace DataVisualization {
 			InitializeComponentLinkedList();
 			InitializeComponentTree();
 			InitializeComponentAlgorithm();
-			
-			ShowSort();
+
+			this->comboBox1->SelectedIndex = 0;
 
 			//
 			//TODO: Add the constructor code here
@@ -185,6 +185,7 @@ namespace DataVisualization {
 	private: System::Windows::Forms::GroupBox^	  groupBox4Algorithm;
 	private: System::Windows::Forms::GroupBox^	  groupBox5Algorithm;
 	private: System::Windows::Forms::GroupBox^	  groupBox6Algorithm;
+	private: System::Windows::Forms::GroupBox^    groupBoxAlgorithm1;
 	private: System::Windows::Forms::Button^	  CreateAlgorithm;
 	private: System::Windows::Forms::Button^	  SearchAlgorithm;
 	private: System::Windows::Forms::Button^	  DeleteAlgorithm;
@@ -295,7 +296,8 @@ namespace DataVisualization {
 			this->aboutThisToolStripMenuItem->Text = L"About This";
 			// 
 			// comboBox1
-			// 
+			//
+			this->comboBox1->Text = "Test";
 			this->comboBox1->BackColor = System::Drawing::SystemColors::Control;
 			this->comboBox1->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
 			this->comboBox1->Font = (gcnew System::Drawing::Font(L"Segoe UI Emoji", 10.5F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
@@ -1258,6 +1260,7 @@ namespace DataVisualization {
 			this->groupBox4Algorithm = (gcnew System::Windows::Forms::GroupBox());
 			this->groupBox5Algorithm = (gcnew System::Windows::Forms::GroupBox());
 			this->groupBox6Algorithm = (gcnew System::Windows::Forms::GroupBox());
+			this->groupBoxAlgorithm1 = (gcnew System::Windows::Forms::GroupBox());
 			this->OriginalDataAlgorithm = (gcnew System::Windows::Forms::TextBox());
 			this->ResultDataAlgorithm = (gcnew System::Windows::Forms::TextBox());
 			this->labelOriginalDataAlgorithm = (gcnew System::Windows::Forms::Label());
@@ -1276,6 +1279,11 @@ namespace DataVisualization {
 			this->pictureBoxAlgorithm->TabIndex = 1;
 			this->pictureBoxAlgorithm->TabStop = false;
 			this->pictureBoxAlgorithm->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MyForm::pictureBoxAlgorithm_Paint);
+
+			this->groupBoxAlgorithm1->Text = L"Collision Detection";
+			this->groupBoxAlgorithm1->Visible = true;
+			this->groupBoxAlgorithm1->Size = System::Drawing::Size(155, 400);
+			this->groupBoxAlgorithm1->Location = System::Drawing::Point(5, 20);
 
 			//
 			// select
@@ -1309,7 +1317,7 @@ namespace DataVisualization {
 
 			this->groupBox6Algorithm->Text = L"Select";
 			this->groupBox6Algorithm->Size = System::Drawing::Size(152, 110);
-			this->groupBox6Algorithm->Location = System::Drawing::Point(2, 445);
+			this->groupBox6Algorithm->Location = System::Drawing::Point(5, 730);
 
 			//TextCreate
 			this->TextCreateAlgorithm->Name = L"TextCreateAlgorithm";
@@ -1344,10 +1352,10 @@ namespace DataVisualization {
 			this->TextInsertAlgorithm->BackColor = System::Drawing::Color::White;
 
 			//Create
-			this->CreateAlgorithm->Name = L"";
+			this->CreateAlgorithm->Name = L"Normal";
 			this->CreateAlgorithm->Location = System::Drawing::Point(8, 20);
 			this->CreateAlgorithm->Size = System::Drawing::Size(140, 25);
-			this->CreateAlgorithm->Text = L"Collision Detection";
+			this->CreateAlgorithm->Text = L"Normal";
 			this->CreateAlgorithm->Click += gcnew System::EventHandler(this, &MyForm::CreateAlgorithm_Click);
 
 			//Search
@@ -1444,11 +1452,13 @@ namespace DataVisualization {
 
 			this->groupBox4Algorithm->Controls->Add(pictureBoxAlgorithm);
 
-			this->groupBox5Algorithm->Controls->Add(CreateAlgorithm);
-			this->groupBox5Algorithm->Controls->Add(SearchAlgorithm);
-			this->groupBox5Algorithm->Controls->Add(DeleteAlgorithm);
-			this->groupBox5Algorithm->Controls->Add(ReverseAlgorithm);
-			this->groupBox5Algorithm->Controls->Add(InsertLinkAlgorithm);
+			this->groupBoxAlgorithm1->Controls->Add(CreateAlgorithm);
+			this->groupBoxAlgorithm1->Controls->Add(SearchAlgorithm);
+			this->groupBoxAlgorithm1->Controls->Add(DeleteAlgorithm);
+			this->groupBoxAlgorithm1->Controls->Add(ReverseAlgorithm);
+			this->groupBoxAlgorithm1->Controls->Add(InsertLinkAlgorithm);
+
+			this->groupBox5Algorithm->Controls->Add(this->groupBoxAlgorithm1);
 			this->groupBox5Algorithm->Controls->Add(this->groupBox6Algorithm);
 
 			/*this->groupBox5Algorithm->Controls->Add(TextCreateAlgorithm);
