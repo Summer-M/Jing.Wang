@@ -64,6 +64,12 @@ namespace DataVisualization {
 			font = gcnew System::Drawing::Font(L"Microsoft YaHei", 9);
 			stepfont = gcnew System::Drawing::Font(L"Microsoft YaHei", 10);
 			stepbrush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::Purple);
+
+			//Alo
+			brushAlo = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::DarkTurquoise);
+			AloGraphics = this->pictureBoxAlgorithm->CreateGraphics();
+			bitmapAlo = gcnew System::Drawing::Bitmap(this->pictureBoxAlgorithm->Width, this->pictureBoxAlgorithm->Height);
+			canvasAlo = gcnew System::Drawing::Bitmap(this->pictureBoxAlgorithm->Width, this->pictureBoxAlgorithm->Height);
 		}
 
 	protected:
@@ -242,6 +248,12 @@ namespace DataVisualization {
 		//
 		unsigned int selecttime;							// select
 
+		//
+		System::Drawing::Brush^  brushAlo;
+		System::Drawing::Graphics^  AloGraphics;
+		System::Drawing::Bitmap^ bitmapAlo;
+		System::Drawing::Bitmap^ canvasAlo;
+
 #pragma region Windows Form Designer generated code
 		/// <summary>
 		/// Required method for Designer support - do not modify
@@ -324,7 +336,14 @@ namespace DataVisualization {
 			this->timer1->Tick += gcnew System::EventHandler(this, &MyForm::timer1_Tick);
 			// 
 			// MyForm
-			// 
+			//
+			this->SetStyle(ControlStyles::OptimizedDoubleBuffer
+				| ControlStyles::ResizeRedraw
+				| ControlStyles::Selectable
+				| ControlStyles::AllPaintingInWmPaint
+				| ControlStyles::UserPaint
+				| ControlStyles::SupportsTransparentBackColor
+				, true);
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
@@ -1290,29 +1309,29 @@ namespace DataVisualization {
 			//
 			this->format3Algorithm->AutoSize = true;
 			this->format3Algorithm->Location = System::Drawing::Point(3, 22);
-			this->format3Algorithm->Name = L"Singly";
+			this->format3Algorithm->Name = L"circular";
 			this->format3Algorithm->Size = System::Drawing::Size(85, 16);
 			this->format3Algorithm->TabIndex = 0;
 			this->format3Algorithm->TabStop = true;
-			this->format3Algorithm->Text = L"Singly";
+			this->format3Algorithm->Text = L"circular";
 			this->format3Algorithm->UseVisualStyleBackColor = true;
 
 			this->format4Algorithm->AutoSize = true;
 			this->format4Algorithm->Location = System::Drawing::Point(3, 50);
-			this->format4Algorithm->Name = L"Middle";
+			this->format4Algorithm->Name = L"rectangular";
 			this->format4Algorithm->Size = System::Drawing::Size(85, 16);
 			this->format4Algorithm->TabIndex = 0;
 			this->format4Algorithm->TabStop = true;
-			this->format4Algorithm->Text = L"Middle";
+			this->format4Algorithm->Text = L"rectangular";
 			this->format4Algorithm->UseVisualStyleBackColor = true;
 
 			this->format5Algorithm->AutoSize = true;
 			this->format5Algorithm->Location = System::Drawing::Point(3, 78);
-			this->format5Algorithm->Name = L"Diffcult";
+			this->format5Algorithm->Name = L"polygon";
 			this->format5Algorithm->Size = System::Drawing::Size(85, 16);
 			this->format5Algorithm->TabIndex = 0;
 			this->format5Algorithm->TabStop = true;
-			this->format5Algorithm->Text = L"Diffcult";
+			this->format5Algorithm->Text = L"polygon";
 			this->format5Algorithm->UseVisualStyleBackColor = true;
 
 			this->groupBox6Algorithm->Text = L"Select";
@@ -1515,13 +1534,13 @@ private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e
 	{
 	case 0:
 	     {
-			//lock
+			// lock
 			WaitForSingleObject(Process::HMutex, INFINITE);
 
 			this->pictureBox1->Invalidate();
 			this->Stepbutton->Text = The_digital_unit(StepInNormal + 1);
 
-			//unlock
+			// unlock
 			ReleaseMutex(HMutex);
 	     }
 
@@ -1547,8 +1566,8 @@ private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e
 			WaitForSingleObject(AMutex, INFINITE);
 
 			this->pictureBoxAlgorithm->Invalidate();
-			
-			//unlock
+
+			// unlock
 			ReleaseMutex(AMutex);
 		}
 
@@ -2210,7 +2229,7 @@ private: System::Void CreateAlgorithm_Click(System::Object^  sender, System::Eve
 private: void ReadyGo()
 {
 	ThreadAboutAlgorithm threadaboutalgorithm;
-	this->timer1->Interval = 50;
+	this->timer1->Interval = 25;
 	try
 	{
 		hThread2 = (HANDLE)_beginthreadex(NULL, 0, threadaboutalgorithm.ThreadOfA, NULL, 0, NULL);
@@ -2225,25 +2244,57 @@ private: void ReadyGo()
 
 private: System::Void pictureBoxAlgorithm_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e)
 {
-	System::Drawing::Brush^  brush;
-	System::Drawing::Graphics^  AloGraphics = e->Graphics;
-	System::Drawing::Bitmap^ bitmap = gcnew System::Drawing::Bitmap(this->pictureBoxAlgorithm->Width, this->pictureBoxAlgorithm->Height);
-	System::Drawing::Bitmap^ canvas = gcnew System::Drawing::Bitmap(this->pictureBoxAlgorithm->Width, this->pictureBoxAlgorithm->Height);
-	AloGraphics->FromImage(bitmap);
+	AloGraphics = e->Graphics;
+	AloGraphics->FromImage(bitmapAlo);
 	AloGraphics->SmoothingMode = System::Drawing::Drawing2D::SmoothingMode::AntiAlias;
-	for (size_t i = 0; i < Circlesize; i++)
+
+	if (format3Algorithm->Checked)													       // the circle  
 	{
-		if (Collect[i])
-			brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::DeepSkyBlue));
-		else
-			brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::Red));
-	 	
-		AloGraphics->FillEllipse(brush, PoxXCircle[i], PoxYCircle[i], CircleW, CircleH);
-		
-		Collect[i] = true;
+		for (size_t i = 0; i < Circlesize; i++)
+		{
+			if (Collect[i])
+				brushAlo = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::DeepSkyBlue));
+			else
+				brushAlo = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::Red));
+
+			AloGraphics->FillEllipse(brushAlo, PoxXCircle[i], PoxYCircle[i], CircleW, CircleH);
+
+			Collect[i] = true;
+		}
+
+		AloGraphics->DrawImage(bitmapAlo, 0, 0);
 	}
-	
-	AloGraphics->DrawImage(bitmap, 0, 0);
+	else if (format4Algorithm->Checked)													 // the rectangle  
+	{
+		for (size_t i = 0; i < Circlesize; i++)
+		{
+			if (Collect[i])
+				brushAlo = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::DeepSkyBlue));
+			else
+				brushAlo = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::Red));
+
+			AloGraphics->FillRectangle(brushAlo, PoxXCircle[i], PoxYCircle[i], CircleW, CircleH);
+
+			Collect[i] = true;
+		}
+		AloGraphics->DrawImage(bitmapAlo, 0, 0);
+	}
+	else if (format5Algorithm->Checked)												    // the polygon
+	{
+		for (size_t i = 0; i < Circlesize; i++)
+		{
+			if (Collect[i])
+				brushAlo = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::DeepSkyBlue));
+			else
+				brushAlo = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::Red));
+
+			AloGraphics->FillRectangle(brushAlo, PoxXCircle[i], PoxYCircle[i], CircleW, CircleH);
+
+			Collect[i] = true;
+		}
+
+		AloGraphics->DrawImage(bitmapAlo, 0, 0);
+	}
 }
 
 #pragma endregion

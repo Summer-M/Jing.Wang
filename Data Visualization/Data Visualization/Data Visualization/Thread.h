@@ -17,6 +17,7 @@ public:
 		sortnums = nums;
 		modelinSort = Model;
 	};
+
 	~MYThread() {};
 
 public:
@@ -78,7 +79,7 @@ public:
 	static unsigned int _stdcall ThreadOfA(LPVOID lpParam)
 	{
 		Geometric::Object *object;
-		object->Move();
+		object->MoveRect();
 		return 0;
 	}
 };

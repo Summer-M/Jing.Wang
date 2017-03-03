@@ -89,6 +89,9 @@ namespace Geometric
 
 		//!\brief move my object
 		void Move();
+
+		//!\brief move my object
+		void MoveRect();
 	};
 
 	class GeoCircle
@@ -133,42 +136,113 @@ namespace Geometric
 		inline vector<int> CircleCenter();
 	};
 
-	class GeoRrectangular
+	struct MyStructAboutRect
+	{
+		double x;
+		double y;
+	};
+
+	struct AboutRect
+	{
+		unsigned int vertices;
+		MyStructAboutRect rect[4];
+	};
+
+	class GeoRectangular
 	{
 	public:
-		GeoRrectangular() {};
-		~GeoRrectangular() {};
+		GeoRectangular() {};
+		GeoRectangular(int leftX,int leftY,int width,int height)
+		{
+			upperleft.x = leftX;
+			upperleft.y = leftY;
+			lowerleft.x = leftX;
+			lowerleft.y = leftY + height;
+			topright.x  = leftX + width;
+			topright.y  = leftY;
+			lowerright.x = leftX + width;
+			lowerright.y = leftY + height;
+
+			aboutrect.vertices = 4;
+			aboutrect.rect[0] = upperleft;
+			aboutrect.rect[1] = lowerleft;
+			aboutrect.rect[2] = topright;
+			aboutrect.rect[3] = lowerright;
+		};
+
+		~GeoRectangular() {};
 
 	private:
-		// no code
+		
+		// Rectangular four point coordinates
+		MyStructAboutRect upperleft;
+		MyStructAboutRect lowerleft;
+		MyStructAboutRect topright;
+		MyStructAboutRect lowerright;
+
+		AboutRect aboutrect;
+	
+	public:
+		//!\brief To obtain the normal vector
+		AboutRect get() { return aboutrect; }
 	};
 
 	/*
-	- Notice: the class is going to be into a template class!!
+		Notice: the class is going to be into a template class!!
 	*/
 	class Collision
 	{
-
 	public:
 		Collision(vector<int> PosX, vector<int> PosY)
 			:CheckPosx(0),
-			CheckPosy(0)
+			 CheckPosy(0)
 		{
 			CheckPosx = PosX;
 			CheckPosy = PosY;
 		};
-		~Collision() {};
+
+		Collision(){}
+		~Collision(){}
 
 	private:
-		// no code
+		// the first algorithm
 		vector<int> CheckPosx;
 		vector<int> CheckPosy;
+
 	public:
-		//! collision detection of the ellipse
+
+		//!\brief the first algorithm
+		//!\brief collision detection of the ellipse
 		vector<int> CollsionAboutCircle(const int size);
 
-		//! the first algorithm
+		// the second algorithm
 		bool AlgorithmFirst(vector<int> mycenter, int index, int Others, const int size);
+
+		//!\brief the socond algorithm
+		//!\brief collision detection of the rectangle
+		// the length of this vector
+		double Length(MyStructAboutRect p1, MyStructAboutRect p2);
+		
+		// the multiplication
+		double Multiplication(MyStructAboutRect p1, MyStructAboutRect p2);
+		
+		// the verical
+		MyStructAboutRect vertical(MyStructAboutRect p);
+		
+		// the subtraction
+		MyStructAboutRect Subtraction(MyStructAboutRect p1, MyStructAboutRect p2);
+		
+		// the diatance of two vector
+		double Distance(MyStructAboutRect p1, MyStructAboutRect p2);
+		
+		// the proiection
+		void ProjectionOfPolygon(MyStructAboutRect p1, AboutRect rect, double *min, double *max);
+
+		// the Projection'distance
+		double ProjectionDistance(double minx0, double maxx0, double minx1, double maxx1);
+
+		// the second algorithm
+		bool AlgorithmSecond(AboutRect A, AboutRect B);
 	};
 //! \brief Process rand test-numbers 
 //-------------------------------------------------------------------------

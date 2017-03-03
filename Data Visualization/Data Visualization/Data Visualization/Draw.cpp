@@ -3,16 +3,16 @@
 
 namespace Geometric
 {
-	//!\brief extern variable
-	//-------------------------------------------------------
+//!\brief extern variable
+//-------------------------------------------------------------------------------------
 	HANDLE AMutex = NULL;
 	vector<int>	PoxXCircle = RandNumbers(850);
 	vector<int>	PoxYCircle = RandNumbers(800);
-	vector<int> DirectionXCircle = RandNumbers(15);
-	vector<int> DirectionYCircle = RandNumbers(15);
+	vector<int> DirectionXCircle(Circlesize,4);
+	vector<int> DirectionYCircle(Circlesize,4);
 	vector<bool> Collect(Circlesize, true);
 
-
+//-------------------------------------------------------------------------------------
 	inline vector<int> RandNumbers(int value)
 	{
 		vector<int> RandNumber;
@@ -29,6 +29,7 @@ namespace Geometric
 		class Object
 	*/
 
+//-------------------------------------------------------------------------------------
 	MyText<SortType> Object::DrawText()
 	{
 		MyText<SortType> mytext;
@@ -48,6 +49,7 @@ namespace Geometric
 		return mytext;
 	}
 
+//-------------------------------------------------------------------------------------
 	MyRectangle<SortType> Object::DrawCylindrical()
 	{
 		MyRectangle<SortType> Rectangle;
@@ -69,6 +71,7 @@ namespace Geometric
 		return Rectangle;
 	}
 
+//-------------------------------------------------------------------------------------
 	DottedLine<SortType> Object::DrawDottedLine()
 	{
 		// pt1->pt2 or pt2->pt1
@@ -91,6 +94,7 @@ namespace Geometric
 		return dottedline;
 	}
 
+//-------------------------------------------------------------------------------------
 	bool Object::DrawPoints(System::Drawing::Graphics^ myGraphics)
 	{
 		try
@@ -107,6 +111,7 @@ namespace Geometric
 		}
 	}
 
+//-------------------------------------------------------------------------------------
 	bool Object::DrawCircle(System::Drawing::Graphics^ myGraphics)
 	{
 		try
@@ -123,6 +128,7 @@ namespace Geometric
 		}
 	}
 
+//-------------------------------------------------------------------------------------
 	void Object::Move(/*the function change circle position*/)
 	{
 		/*
@@ -242,10 +248,72 @@ namespace Geometric
 		}
 	}
 
-	/*
-	Collision
-	*/
+//-------------------------------------------------------------------------------------
+	void Object::MoveRect(/*the function change circle position*/)
+	{
+		/*
+		-------------------------------------------------------------
+		|															|
+		|		                   |								|
+		|	                      -0-								|
+		|		                   |								|
+		|															|
+		------------------------------------------------------------
+		*/
 
+		Collision collision;
+
+		while (true)
+		{
+			//lock
+			WaitForSingleObject(AMutex, INFINITE);
+			for (size_t i = 0; i < Circlesize; i++)
+			{
+				// go to the wall
+				if (PoxXCircle[i] + CircleW >= BELOW || PoxXCircle[i] <= TOP)
+				{
+					DirectionXCircle[i] *= -1;
+				}
+				if (PoxYCircle[i] + CircleH >= RIGHT || PoxYCircle[i] <= LEFT)
+				{
+					DirectionYCircle[i] *= -1;
+				}
+
+				PoxXCircle[i] += DirectionXCircle[i];
+				PoxYCircle[i] += DirectionYCircle[i];
+
+				GeoRectangular currentrectangle(PoxXCircle[i], PoxYCircle[i], CircleW, CircleH);
+
+				////! collision detection
+				////! here will use several different collision detection algorithm
+				////! Elastic change the speed
+				////! -------------------------start-------------------------------------
+				for (size_t iIndex = 0; iIndex < Circlesize; iIndex++)
+				{
+					GeoRectangular georectangular(PoxXCircle[iIndex], PoxYCircle[iIndex], CircleW, CircleH);
+
+					if (iIndex == i)
+						continue;
+					if (collision.AlgorithmSecond(currentrectangle.get(), georectangular.get()))			//!!!
+					{
+						Collect[i] = false;
+					}
+				}
+
+				//! ---------------------------end--------------------------------------
+			}
+
+			//unlock
+			Sleep(30);
+			ReleaseMutex(AMutex);
+		}
+	}
+
+	/*
+		Collision
+	*/
+	
+//-------------------------------------------------------------------------------------
 	vector<int> Collision::CollsionAboutCircle(const int size)
 	{
 		vector<int> PosCenter;
@@ -259,6 +327,7 @@ namespace Geometric
 		return PosCenter;
 	}
 
+//-------------------------------------------------------------------------------------
 	bool Collision::AlgorithmFirst(vector<int> mycenter, int index, int Others, const int size)
 	{
 		if (sqrt(pow(mycenter[index] - mycenter[Others], 2) + pow(mycenter[index + 1] - mycenter[Others + 1], 2)) <= CircleW)
@@ -269,30 +338,122 @@ namespace Geometric
 		return true;
 	}
 
+//-------------------------------------------------------------------------------------
+	double Collision::Length(MyStructAboutRect p1, MyStructAboutRect p2)
+	{
+		return sqrt(p1.x*p2.x + p1.y*p2.y);
+	}
+
+//-------------------------------------------------------------------------------------
+	double Collision::Multiplication(MyStructAboutRect p1, MyStructAboutRect p2)
+	{
+		return p1.x * p2.x + p1.y * p2.y;
+	}
+
+//-------------------------------------------------------------------------------------
+	MyStructAboutRect Collision::vertical(MyStructAboutRect p)
+	{
+		return MyStructAboutRect{ -p.y,p.x };
+	}
+
+//-------------------------------------------------------------------------------------
+	MyStructAboutRect Collision::Subtraction(MyStructAboutRect p1, MyStructAboutRect p2)
+	{
+		return MyStructAboutRect{ p1.x - p2.x,p1.y - p2.y };
+	}
+//-------------------------------------------------------------------------------------
+	double Collision::Distance(MyStructAboutRect p1, MyStructAboutRect p2)
+	{
+		return pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2);
+	}
+//-------------------------------------------------------------------------------------
+	void Collision::ProjectionOfPolygon(MyStructAboutRect p1, AboutRect polygon, double *min, double *max)
+	{
+		double distance = Multiplication(p1, polygon.rect[0]);
+		*min = *max = distance;
+
+		for (size_t i = 0; i < polygon.vertices; i++)
+		{
+			distance = Multiplication(p1, polygon.rect[i]);
+			if (distance < *min)
+			{
+				*min = distance;
+			}
+			else if (distance > *max)
+			{
+				*max = distance;
+			}
+		}
+	}
+//-------------------------------------------------------------------------------------
+	double Collision::ProjectionDistance(double minx0, double maxx0, double minx1, double maxx1)
+	{
+		return (minx0 < minx1) ? (minx1 - maxx0) : (minx0 - maxx1);
+	}
+//-------------------------------------------------------------------------------------
+	bool Collision::AlgorithmSecond(AboutRect A,AboutRect B)
+	{
+		MyStructAboutRect verticals, origin;
+		double minx0 = 0, maxx0 = 0, minx1 = 0, maxx1 = 0;
+		for (size_t i = 0,j = A.vertices-1; i < A.vertices + B.vertices; j = i,i++)
+		{
+			if (i < A.vertices)
+			{
+				// the criterion in A
+				origin = Subtraction(A.rect[i], A.rect[j]);
+			}
+			else
+			{
+				// the criterion in B
+				origin = Subtraction(B.rect[i - A.vertices], B.rect[j - A.vertices]);
+			}
+
+			// get vertical
+			verticals = vertical(origin);
+
+			// get projections
+			ProjectionOfPolygon(verticals, A, &minx0, &maxx0);
+			ProjectionOfPolygon(verticals, B, &minx1, &maxx1);
+
+			// collision?
+			if (ProjectionDistance(minx0, maxx0, minx1, maxx1)>0)
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	/*
-	class GeoCircle
+		class GeoCircle
 	*/
 
+//-------------------------------------------------------------------------------------
 	const int &GeoCircle::UppeLeftx() const
 	{
 		return UppeLeftX;
 	}
 
+//-------------------------------------------------------------------------------------
 	const int &GeoCircle::UppeLefty() const
 	{
 		return UppeLeftY;
 	}
 
+//-------------------------------------------------------------------------------------
 	const int &GeoCircle::width() const
 	{
 		return Width;
 	}
 
+//-------------------------------------------------------------------------------------
 	const int &GeoCircle::height() const
 	{
 		return Height;
 	}
 
+//-------------------------------------------------------------------------------------
 	inline vector<int> GeoCircle::CircleCenter()
 	{
 		vector<int> CircleStruct;

@@ -65,7 +65,7 @@ static vector< vector<SortType> > Every_Step_Of_The_Value;
 /*
 	Draw the basic warrior
 */
-#define Circlesize	10
+#define Circlesize	20
 #define CircleW		25
 #define CircleH		25
 
