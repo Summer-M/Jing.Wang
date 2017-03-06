@@ -8,9 +8,9 @@ namespace Geometric
 	HANDLE AMutex = NULL;
 	vector<int>	PoxXCircle = RandNumbers(850);
 	vector<int>	PoxYCircle = RandNumbers(800);
-	vector<int> DirectionXCircle(Circlesize,4);
-	vector<int> DirectionYCircle(Circlesize,4);
-	vector<bool> Collect(Circlesize, true);
+	vector<int> DirectionXCircle(Circlesize,9);
+	vector<int> DirectionYCircle(Circlesize,17);
+	vector<bool> Collect(Circlesize);
 
 //-------------------------------------------------------------------------------------
 	inline vector<int> RandNumbers(int value)
@@ -19,7 +19,7 @@ namespace Geometric
 		srand((int)time(NULL));
 		for (size_t i = 0; i < Circlesize; i++)
 		{
-			RandNumber.push_back(rand() % value + 3);
+			RandNumber.push_back(rand() % value);
 		}
 
 		return RandNumber;
@@ -290,13 +290,19 @@ namespace Geometric
 				////! -------------------------start-------------------------------------
 				for (size_t iIndex = 0; iIndex < Circlesize; iIndex++)
 				{
-					GeoRectangular georectangular(PoxXCircle[iIndex], PoxYCircle[iIndex], CircleW, CircleH);
-
 					if (iIndex == i)
 						continue;
+
+					GeoRectangular georectangular(PoxXCircle[iIndex], PoxYCircle[iIndex], CircleW, CircleH);
+
 					if (collision.AlgorithmSecond(currentrectangle.get(), georectangular.get()))			//!!!
 					{
 						Collect[i] = false;
+						break;	
+					}
+					else
+					{
+						Collect[i] = true;
 					}
 				}
 

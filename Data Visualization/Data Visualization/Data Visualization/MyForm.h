@@ -337,13 +337,6 @@ namespace DataVisualization {
 			// 
 			// MyForm
 			//
-			this->SetStyle(ControlStyles::OptimizedDoubleBuffer
-				| ControlStyles::ResizeRedraw
-				| ControlStyles::Selectable
-				| ControlStyles::AllPaintingInWmPaint
-				| ControlStyles::UserPaint
-				| ControlStyles::SupportsTransparentBackColor
-				, true);
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
@@ -2258,8 +2251,6 @@ private: System::Void pictureBoxAlgorithm_Paint(System::Object^  sender, System:
 				brushAlo = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::Red));
 
 			AloGraphics->FillEllipse(brushAlo, PoxXCircle[i], PoxYCircle[i], CircleW, CircleH);
-
-			Collect[i] = true;
 		}
 
 		AloGraphics->DrawImage(bitmapAlo, 0, 0);
@@ -2274,9 +2265,8 @@ private: System::Void pictureBoxAlgorithm_Paint(System::Object^  sender, System:
 				brushAlo = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::Red));
 
 			AloGraphics->FillRectangle(brushAlo, PoxXCircle[i], PoxYCircle[i], CircleW, CircleH);
-
-			Collect[i] = true;
 		}
+		
 		AloGraphics->DrawImage(bitmapAlo, 0, 0);
 	}
 	else if (format5Algorithm->Checked)												    // the polygon
@@ -2289,8 +2279,6 @@ private: System::Void pictureBoxAlgorithm_Paint(System::Object^  sender, System:
 				brushAlo = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Color::FromArgb(90, System::Drawing::Color::Color::Red));
 
 			AloGraphics->FillRectangle(brushAlo, PoxXCircle[i], PoxYCircle[i], CircleW, CircleH);
-
-			Collect[i] = true;
 		}
 
 		AloGraphics->DrawImage(bitmapAlo, 0, 0);
