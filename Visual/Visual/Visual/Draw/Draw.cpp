@@ -1,18 +1,18 @@
 
-#include "Draw.h"
+#include "../Draw/Draw.h"
 
 namespace Geometric
 {
-//!\brief extern variable
-//-------------------------------------------------------------------------------------
+	//!\brief extern variable
+	//-------------------------------------------------------------------------------------
 	HANDLE AMutex = NULL;
-	vector<int>	PoxXCircle = RandNumbers(850);
-	vector<int>	PoxYCircle = RandNumbers(800);
-	vector<int> DirectionXCircle(Circlesize,9);
-	vector<int> DirectionYCircle(Circlesize,17);
+	vector<int>	PoxXCircle = RandNumberss(750);
+	vector<int>	PoxYCircle = RandNumberss(620);
+	vector<int> DirectionXCircle(Circlesize, 10);
+	vector<int> DirectionYCircle(Circlesize, 16);
 	vector<bool> Collect(Circlesize);
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	inline vector<int> RandNumbers(int value)
 	{
 		vector<int> RandNumber;
@@ -25,11 +25,23 @@ namespace Geometric
 		return RandNumber;
 	}
 
+	inline vector<int> RandNumberss(int value)
+	{
+		vector<int> RandNumber;
+		srand((int)time(NULL));
+		for (size_t i = 0; i < Circlesize; i++)
+		{
+			RandNumber.push_back(rand() % value + 25);
+		}
+
+		return RandNumber;
+	}
+
 	/*
-		class Object
+	class Object
 	*/
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	MyText<SortType> Object::DrawText()
 	{
 		MyText<SortType> mytext;
@@ -49,7 +61,7 @@ namespace Geometric
 		return mytext;
 	}
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	MyRectangle<SortType> Object::DrawCylindrical()
 	{
 		MyRectangle<SortType> Rectangle;
@@ -71,7 +83,7 @@ namespace Geometric
 		return Rectangle;
 	}
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	DottedLine<SortType> Object::DrawDottedLine()
 	{
 		// pt1->pt2 or pt2->pt1
@@ -94,7 +106,7 @@ namespace Geometric
 		return dottedline;
 	}
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	bool Object::DrawPoints(System::Drawing::Graphics^ myGraphics)
 	{
 		try
@@ -111,7 +123,7 @@ namespace Geometric
 		}
 	}
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	bool Object::DrawCircle(System::Drawing::Graphics^ myGraphics)
 	{
 		try
@@ -128,7 +140,7 @@ namespace Geometric
 		}
 	}
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	void Object::Move(/*the function change circle position*/)
 	{
 		/*
@@ -243,12 +255,12 @@ namespace Geometric
 			}
 
 			//unlock
-			Sleep(50);
 			ReleaseMutex(AMutex);
+			Sleep(30);
 		}
 	}
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	void Object::MoveRect(/*the function change circle position*/)
 	{
 		/*
@@ -298,7 +310,7 @@ namespace Geometric
 					if (collision.AlgorithmSecond(currentrectangle.get(), georectangular.get()))			//!!!
 					{
 						Collect[i] = false;
-						break;	
+						break;
 					}
 					else
 					{
@@ -310,16 +322,16 @@ namespace Geometric
 			}
 
 			//unlock
-			Sleep(30);
 			ReleaseMutex(AMutex);
+			Sleep(50);
 		}
 	}
 
 	/*
-		Collision
+	Collision
 	*/
-	
-//-------------------------------------------------------------------------------------
+
+	//-------------------------------------------------------------------------------------
 	vector<int> Collision::CollsionAboutCircle(const int size)
 	{
 		vector<int> PosCenter;
@@ -333,7 +345,7 @@ namespace Geometric
 		return PosCenter;
 	}
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	bool Collision::AlgorithmFirst(vector<int> mycenter, int index, int Others, const int size)
 	{
 		if (sqrt(pow(mycenter[index] - mycenter[Others], 2) + pow(mycenter[index + 1] - mycenter[Others + 1], 2)) <= CircleW)
@@ -344,35 +356,35 @@ namespace Geometric
 		return true;
 	}
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	double Collision::Length(MyStructAboutRect p1, MyStructAboutRect p2)
 	{
 		return sqrt(p1.x*p2.x + p1.y*p2.y);
 	}
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	double Collision::Multiplication(MyStructAboutRect p1, MyStructAboutRect p2)
 	{
 		return p1.x * p2.x + p1.y * p2.y;
 	}
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	MyStructAboutRect Collision::vertical(MyStructAboutRect p)
 	{
 		return MyStructAboutRect{ -p.y,p.x };
 	}
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	MyStructAboutRect Collision::Subtraction(MyStructAboutRect p1, MyStructAboutRect p2)
 	{
 		return MyStructAboutRect{ p1.x - p2.x,p1.y - p2.y };
 	}
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	double Collision::Distance(MyStructAboutRect p1, MyStructAboutRect p2)
 	{
 		return pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2);
 	}
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	void Collision::ProjectionOfPolygon(MyStructAboutRect p1, AboutRect polygon, double *min, double *max)
 	{
 		double distance = Multiplication(p1, polygon.rect[0]);
@@ -391,17 +403,17 @@ namespace Geometric
 			}
 		}
 	}
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	double Collision::ProjectionDistance(double minx0, double maxx0, double minx1, double maxx1)
 	{
 		return (minx0 < minx1) ? (minx1 - maxx0) : (minx0 - maxx1);
 	}
-//-------------------------------------------------------------------------------------
-	bool Collision::AlgorithmSecond(AboutRect A,AboutRect B)
+	//-------------------------------------------------------------------------------------
+	bool Collision::AlgorithmSecond(AboutRect A, AboutRect B)
 	{
 		MyStructAboutRect verticals, origin;
 		double minx0 = 0, maxx0 = 0, minx1 = 0, maxx1 = 0;
-		for (size_t i = 0,j = A.vertices-1; i < A.vertices + B.vertices; j = i,i++)
+		for (size_t i = 0, j = A.vertices - 1; i < A.vertices + B.vertices; j = i, i++)
 		{
 			if (i < A.vertices)
 			{
@@ -432,34 +444,34 @@ namespace Geometric
 	}
 
 	/*
-		class GeoCircle
+	class GeoCircle
 	*/
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	const int &GeoCircle::UppeLeftx() const
 	{
 		return UppeLeftX;
 	}
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	const int &GeoCircle::UppeLefty() const
 	{
 		return UppeLeftY;
 	}
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	const int &GeoCircle::width() const
 	{
 		return Width;
 	}
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	const int &GeoCircle::height() const
 	{
 		return Height;
 	}
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	inline vector<int> GeoCircle::CircleCenter()
 	{
 		vector<int> CircleStruct;

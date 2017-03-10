@@ -1,6 +1,6 @@
 
-#include "Variable.h"
-#include "Thread.h"
+#include "../Variable/Variable.h"
+#include "../Thread/Thread.h"
 
 // static 
 unsigned int MYThread<SortType>::sortindex(0);

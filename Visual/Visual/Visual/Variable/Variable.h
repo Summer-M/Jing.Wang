@@ -33,10 +33,11 @@ using namespace std;
 
 //! define
 #define SortType  long long
-#define RECTANGULAR_SPACE  60
-#define RECTANGULAR_NUMBER 13
+#define RECTANGULAR_SPACE  10
+#define RECTANGULAR_NUMBER 80
 
 //! the statement
+static unsigned int	BaseNumber(37);
 static unsigned int StepInNormal(0);
 static std::vector<SortType> IArraysize;
 static vector<SortType> Every_Step_Of_The_Change;
@@ -54,22 +55,17 @@ static vector< vector<SortType> > Every_Step_Of_The_Value;
 // --------------------------------------------------------------------
 
 /*
-	Draw the area
+Draw the area
 */
 #
-#define  BELOW		890 
+#define  BELOW		840 
 #define  TOP		  0
 #define  LEFT		  0
-#define  RIGHT		870
+#define  RIGHT		696
 
 /*
-	Draw the basic warrior
+Draw the basic warrior
 */
-#define Circlesize	150
+#define Circlesize	100
 #define CircleW		25
 #define CircleH		25
-
-
-
-
-

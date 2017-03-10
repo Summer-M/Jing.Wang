@@ -1,8 +1,10 @@
 #pragma once
 
-#include <iostream>
+#include <vector>
 #include <time.h>
-#include "Header.h"
+#include <Windows.h>
+
+#include "../Variable/Variable.h"
 
 namespace Geometric
 {
@@ -19,7 +21,7 @@ namespace Geometric
 	// --------------------------------------------------------------------
 	//|					About The graphics transformation				   |
 	// --------------------------------------------------------------------
-	
+
 	extern	HANDLE		 AMutex;
 	extern	vector<int>	 PoxXCircle;
 	extern	vector<int>	 PoxYCircle;
@@ -55,11 +57,11 @@ namespace Geometric
 	class Object
 	{
 	public:
-		enum {/* the Cylindrical */ PosX = 65, PosY = 305, Width = 20, Height = 250 /*the Point*/, PosX1 = 30, PosY1 = 400 };
-		Object(){};
+		enum {/* the Cylindrical */ PosX = 20, PosY = 305, Width = 5, Height = 280 /*the Point*/, PosX1 = 30, PosY1 = 400 };
+		Object() {};
 		Object(SortType offX, SortType width)
 			:OffsetX(0),
-			 OffsetW(0)
+			OffsetW(0)
 		{
 			OffsetX = offX;
 			OffsetW = width;
@@ -97,18 +99,18 @@ namespace Geometric
 	class GeoCircle
 	{
 	public:
-		GeoCircle(int x,int y,int width,int height)
+		GeoCircle(int x, int y, int width, int height)
 			:UppeLeftX(0),
-			 UppeLeftY(0),
-			 Width(0),
-			 Height(0)
+			UppeLeftY(0),
+			Width(0),
+			Height(0)
 		{
 			UppeLeftX = x;
 			UppeLeftY = y;
 			Width = width;
 			Height = height;
 		};
-		~GeoCircle() 
+		~GeoCircle()
 		{
 		};
 
@@ -152,14 +154,14 @@ namespace Geometric
 	{
 	public:
 		GeoRectangular() {};
-		GeoRectangular(int leftX,int leftY,int width,int height)
+		GeoRectangular(int leftX, int leftY, int width, int height)
 		{
 			upperleft.x = leftX;
 			upperleft.y = leftY;
 			lowerleft.x = leftX;
 			lowerleft.y = leftY + height;
-			topright.x  = leftX + width;
-			topright.y  = leftY;
+			topright.x = leftX + width;
+			topright.y = leftY;
 			lowerright.x = leftX + width;
 			lowerright.y = leftY + height;
 
@@ -173,7 +175,7 @@ namespace Geometric
 		~GeoRectangular() {};
 
 	private:
-		
+
 		// Rectangular four point coordinates
 		MyStructAboutRect upperleft;
 		MyStructAboutRect lowerleft;
@@ -181,28 +183,28 @@ namespace Geometric
 		MyStructAboutRect lowerright;
 
 		AboutRect aboutrect;
-	
+
 	public:
 		//!\brief To obtain the normal vector
 		AboutRect get() { return aboutrect; }
 	};
 
 	/*
-		Notice: the class is going to be into a template class!!
+	Notice: the class is going to be into a template class!!
 	*/
 	class Collision
 	{
 	public:
 		Collision(vector<int> PosX, vector<int> PosY)
 			:CheckPosx(0),
-			 CheckPosy(0)
+			CheckPosy(0)
 		{
 			CheckPosx = PosX;
 			CheckPosy = PosY;
 		};
 
-		Collision(){}
-		~Collision(){}
+		Collision() {}
+		~Collision() {}
 
 	private:
 		// the first algorithm
@@ -222,19 +224,19 @@ namespace Geometric
 		//!\brief collision detection of the rectangle
 		// the length of this vector
 		double Length(MyStructAboutRect p1, MyStructAboutRect p2);
-		
+
 		// the multiplication
 		double Multiplication(MyStructAboutRect p1, MyStructAboutRect p2);
-		
+
 		// the verical
 		MyStructAboutRect vertical(MyStructAboutRect p);
-		
+
 		// the subtraction
 		MyStructAboutRect Subtraction(MyStructAboutRect p1, MyStructAboutRect p2);
-		
+
 		// the diatance of two vector
 		double Distance(MyStructAboutRect p1, MyStructAboutRect p2);
-		
+
 		// the proiection
 		void ProjectionOfPolygon(MyStructAboutRect p1, AboutRect rect, double *min, double *max);
 
@@ -244,7 +246,8 @@ namespace Geometric
 		// the second algorithm
 		bool AlgorithmSecond(AboutRect A, AboutRect B);
 	};
-//! \brief Process rand test-numbers 
-//-------------------------------------------------------------------------
+	//! \brief Process rand test-numbers 
+	//-------------------------------------------------------------------------
 	inline vector<int> RandNumbers(int value);
+	inline vector<int> RandNumberss(int value);
 }

@@ -1,5 +1,7 @@
-#include "Header.h"
-#include "Draw.h"
+
+#include "../Process/Process.h"
+#include "../Process/Process.h"
+#include "../Draw/Draw.h"
 
 namespace Process
 {
@@ -9,19 +11,19 @@ namespace Process
 	HANDLE HMutex = NULL;
 	bool SortFinished = true;
 	vector<int> ExchangeIndex(2);
-	int SleepTime = 100;
+	int SleepTime = 200;
 
 	//-------------------------------------------------------
 
 
 	/*
-		Sort
+	Sort
 	*/
 
 	// No code!!!
 
 	/*
-		LinkedList
+	LinkedList
 	*/
 	//!\brief extern variable
 	//-------------------------------------------------------

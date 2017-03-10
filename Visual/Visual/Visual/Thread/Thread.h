@@ -3,9 +3,9 @@
 //! \file
 //! This file define the thread
 
-#include "Draw.h"
-#include "Header.h"
-#include "Variable.h"
+#include "../Draw/Draw.h"
+#include "../Process/Process.h"
+#include "../Variable/Variable.h"
 
 template <class T>
 class MYThread

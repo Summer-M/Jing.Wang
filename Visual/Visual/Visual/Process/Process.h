@@ -7,7 +7,8 @@
 #include <process.h>
 #include <Windows.h>
 #include <malloc.h>
-#include "Variable.h"
+
+#include "../Variable/Variable.h"
 
 
 namespace Process
@@ -21,9 +22,9 @@ namespace Process
 	extern	bool				SortFinished;
 	extern  vector<int>			ExchangeIndex;
 	extern  int                 SleepTime;
-	
+
 	/*
-		the part of this namespace is used for sort
+	the part of this namespace is used for sort
 	*/
 
 	template <typename T>
@@ -37,7 +38,7 @@ namespace Process
 	class Sort
 	{
 	public:
-		enum { size = 13, othersize = 100 };
+		enum { size = 80, othersize = 100 };
 		Sort(vector<DataType> Object)
 			//IArraysize(size)
 		{
@@ -88,9 +89,10 @@ namespace Process
 							StepInNormal++;
 							//----------------------------------------------------------------------------------
 
-							//unlock	
-							Sleep(SleepTime);
+							//unlock
 							ReleaseMutex(HMutex);
+							Sleep(SleepTime);
+						
 						}
 						else if (ModelInModel == "step partten")
 						{
@@ -140,8 +142,8 @@ namespace Process
 					//----------------------------------------------------------------------------------
 
 					//unlock	
-					Sleep(SleepTime);
 					ReleaseMutex(HMutex);
+					Sleep(SleepTime);
 				}
 				else if (ModelInModel == "step partten")
 				{
@@ -183,8 +185,8 @@ namespace Process
 					//----------------------------------------------------------------------------------
 
 					//unlock	
-					Sleep(SleepTime);
 					ReleaseMutex(HMutex);
+					Sleep(SleepTime);
 				}
 				else if (ModelInModel == "step partten")
 				{
@@ -233,8 +235,8 @@ namespace Process
 						//----------------------------------------------------------------------------------
 
 						//unlock	
-						Sleep(SleepTime);
 						ReleaseMutex(HMutex);
+						Sleep(SleepTime);
 					}
 					else if (ModelInModel == "step partten")
 					{
@@ -271,8 +273,8 @@ namespace Process
 		}
 	};
 
-//! \brief Process rand test-numbers 
-//---------------------------------------------------------------------------
+	//! \brief Process rand test-numbers 
+	//---------------------------------------------------------------------------
 	template <typename DataType>
 	vector<DataType> RandNumbers()					// 13
 	{
@@ -286,7 +288,7 @@ namespace Process
 		return RandNumber;
 	}
 
-	
+
 	template <typename DataType>
 	vector<DataType> RandNums()					   // 300
 	{
@@ -300,11 +302,11 @@ namespace Process
 		return RandNumber;
 	}
 
-//! \brief thread 
-//---------------------------------------------------------------------------
-	
+	//! \brief thread 
+	//---------------------------------------------------------------------------
+
 	/*
-		the part of this namespace is used for linkedlist
+	the part of this namespace is used for linkedlist
 	*/
 
 	// extern
@@ -324,10 +326,10 @@ namespace Process
 		DoublyNoteList *pev;						// the pev pointer area
 		DoublyNoteList *next;						// the next pointer area
 	};
-	
+
 
 	/*
-		- Notice: the class is going to be into a template class!!
+	- Notice: the class is going to be into a template class!!
 	*/
 
 	class LinkedList
@@ -351,7 +353,7 @@ namespace Process
 		// search in LinkedList
 		struct NoteList* SearchList(int data, struct NoteList *head);
 		// search in LinkedList
-		struct NoteList* Reverse( struct NoteList *head);
+		struct NoteList* Reverse(struct NoteList *head);
 		// insert in LinkedList
 		struct NoteList * Insert(int Pos, struct NoteList *head, struct NoteList *insert);
 		// remove in LinkedList
