@@ -46,7 +46,7 @@ namespace Process
 		};
 		Sort(string Model)
 		{
-			ModelInModel = Model;;
+			ModelInModel = Model;
 		}
 		~Sort() {};
 
@@ -66,7 +66,6 @@ namespace Process
 			int iMimddle;
 			for (size_t i = 0; i < array.size(); i++)
 			{
-
 				for (size_t j = i + 1; j < array.size(); j++)
 				{
 					if (array[i] > array[j])
@@ -92,7 +91,6 @@ namespace Process
 							//unlock
 							ReleaseMutex(HMutex);
 							Sleep(SleepTime);
-						
 						}
 						else if (ModelInModel == "step partten")
 						{

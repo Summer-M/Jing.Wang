@@ -81,7 +81,7 @@ namespace Visual {
 	private: System::Windows::Forms::GroupBox^  groupBox3;
 	private: System::Windows::Forms::RadioButton^  step;
 	private: System::Windows::Forms::RadioButton^  normal;
-	private: System::Windows::Forms::GroupBox^  groupBox4;
+
 	private: System::Windows::Forms::GroupBox^  groupBox5;
 	private: System::Windows::Forms::PictureBox^  pictureBox3;
 	private: System::Windows::Forms::PictureBox^  pictureBox2;
@@ -89,6 +89,7 @@ namespace Visual {
 	private: System::Windows::Forms::Button^  button4;
 	private: System::Windows::Forms::Timer^  timer1;
 	private: System::ComponentModel::IContainer^  components;
+	private: System::Windows::Forms::TextBox^  textBox1;
 
 	private:
 		/// <summary>
@@ -144,13 +145,13 @@ namespace Visual {
 			this->groupBox3 = (gcnew System::Windows::Forms::GroupBox());
 			this->step = (gcnew System::Windows::Forms::RadioButton());
 			this->normal = (gcnew System::Windows::Forms::RadioButton());
-			this->groupBox4 = (gcnew System::Windows::Forms::GroupBox());
 			this->groupBox5 = (gcnew System::Windows::Forms::GroupBox());
 			this->pictureBox3 = (gcnew System::Windows::Forms::PictureBox());
 			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
 			this->button5 = (gcnew System::Windows::Forms::Button());
 			this->button4 = (gcnew System::Windows::Forms::Button());
 			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
+			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
@@ -237,9 +238,9 @@ namespace Visual {
 			this->groupBox2->Text = L"Sort";
 			// 
 			// others
-			//
-			this->others->Enabled = false;
+			// 
 			this->others->AutoSize = true;
+			this->others->Enabled = false;
 			this->others->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->others->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(134)));
@@ -323,9 +324,10 @@ namespace Visual {
 			// step
 			// 
 			this->step->AutoSize = true;
+			this->step->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->step->Location = System::Drawing::Point(40, 50);
 			this->step->Name = L"step";
-			this->step->Size = System::Drawing::Size(97, 21);
+			this->step->Size = System::Drawing::Size(96, 21);
 			this->step->TabIndex = 1;
 			this->step->TabStop = true;
 			this->step->Text = L"step pattern";
@@ -334,21 +336,14 @@ namespace Visual {
 			// normal
 			// 
 			this->normal->AutoSize = true;
+			this->normal->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->normal->Location = System::Drawing::Point(40, 23);
 			this->normal->Name = L"normal";
-			this->normal->Size = System::Drawing::Size(67, 21);
+			this->normal->Size = System::Drawing::Size(66, 21);
 			this->normal->TabIndex = 0;
 			this->normal->TabStop = true;
 			this->normal->Text = L"normal";
 			this->normal->UseVisualStyleBackColor = true;
-			// 
-			// groupBox4
-			// 
-			this->groupBox4->Location = System::Drawing::Point(13, 629);
-			this->groupBox4->Name = L"groupBox4";
-			this->groupBox4->Size = System::Drawing::Size(831, 92);
-			this->groupBox4->TabIndex = 4;
-			this->groupBox4->TabStop = false;
 			// 
 			// groupBox5
 			// 
@@ -358,7 +353,7 @@ namespace Visual {
 			this->groupBox5->Controls->Add(this->button4);
 			this->groupBox5->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(134)));
-			this->groupBox5->Location = System::Drawing::Point(860, 629);
+			this->groupBox5->Location = System::Drawing::Point(860, 630);
 			this->groupBox5->Name = L"groupBox5";
 			this->groupBox5->Size = System::Drawing::Size(173, 92);
 			this->groupBox5->TabIndex = 5;
@@ -369,9 +364,9 @@ namespace Visual {
 			// 
 			this->pictureBox3->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Center;
 			this->pictureBox3->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox3.Image")));
-			this->pictureBox3->Location = System::Drawing::Point(23, 59);
+			this->pictureBox3->Location = System::Drawing::Point(30, 59);
 			this->pictureBox3->Name = L"pictureBox3";
-			this->pictureBox3->Size = System::Drawing::Size(25, 23);
+			this->pictureBox3->Size = System::Drawing::Size(20, 20);
 			this->pictureBox3->SizeMode = System::Windows::Forms::PictureBoxSizeMode::CenterImage;
 			this->pictureBox3->TabIndex = 3;
 			this->pictureBox3->TabStop = false;
@@ -379,9 +374,9 @@ namespace Visual {
 			// pictureBox2
 			// 
 			this->pictureBox2->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox2.Image")));
-			this->pictureBox2->Location = System::Drawing::Point(23, 22);
+			this->pictureBox2->Location = System::Drawing::Point(30, 24);
 			this->pictureBox2->Name = L"pictureBox2";
-			this->pictureBox2->Size = System::Drawing::Size(25, 23);
+			this->pictureBox2->Size = System::Drawing::Size(20, 20);
 			this->pictureBox2->SizeMode = System::Windows::Forms::PictureBoxSizeMode::CenterImage;
 			this->pictureBox2->TabIndex = 2;
 			this->pictureBox2->TabStop = false;
@@ -414,13 +409,24 @@ namespace Visual {
 			// 
 			this->timer1->Tick += gcnew System::EventHandler(this, &SortControl::timer1_Tick);
 			// 
+			// textBox1
+			// 
+			this->textBox1->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->textBox1->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->textBox1->Location = System::Drawing::Point(13, 638);
+			this->textBox1->Multiline = true;
+			this->textBox1->Name = L"textBox1";
+			this->textBox1->ReadOnly = true;
+			this->textBox1->Size = System::Drawing::Size(831, 83);
+			this->textBox1->TabIndex = 6;
+			// 
 			// SortControl
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::Transparent;
+			this->Controls->Add(this->textBox1);
 			this->Controls->Add(this->groupBox5);
-			this->Controls->Add(this->groupBox4);
 			this->Controls->Add(this->groupBox3);
 			this->Controls->Add(this->groupBox2);
 			this->Controls->Add(this->groupBox1);
@@ -438,6 +444,7 @@ namespace Visual {
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox3))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->EndInit();
 			this->ResumeLayout(false);
+			this->PerformLayout();
 
 		}
 #pragma endregion
@@ -451,6 +458,9 @@ private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e
 	WaitForSingleObject(Process::HMutex, INFINITE);
 
 	//show();
+	updatetextbox((this->textBox1->GetLineFromCharIndex(this->textBox1->GetFirstCharIndexOfCurrentLine()) + 1).ToString() + ") " + " The " + (StepInNormal + 1).ToString() + " steps : " + "swap the " + ExchangeIndex[0].ToString()
+		+  " with the " + ExchangeIndex[1].ToString() + ".");
+	
 	this->pictureBox1->Invalidate();
 	this->button3->Text = The_digital_unit(StepInNormal + 1);
 
@@ -671,6 +681,7 @@ private: System::Void pictureBox1_Paint(System::Object^  sender, System::Windows
 				// update data
 				this->timer1->Stop();
 				StepInNormal = 0;
+				updatetextbox("--------------------------------------------Over-------------------------------------------------");
 				myGraphics->DrawImage(bitmap, 0, 0);
 			}
 		}
@@ -773,6 +784,7 @@ private: void Go( /* the function is start thread */ MyStruct<SortType> SortInfo
 	{
 		try
 		{
+			this->textBox1->Text = "--------------------------------------------Start-------------------------------------------------";
 			HMutex = CreateMutex(NULL, FALSE, LPCWSTR("sort"));
 			HANDLE  HandleSort = (HANDLE)_beginthreadex(NULL, 0, ThreadInSort.ThreadOfSort, NULL, 0, NULL);
 
@@ -887,6 +899,7 @@ private: void show()
 				// update data
 				this->timer1->Stop();
 				StepInNormal = 0;
+				updatetextbox("--------------------------------------------OVER-------------------------------------------------");
 				//myGraphics->DrawImage(bitmap, 0, 0);
 			}
 		}
@@ -941,6 +954,7 @@ private: void show()
 }
 private: void Shielding( /*The function is shield object*/) {
 
+	this->button1->Enabled = false;
 	this->bubble->Enabled = false;
 	this->button2->Enabled = false;
 	this->select->Enabled = false;
@@ -965,13 +979,14 @@ private: void ShieldingModel( /* the function is shield widget */)
 }
 private: void Opening( /*The function is open object*/) {
 
+	this->button1->Enabled = true;
 	this->bubble->Enabled = true;
 	this->button2->Enabled = false;
 	this->select->Enabled = true;
 	this->insert->Enabled = true;
 	this->shell->Enabled = true;
 	this->normal->Enabled = false;
-	this->step->Enabled = false;
+	this->step->Enabled = true;
 	this->button4->Enabled = false;
 	this->button5->Enabled = false;
 }
@@ -987,5 +1002,10 @@ private: String^ The_digital_unit(const unsigned int steps)
 		break;
 	}
 }
+private: void updatetextbox(String^ infomation)
+{
+	//this->textBox1->Text = L"\r\n";
+	this->textBox1->AppendText("\r\n" + infomation);
+}  
 };
 }
