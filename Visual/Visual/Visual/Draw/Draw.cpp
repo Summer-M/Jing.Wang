@@ -323,7 +323,7 @@ namespace Geometric
 
 			//unlock
 			ReleaseMutex(AMutex);
-			Sleep(50);
+			Sleep(30);
 		}
 	}
 

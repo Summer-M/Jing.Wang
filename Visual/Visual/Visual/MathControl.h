@@ -65,6 +65,7 @@ namespace Visual {
 	private: System::Windows::Forms::TextBox^  textBox2;
 	private: System::Windows::Forms::TextBox^  textBox1;
 	private: System::ComponentModel::IContainer^  components;
+	private: System::Windows::Forms::Timer^  timer1;
 	protected:
 
 	private:
@@ -77,8 +78,7 @@ namespace Visual {
 		System::Drawing::Brush^  brushAlo;
 		System::Drawing::Graphics^  AloGraphics;
 		System::Drawing::Bitmap^ bitmapAlo;
-	private: System::Windows::Forms::Timer^  timer1;
-			 System::Drawing::Bitmap^ canvasAlo;
+		System::Drawing::Bitmap^ canvasAlo;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -161,6 +161,7 @@ namespace Visual {
 			this->button2->TabIndex = 1;
 			this->button2->Text = L"Separation";
 			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &MathControl::button2_Click);
 			// 
 			// button1
 			// 
@@ -355,6 +356,10 @@ namespace Visual {
 		ReadyGo();
 	}
 
+	private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e) {
+		ReadyGoB();
+	}
+
 	private: void ReadyGo()
 	{
 		ThreadAboutAlgorithm threadaboutalgorithm;
@@ -362,6 +367,22 @@ namespace Visual {
 		try
 		{
 			HANDLE hThread2 = (HANDLE)_beginthreadex(NULL, 0, threadaboutalgorithm.ThreadOfA, NULL, 0, NULL);
+			AMutex = CreateMutex(NULL, FALSE, LPCWSTR("Algorithm"));
+			this->timer1->Start();
+		}
+		catch (const std::exception&)
+		{
+			return;
+		}
+	}
+
+	private: void ReadyGoB()
+	{
+		ThreadAboutAlgorithm threadaboutalgorithm;
+		this->timer1->Interval = 15;
+		try
+		{
+			HANDLE hThread2 = (HANDLE)_beginthreadex(NULL, 0, threadaboutalgorithm.ThreadOfAB, NULL, 0, NULL);
 			AMutex = CreateMutex(NULL, FALSE, LPCWSTR("Algorithm"));
 			this->timer1->Start();
 		}

@@ -78,8 +78,16 @@ public:
 	// no code
 	static unsigned int _stdcall ThreadOfA(LPVOID lpParam)
 	{
-		Geometric::Object *object;
-		object->MoveRect();
+		Geometric::Object object;
+		object.Move();
+		return 0;
+	}
+
+	// no code
+	static unsigned int _stdcall ThreadOfAB(LPVOID lpParam)
+	{
+		Geometric::Object object;
+		object.MoveRect();
 		return 0;
 	}
 };

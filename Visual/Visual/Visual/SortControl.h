@@ -47,7 +47,7 @@ namespace Visual {
 
 			//about coordinates
 			penCoordinates = gcnew System::Drawing::Pen(System::Drawing::Color::Color::Black, 1);
-
+			penCoordinates2 = gcnew System::Drawing::Pen(System::Drawing::Color::Color::LightGray, 1);
 			//about text
 			font = gcnew System::Drawing::Font(L"Microsoft YaHei", 9);
 			stepfont = gcnew System::Drawing::Font(L"Microsoft YaHei", 10);
@@ -111,7 +111,8 @@ namespace Visual {
 		System::Drawing::Pen^    penDottedLine;				// dotted line
 
 		//about coordinates
-		System::Drawing::Pen^    penCoordinates;			// coordinates 
+		System::Drawing::Pen^    penCoordinates;			// coordinates
+		System::Drawing::Pen^    penCoordinates2;
 
 		//about text
 		System::Drawing::Font^   font;						// text data
@@ -412,13 +413,16 @@ namespace Visual {
 			// textBox1
 			// 
 			this->textBox1->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->textBox1->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->textBox1->Font = (gcnew System::Drawing::Font(L"SimSun", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(134)));
 			this->textBox1->Location = System::Drawing::Point(13, 638);
 			this->textBox1->Multiline = true;
 			this->textBox1->Name = L"textBox1";
 			this->textBox1->ReadOnly = true;
+			this->textBox1->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
 			this->textBox1->Size = System::Drawing::Size(831, 83);
 			this->textBox1->TabIndex = 6;
+			this->textBox1->Text = resources->GetString(L"textBox1.Text");
 			// 
 			// SortControl
 			// 
@@ -458,11 +462,12 @@ private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e
 	WaitForSingleObject(Process::HMutex, INFINITE);
 
 	//show();
-	updatetextbox((this->textBox1->GetLineFromCharIndex(this->textBox1->GetFirstCharIndexOfCurrentLine()) + 1).ToString() + ") " + " The " + (StepInNormal + 1).ToString() + " steps : " + "swap the " + ExchangeIndex[0].ToString()
-		+  " with the " + ExchangeIndex[1].ToString() + ".");
+	Updatetextbox((this->textBox1->GetLineFromCharIndex(this->textBox1->GetFirstCharIndexOfCurrentLine()) + 1).ToString() + ") " + " The " + The_digital_unit(StepInNormal + 1) + " steps : "
+		+  "Swapping the " + The_digital_unit(ExchangeIndex[0])
+		+  " with the " + The_digital_unit(ExchangeIndex[1]) + ".(As above the red rectangle!)");
 	
 	this->pictureBox1->Invalidate();
-	this->button3->Text = The_digital_unit(StepInNormal + 1);
+	this->button3->Text = "- The " + The_digital_unit(StepInNormal + 1) + " Steps -";
 
 	//unlock
 	ReleaseMutex(HMutex);
@@ -606,6 +611,29 @@ private: System::Void pictureBox1_Paint(System::Object^  sender, System::Windows
 	myGraphics->FromImage(bitmap);
 	myGraphics->SmoothingMode = System::Drawing::Drawing2D::SmoothingMode::AntiAlias;
 
+	// draw x-coordinate
+	for (SortType i = 0; i < RECTANGULAR_NUMBER; i++)
+	{
+		System::Drawing::Point Pt1(22 + RECTANGULAR_SPACE * i, this->pictureBox1->Height);
+		System::Drawing::Point Pt2(22 + RECTANGULAR_SPACE * i, this->pictureBox1->Height - 7);
+		myGraphics->DrawLine(penCoordinates, Pt1, Pt2);
+	}
+
+	// draw y-coordinate
+	for (SortType i = 0; i < RECTANGULAR_NUMBER - 2; i++)
+	{
+		if (i % 4 == 0 && i != 0)
+		{
+			System::Drawing::Point Pt1(17, 5 + RECTANGULAR_SPACE * i);
+			System::Drawing::Point Pt2(this->pictureBox1->Width - 12, 5 + RECTANGULAR_SPACE * i);
+			myGraphics->DrawLine(penCoordinates2, Pt1, Pt2);
+		}
+
+		System::Drawing::Point Pt1(0, 5 + RECTANGULAR_SPACE * i);
+		System::Drawing::Point Pt2(0 + 7, 5 + RECTANGULAR_SPACE * i);
+		myGraphics->DrawLine(penCoordinates, Pt1, Pt2);
+	}
+
 	// draw sorting process
 	if (this->normal->Checked)
 	{
@@ -650,7 +678,7 @@ private: System::Void pictureBox1_Paint(System::Object^  sender, System::Windows
 
 					//myGraphics->DrawLine(penDottedLine, Pt5, Pt6);
 					//myGraphics->DrawString((IArraysize[i] + BaseNumber).ToString(), font, brush, float(object.DrawText().TextX), float(object.DrawText().TextY));
-					myGraphics->DrawString(The_digital_unit(StepInNormal + 1), stepfont, stepbrush, float(abs(Pt2.X - Pt3.X) / 2 + min(Pt2.X, Pt3.X) - 50), float(Pt2.Y - 25));
+					myGraphics->DrawString("- The " + The_digital_unit(StepInNormal + 1) + "Steps -", stepfont, stepbrush, float(abs(Pt2.X - Pt3.X) / 2 + min(Pt2.X, Pt3.X) - 50), float(Pt2.Y - 25));
 				}
 
 				myGraphics->DrawImage(bitmap, 0, 0);
@@ -681,7 +709,7 @@ private: System::Void pictureBox1_Paint(System::Object^  sender, System::Windows
 				// update data
 				this->timer1->Stop();
 				StepInNormal = 0;
-				updatetextbox("--------------------------------------------Over-------------------------------------------------");
+				Updatetextbox("--------------------------------------------Over-------------------------------------------------");
 				myGraphics->DrawImage(bitmap, 0, 0);
 			}
 		}
@@ -723,31 +751,19 @@ private: System::Void pictureBox1_Paint(System::Object^  sender, System::Windows
 			System::Drawing::Point Pt5(object.DrawDottedLine().Point1X, object.DrawDottedLine().Point1Y);
 			System::Drawing::Point Pt6(object.DrawDottedLine().Point2X, object.DrawDottedLine().Point2Y);
 
-			myGraphics->DrawLine(penDottedLine, Pt5, Pt6);
-			myGraphics->DrawString((Every_Step_Of_The_Value.at(SortStep).at(i) + BaseNumber).ToString(), font, brush, float(object.DrawText().TextX), float(object.DrawText().TextY));
-			myGraphics->DrawString(The_digital_unit(SortStep + 1), stepfont, stepbrush, float(abs(Pt2.X - Pt3.X) / 2 + min(Pt2.X, Pt3.X) - 50), float(Pt2.Y - 25));
-			this->button3->Text = The_digital_unit(SortStep + 1);
+			//myGraphics->DrawLine(penDottedLine, Pt5, Pt6);
+			//myGraphics->DrawString((Every_Step_Of_The_Value.at(SortStep).at(i) + BaseNumber).ToString(), font, brush, float(object.DrawText().TextX), float(object.DrawText().TextY));
+			myGraphics->DrawString("- The " + The_digital_unit(SortStep + 1) + "Steps -", stepfont, stepbrush, float(abs(Pt2.X - Pt3.X) / 2 + min(Pt2.X, Pt3.X) - 50), float(Pt2.Y - 25));
 		}
+
+		this->button3->Text = "- The " + The_digital_unit(SortStep + 1) + "Steps -"; 
+		Updatetextbox((this->textBox1->GetLineFromCharIndex(this->textBox1->GetFirstCharIndexOfCurrentLine()) + 1).ToString() + ") " + " The " + The_digital_unit(SortStep + 1) 
+			+ " steps : " + "Swapping the " + The_digital_unit(Every_Step_Of_The_Change[2 * SortStep]) 
+			+ " with the " + The_digital_unit(Every_Step_Of_The_Change[2 * SortStep + 1]) + " in the vector" + ".(As above the red rectangle!)");
 	}
 	else if (!Endpattern)
 	{
 		myGraphics->Clear(this->pictureBox1->BackColor);
-	}
-
-	// draw x-coordinate
-	for (SortType i = 0; i < RECTANGULAR_NUMBER; i++)
-	{
-		System::Drawing::Point Pt1(22 + RECTANGULAR_SPACE * i, this->pictureBox1->Height);
-		System::Drawing::Point Pt2(22 + RECTANGULAR_SPACE * i, this->pictureBox1->Height - 7);
-		myGraphics->DrawLine(penCoordinates, Pt1, Pt2);
-	}
-
-	// draw y-coordinate
-	for (SortType i = 0; i < RECTANGULAR_NUMBER - 2; i++)
-	{
-		System::Drawing::Point Pt1(0, 5 + RECTANGULAR_SPACE * i);
-		System::Drawing::Point Pt2(0 + 7, 5 + RECTANGULAR_SPACE * i);
-		myGraphics->DrawLine(penCoordinates, Pt1, Pt2);
 	}
 }
 
@@ -784,7 +800,7 @@ private: void Go( /* the function is start thread */ MyStruct<SortType> SortInfo
 	{
 		try
 		{
-			this->textBox1->Text = "--------------------------------------------Start-------------------------------------------------";
+			this->textBox1->AppendText("\r\n--------------------------------------------Start-------------------------------------------------");
 			HMutex = CreateMutex(NULL, FALSE, LPCWSTR("sort"));
 			HANDLE  HandleSort = (HANDLE)_beginthreadex(NULL, 0, ThreadInSort.ThreadOfSort, NULL, 0, NULL);
 
@@ -808,6 +824,7 @@ private: void ReadyForSortUseSecondModel( /*the function is start thread*/ const
 
 	try
 	{
+		this->textBox1->AppendText("\r\n--------------------------------------------Start-------------------------------------------------");
 		HMutex = CreateMutex(NULL, FALSE, LPCWSTR("sort"));
 		HANDLE  HandleSort = (HANDLE)_beginthreadex(NULL, 0, ThreadInSort.ThreadOfSort, NULL, 0, NULL);
 		DWORD ReturnStatus = WaitForSingleObject(HandleSort, INFINITE);
@@ -822,136 +839,6 @@ private: void ReadyForSortUseSecondModel( /*the function is start thread*/ const
 
 //!\brief
 //!\brief about update ui
-private: void show()
-{
-	// draw sorting process
-	if (this->normal->Checked)
-	{
-		Geometric::Object arrow;
-		vector<long long>::iterator SearchFirst;
-
-		try
-		{
-			if (IArraysize.size() != 0 && SortFinished)
-			{
-				// update the line segment
-				System::Drawing::Point Pt1(RECTANGULAR_SPACE * ExchangeIndex[0] + 45, 185 - IArraysize[ExchangeIndex[0]]);
-				System::Drawing::Point Pt2(RECTANGULAR_SPACE * ExchangeIndex[0] + 45, 90 - IArraysize[ExchangeIndex[0]]);
-				System::Drawing::Point Pt3(RECTANGULAR_SPACE * ExchangeIndex[1] + 45, 90 - IArraysize[ExchangeIndex[0]]);
-				System::Drawing::Point Pt4(RECTANGULAR_SPACE * ExchangeIndex[1] + 45, 185 - IArraysize[ExchangeIndex[1]]);
-
-				myGraphics->DrawLine(pen, Pt1, Pt2);
-				myGraphics->DrawLine(pen, Pt2, Pt3);
-				myGraphics->DrawLine(pen, Pt3, Pt4);
-
-				// update cylindrical
-				for (SortType i = 0; i < RECTANGULAR_NUMBER; i++)
-				{
-					Geometric::Object object(RECTANGULAR_SPACE * i, IArraysize[i]);
-					if (i == ExchangeIndex[0] || i == ExchangeIndex[1])
-					{
-						brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::PaleVioletRed);
-						myGraphics->FillRectangle(brush, int(object.DrawCylindrical().RectangleX), int(object.DrawCylindrical().RectangleY),
-							int(object.DrawCylindrical().RectangleWidth), int(object.DrawCylindrical().RectangleHeight));
-					}
-
-					else
-					{
-						brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::DarkTurquoise);
-						myGraphics->FillRectangle(brush, int(object.DrawCylindrical().RectangleX), int(object.DrawCylindrical().RectangleY),
-							int(object.DrawCylindrical().RectangleWidth), int(object.DrawCylindrical().RectangleHeight));
-					}
-
-					//update dottedLine and text 
-					System::Drawing::Point Pt5(object.DrawDottedLine().Point1X, object.DrawDottedLine().Point1Y);
-					System::Drawing::Point Pt6(object.DrawDottedLine().Point2X, object.DrawDottedLine().Point2Y);
-
-					myGraphics->DrawLine(penDottedLine, Pt5, Pt6);
-					myGraphics->DrawString((IArraysize[i] + BaseNumber).ToString(), font, brush, float(object.DrawText().TextX), float(object.DrawText().TextY));
-					myGraphics->DrawString(The_digital_unit(StepInNormal + 1), stepfont, stepbrush, float(abs(Pt2.X - Pt3.X) / 2 + min(Pt2.X, Pt3.X) - 50), float(Pt2.Y - 25));
-				}
-
-				//myGraphics->DrawImage(bitmap, 0, 0);
-				//this->pictureBox1->Image = canvas;
-			}
-			else if (!SortFinished)
-			{
-				// finally update ui when thread is end.
-				for (SortType i = 0; i < RECTANGULAR_NUMBER; i++)
-				{
-					// update cylindrical
-					Geometric::Object object(RECTANGULAR_SPACE * i, IArraysize[i]);
-					brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::DarkTurquoise);
-					myGraphics->FillRectangle(brush, int(object.DrawCylindrical().RectangleX), int(object.DrawCylindrical().RectangleY),
-						int(object.DrawCylindrical().RectangleWidth), int(object.DrawCylindrical().RectangleHeight));
-
-					//update dottedLine and text 
-					System::Drawing::Point Pt5(object.DrawDottedLine().Point1X, object.DrawDottedLine().Point1Y);
-					System::Drawing::Point Pt6(object.DrawDottedLine().Point2X, object.DrawDottedLine().Point2Y);
-
-					myGraphics->DrawLine(penDottedLine, Pt5, Pt6);
-					myGraphics->DrawString((IArraysize[i] + BaseNumber).ToString(), font, brush, float(object.DrawText().TextX), float(object.DrawText().TextY));
-				}
-
-				// update controls
-				Opening();
-
-				// update data
-				this->timer1->Stop();
-				StepInNormal = 0;
-				updatetextbox("--------------------------------------------OVER-------------------------------------------------");
-				//myGraphics->DrawImage(bitmap, 0, 0);
-			}
-		}
-		catch (const std::exception&)
-		{
-			return;
-		}
-	}
-	else if (this->step->Checked && Endpattern)
-	{
-		// update ui about the previous step
-		System::Drawing::Point Pt1(RECTANGULAR_SPACE * Every_Step_Of_The_Change[2 * SortStep] + 45, 185 - Every_Step_Of_The_Value.at(SortStep).at(Every_Step_Of_The_Change[2 * SortStep]));
-		System::Drawing::Point Pt2(RECTANGULAR_SPACE * Every_Step_Of_The_Change[2 * SortStep] + 45, 90 - Every_Step_Of_The_Value.at(SortStep).at(Every_Step_Of_The_Change[2 * SortStep]));
-		System::Drawing::Point Pt3(RECTANGULAR_SPACE * Every_Step_Of_The_Change[2 * SortStep + 1] + 45, 90 - Every_Step_Of_The_Value.at(SortStep).at(Every_Step_Of_The_Change[2 * SortStep]));
-		System::Drawing::Point Pt4(RECTANGULAR_SPACE * Every_Step_Of_The_Change[2 * SortStep + 1] + 45, 185 - Every_Step_Of_The_Value.at(SortStep).at(Every_Step_Of_The_Change[2 * SortStep + 1]));
-
-		myGraphics->DrawLine(pen, Pt1, Pt2);
-		myGraphics->DrawLine(pen, Pt2, Pt3);
-		myGraphics->DrawLine(pen, Pt3, Pt4);
-
-		for (SortType i = 0; i < RECTANGULAR_NUMBER; i++)
-		{
-			Geometric::Object object(RECTANGULAR_SPACE * i, Every_Step_Of_The_Value.at(SortStep).at(i));
-
-			if (i == Every_Step_Of_The_Change[2 * SortStep] || i == Every_Step_Of_The_Change[2 * SortStep + 1])
-			{
-				brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::PaleVioletRed);
-				myGraphics->FillRectangle(brush, int(object.DrawCylindrical().RectangleX), int(object.DrawCylindrical().RectangleY),
-					int(object.DrawCylindrical().RectangleWidth), int(object.DrawCylindrical().RectangleHeight));
-			}
-			else
-			{
-				brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::DarkTurquoise);
-				myGraphics->FillRectangle(brush, int(object.DrawCylindrical().RectangleX), int(object.DrawCylindrical().RectangleY),
-					int(object.DrawCylindrical().RectangleWidth), int(object.DrawCylindrical().RectangleHeight));
-			}
-
-			//update dottedLine and text and step
-			System::Drawing::Point Pt5(object.DrawDottedLine().Point1X, object.DrawDottedLine().Point1Y);
-			System::Drawing::Point Pt6(object.DrawDottedLine().Point2X, object.DrawDottedLine().Point2Y);
-
-			myGraphics->DrawLine(penDottedLine, Pt5, Pt6);
-			myGraphics->DrawString((Every_Step_Of_The_Value.at(SortStep).at(i) + BaseNumber).ToString(), font, brush, float(object.DrawText().TextX), float(object.DrawText().TextY));
-			myGraphics->DrawString(The_digital_unit(SortStep + 1), stepfont, stepbrush, float(abs(Pt2.X - Pt3.X) / 2 + min(Pt2.X, Pt3.X) - 50), float(Pt2.Y - 25));
-			this->button5->Text = The_digital_unit(SortStep + 1);
-		}
-	}
-	else if (!Endpattern)
-	{
-		myGraphics->Clear(this->pictureBox1->BackColor);
-	}
-}
 private: void Shielding( /*The function is shield object*/) {
 
 	this->button1->Enabled = false;
@@ -985,7 +872,7 @@ private: void Opening( /*The function is open object*/) {
 	this->select->Enabled = true;
 	this->insert->Enabled = true;
 	this->shell->Enabled = true;
-	this->normal->Enabled = false;
+	this->normal->Enabled = true;
 	this->step->Enabled = true;
 	this->button4->Enabled = false;
 	this->button5->Enabled = false;
@@ -994,15 +881,15 @@ private: String^ The_digital_unit(const unsigned int steps)
 {
 	switch (steps)
 	{
-	case 1:	return "- The " + steps.ToString() + "st Step -";
-	case 2:	return "- The " + steps.ToString() + "nd Step -";
-	case 3:	return "- The " + steps.ToString() + "rd Step -";
+	case 1:	return steps.ToString() + "st";
+	case 2:	return steps.ToString() + "nd";
+	case 3:	return steps.ToString() + "rd";
 	default:
-		return "- The " + steps.ToString() + "th Step -";
+		return steps.ToString() + "th";
 		break;
 	}
 }
-private: void updatetextbox(String^ infomation)
+private: void Updatetextbox(String^ infomation)
 {
 	//this->textBox1->Text = L"\r\n";
 	this->textBox1->AppendText("\r\n" + infomation);

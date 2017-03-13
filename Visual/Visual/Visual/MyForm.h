@@ -79,14 +79,14 @@ namespace Visual {
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(MyForm::typeid));
 			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
 			this->tabPage1 = (gcnew System::Windows::Forms::TabPage());
+			this->button6 = (gcnew System::Windows::Forms::Button());
+			this->button5 = (gcnew System::Windows::Forms::Button());
+			this->button4 = (gcnew System::Windows::Forms::Button());
+			this->button3 = (gcnew System::Windows::Forms::Button());
+			this->button2 = (gcnew System::Windows::Forms::Button());
+			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->tabPage2 = (gcnew System::Windows::Forms::TabPage());
 			this->tabPage3 = (gcnew System::Windows::Forms::TabPage());
-			this->button1 = (gcnew System::Windows::Forms::Button());
-			this->button2 = (gcnew System::Windows::Forms::Button());
-			this->button3 = (gcnew System::Windows::Forms::Button());
-			this->button4 = (gcnew System::Windows::Forms::Button());
-			this->button5 = (gcnew System::Windows::Forms::Button());
-			this->button6 = (gcnew System::Windows::Forms::Button());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->tabControl1->SuspendLayout();
 			this->tabPage1->SuspendLayout();
@@ -121,6 +121,85 @@ namespace Visual {
 			this->tabPage1->TabIndex = 0;
 			this->tabPage1->Text = L"Functions";
 			// 
+			// button6
+			// 
+			this->button6->Cursor = System::Windows::Forms::Cursors::Hand;
+			this->button6->FlatAppearance->BorderColor = System::Drawing::Color::WhiteSmoke;
+			this->button6->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->button6->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button6.Image")));
+			this->button6->Location = System::Drawing::Point(558, 6);
+			this->button6->Name = L"button6";
+			this->button6->Size = System::Drawing::Size(59, 51);
+			this->button6->TabIndex = 5;
+			this->button6->UseVisualStyleBackColor = true;
+			// 
+			// button5
+			// 
+			this->button5->Cursor = System::Windows::Forms::Cursors::Hand;
+			this->button5->FlatAppearance->BorderColor = System::Drawing::Color::WhiteSmoke;
+			this->button5->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->button5->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button5.Image")));
+			this->button5->Location = System::Drawing::Point(448, 6);
+			this->button5->Name = L"button5";
+			this->button5->Size = System::Drawing::Size(59, 51);
+			this->button5->TabIndex = 4;
+			this->button5->UseVisualStyleBackColor = true;
+			// 
+			// button4
+			// 
+			this->button4->Cursor = System::Windows::Forms::Cursors::Hand;
+			this->button4->FlatAppearance->BorderColor = System::Drawing::Color::WhiteSmoke;
+			this->button4->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->button4->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button4.Image")));
+			this->button4->Location = System::Drawing::Point(338, 6);
+			this->button4->Name = L"button4";
+			this->button4->Size = System::Drawing::Size(59, 51);
+			this->button4->TabIndex = 3;
+			this->button4->UseVisualStyleBackColor = true;
+			this->button4->Click += gcnew System::EventHandler(this, &MyForm::button4_Click);
+			// 
+			// button3
+			// 
+			this->button3->Cursor = System::Windows::Forms::Cursors::Hand;
+			this->button3->FlatAppearance->BorderColor = System::Drawing::Color::WhiteSmoke;
+			this->button3->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->button3->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button3.Image")));
+			this->button3->Location = System::Drawing::Point(228, 6);
+			this->button3->Name = L"button3";
+			this->button3->Size = System::Drawing::Size(59, 51);
+			this->button3->TabIndex = 2;
+			this->button3->UseVisualStyleBackColor = true;
+			this->button3->Click += gcnew System::EventHandler(this, &MyForm::button3_Click);
+			// 
+			// button2
+			// 
+			this->button2->Cursor = System::Windows::Forms::Cursors::Hand;
+			this->button2->FlatAppearance->BorderColor = System::Drawing::Color::WhiteSmoke;
+			this->button2->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->button2->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button2.Image")));
+			this->button2->Location = System::Drawing::Point(118, 6);
+			this->button2->Name = L"button2";
+			this->button2->Size = System::Drawing::Size(59, 51);
+			this->button2->TabIndex = 1;
+			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &MyForm::button2_Click);
+			// 
+			// button1
+			// 
+			this->button1->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->button1->Cursor = System::Windows::Forms::Cursors::Hand;
+			this->button1->FlatAppearance->BorderColor = System::Drawing::Color::WhiteSmoke;
+			this->button1->FlatAppearance->MouseDownBackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(224)),
+				static_cast<System::Int32>(static_cast<System::Byte>(224)), static_cast<System::Int32>(static_cast<System::Byte>(224)));
+			this->button1->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->button1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button1.Image")));
+			this->button1->Location = System::Drawing::Point(8, 6);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(59, 51);
+			this->button1->TabIndex = 0;
+			this->button1->UseVisualStyleBackColor = false;
+			this->button1->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
+			// 
 			// tabPage2
 			// 
 			this->tabPage2->BackColor = System::Drawing::Color::Transparent;
@@ -140,85 +219,6 @@ namespace Visual {
 			this->tabPage3->Size = System::Drawing::Size(1043, 63);
 			this->tabPage3->TabIndex = 2;
 			this->tabPage3->Text = L"About";
-			// 
-			// button1
-			// 
-			this->button1->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->button1->Cursor = System::Windows::Forms::Cursors::Hand;
-			this->button1->FlatAppearance->BorderColor = System::Drawing::Color::WhiteSmoke;
-			this->button1->FlatAppearance->MouseDownBackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(224)),
-				static_cast<System::Int32>(static_cast<System::Byte>(224)), static_cast<System::Int32>(static_cast<System::Byte>(224)));
-			this->button1->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button1.Image")));
-			this->button1->Location = System::Drawing::Point(8, 6);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(59, 51);
-			this->button1->TabIndex = 0;
-			this->button1->UseVisualStyleBackColor = false;
-			this->button1->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
-			// 
-			// button2
-			// 
-			this->button2->Cursor = System::Windows::Forms::Cursors::Hand;
-			this->button2->FlatAppearance->BorderColor = System::Drawing::Color::WhiteSmoke;
-			this->button2->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button2->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button2.Image")));
-			this->button2->Location = System::Drawing::Point(118, 6);
-			this->button2->Name = L"button2";
-			this->button2->Size = System::Drawing::Size(59, 51);
-			this->button2->TabIndex = 1;
-			this->button2->UseVisualStyleBackColor = true;
-			this->button2->Click += gcnew System::EventHandler(this, &MyForm::button2_Click);
-			// 
-			// button3
-			// 
-			this->button3->Cursor = System::Windows::Forms::Cursors::Hand;
-			this->button3->FlatAppearance->BorderColor = System::Drawing::Color::WhiteSmoke;
-			this->button3->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button3->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button3.Image")));
-			this->button3->Location = System::Drawing::Point(228, 6);
-			this->button3->Name = L"button3";
-			this->button3->Size = System::Drawing::Size(59, 51);
-			this->button3->TabIndex = 2;
-			this->button3->UseVisualStyleBackColor = true;
-			this->button3->Click += gcnew System::EventHandler(this, &MyForm::button3_Click);
-			// 
-			// button4
-			// 
-			this->button4->Cursor = System::Windows::Forms::Cursors::Hand;
-			this->button4->FlatAppearance->BorderColor = System::Drawing::Color::WhiteSmoke;
-			this->button4->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button4->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button4.Image")));
-			this->button4->Location = System::Drawing::Point(338, 6);
-			this->button4->Name = L"button4";
-			this->button4->Size = System::Drawing::Size(59, 51);
-			this->button4->TabIndex = 3;
-			this->button4->UseVisualStyleBackColor = true;
-			this->button4->Click += gcnew System::EventHandler(this, &MyForm::button4_Click);
-			// 
-			// button5
-			// 
-			this->button5->Cursor = System::Windows::Forms::Cursors::Hand;
-			this->button5->FlatAppearance->BorderColor = System::Drawing::Color::WhiteSmoke;
-			this->button5->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button5->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button5.Image")));
-			this->button5->Location = System::Drawing::Point(448, 6);
-			this->button5->Name = L"button5";
-			this->button5->Size = System::Drawing::Size(59, 51);
-			this->button5->TabIndex = 4;
-			this->button5->UseVisualStyleBackColor = true;
-			// 
-			// button6
-			// 
-			this->button6->Cursor = System::Windows::Forms::Cursors::Hand;
-			this->button6->FlatAppearance->BorderColor = System::Drawing::Color::WhiteSmoke;
-			this->button6->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button6->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button6.Image")));
-			this->button6->Location = System::Drawing::Point(558, 6);
-			this->button6->Name = L"button6";
-			this->button6->Size = System::Drawing::Size(59, 51);
-			this->button6->TabIndex = 5;
-			this->button6->UseVisualStyleBackColor = true;
 			// 
 			// groupBox1
 			// 
@@ -240,6 +240,7 @@ namespace Visual {
 			this->Controls->Add(this->tabControl1);
 			this->DoubleBuffered = true;
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->MaximizeBox = false;
 			this->Name = L"MyForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;

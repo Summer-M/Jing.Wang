@@ -92,7 +92,7 @@ namespace Process
 							ReleaseMutex(HMutex);
 							Sleep(SleepTime);
 						}
-						else if (ModelInModel == "step partten")
+						else if (ModelInModel == "step pattern")
 						{
 							Every_Step_Of_The_Change.push_back(i);
 							Every_Step_Of_The_Change.push_back(j);
@@ -143,7 +143,7 @@ namespace Process
 					ReleaseMutex(HMutex);
 					Sleep(SleepTime);
 				}
-				else if (ModelInModel == "step partten")
+				else if (ModelInModel == "step pattern")
 				{
 					Every_Step_Of_The_Change.push_back(index);
 					Every_Step_Of_The_Change.push_back(i);
@@ -186,7 +186,7 @@ namespace Process
 					ReleaseMutex(HMutex);
 					Sleep(SleepTime);
 				}
-				else if (ModelInModel == "step partten")
+				else if (ModelInModel == "step pattern")
 				{
 					Every_Step_Of_The_Change.push_back(i);
 					Every_Step_Of_The_Change.push_back(j);
@@ -236,7 +236,7 @@ namespace Process
 						ReleaseMutex(HMutex);
 						Sleep(SleepTime);
 					}
-					else if (ModelInModel == "step partten")
+					else if (ModelInModel == "step pattern")
 					{
 						Every_Step_Of_The_Change.push_back(i);
 						Every_Step_Of_The_Change.push_back(j + gap);

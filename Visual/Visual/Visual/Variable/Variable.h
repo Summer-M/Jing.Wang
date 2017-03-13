@@ -32,7 +32,7 @@ using namespace std;
 //T InSort<T,n>::IArraysize;
 
 //! define
-#define SortType  long long
+#define SortType  int
 #define RECTANGULAR_SPACE  10
 #define RECTANGULAR_NUMBER 80
 
