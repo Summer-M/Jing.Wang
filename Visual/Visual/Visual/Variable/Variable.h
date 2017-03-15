@@ -55,17 +55,21 @@ static vector< vector<SortType> > Every_Step_Of_The_Value;
 // --------------------------------------------------------------------
 
 /*
-Draw the area
+	Draw the area
 */
-#
-#define  BELOW		840 
+
 #define  TOP		  0
 #define  LEFT		  0
-#define  RIGHT		696
+
+#define  PICBOX1BELOW		400 
+#define  PICBOX1RIGHT		570
+
+#define  PICBOX2BELOW		400 
+#define  PICBOX2RIGHT		570
 
 /*
-Draw the basic warrior
+	Draw the basic warrior
 */
-#define Circlesize	100
+#define Circlesize	180
 #define CircleW		25
 #define CircleH		25

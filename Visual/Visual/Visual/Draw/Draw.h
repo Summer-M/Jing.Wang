@@ -22,12 +22,30 @@ namespace Geometric
 	//|					About The graphics transformation				   |
 	// --------------------------------------------------------------------
 
+	// The mutex
 	extern	HANDLE		 AMutex;
+	extern  HANDLE		 AMutexUseSecond;
+	
+	// The  Ordinary algorithm
 	extern	vector<int>	 PoxXCircle;
 	extern	vector<int>	 PoxYCircle;
 	extern	vector<int>	 DirectionXCircle;
 	extern	vector<int>	 DirectionYCircle;
 	extern  vector<bool> Collect;
+
+	// The  Optimization algorithm
+	extern	vector<int>	 PoxXCircleUseSecond;
+	extern	vector<int>	 PoxYCircleUseSecond;
+	extern	vector<int>	 DirectionXCircleUseSecond;
+	extern	vector<int>	 DirectionYCircleUseSecond;
+	extern  vector<bool> CollectUseSecond;
+
+	// The  Exit thread
+	extern  bool exitthread;
+
+	// The  Calculate Time
+	extern  double checktimeaboutOrdinary;
+	extern  double checktimeaboutOptimization;
 
 	template <typename T>
 	struct MyRectangle
@@ -250,4 +268,5 @@ namespace Geometric
 	//-------------------------------------------------------------------------
 	inline vector<int> RandNumbers(int value);
 	inline vector<int> RandNumberss(int value);
+	inline vector<int> RandNumberDirect(int value);
 }

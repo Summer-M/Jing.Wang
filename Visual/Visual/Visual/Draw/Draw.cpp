@@ -3,16 +3,29 @@
 
 namespace Geometric
 {
-	//!\brief extern variable
-	//-------------------------------------------------------------------------------------
+//!\brief extern variable
+//-------------------------------------------------------------------------------------
 	HANDLE AMutex = NULL;
-	vector<int>	PoxXCircle = RandNumberss(750);
-	vector<int>	PoxYCircle = RandNumberss(620);
-	vector<int> DirectionXCircle(Circlesize, 10);
-	vector<int> DirectionYCircle(Circlesize, 16);
+	HANDLE AMutexUseSecond = NULL;
+	
+	vector<int>	PoxXCircle = RandNumberss(350);
+	vector<int>	PoxYCircle = RandNumberss(350);
+	vector<int> DirectionXCircle = RandNumberDirect(50);
+	vector<int> DirectionYCircle = RandNumberDirect(50);
 	vector<bool> Collect(Circlesize);
 
-	//-------------------------------------------------------------------------------------
+	vector<int>	PoxXCircleUseSecond = RandNumberss(350);
+	vector<int>	PoxYCircleUseSecond = RandNumberss(350);
+	vector<int> DirectionXCircleUseSecond = RandNumberDirect(50);
+	vector<int> DirectionYCircleUseSecond = RandNumberDirect(50);
+	vector<bool> CollectUseSecond(Circlesize);
+
+	bool exitthread(false);
+
+	double checktimeaboutOrdinary(0);
+	double checktimeaboutOptimization(0);
+
+//-------------------------------------------------------------------------------------
 	inline vector<int> RandNumbers(int value)
 	{
 		vector<int> RandNumber;
@@ -37,11 +50,31 @@ namespace Geometric
 		return RandNumber;
 	}
 
-	/*
-	class Object
-	*/
+	inline vector<int> RandNumberDirect(int value)
+	{
+		vector<int> RandNumber;
+		srand((int)time(NULL));
+		for (size_t i = 0; i < Circlesize; i++)
+		{
+			while (true)
+			{
+				int randnum = rand() % value - 25;
+				if (randnum != 0)
+				{
+					RandNumber.push_back(randnum);
+					break;
+				}
+			}
+		}
 
-	//-------------------------------------------------------------------------------------
+		return RandNumber;
+	}
+
+/*
+	class Object
+*/
+
+//-------------------------------------------------------------------------------------
 	MyText<SortType> Object::DrawText()
 	{
 		MyText<SortType> mytext;
@@ -61,7 +94,7 @@ namespace Geometric
 		return mytext;
 	}
 
-	//-------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------
 	MyRectangle<SortType> Object::DrawCylindrical()
 	{
 		MyRectangle<SortType> Rectangle;
@@ -83,7 +116,7 @@ namespace Geometric
 		return Rectangle;
 	}
 
-	//-------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------
 	DottedLine<SortType> Object::DrawDottedLine()
 	{
 		// pt1->pt2 or pt2->pt1
@@ -106,7 +139,7 @@ namespace Geometric
 		return dottedline;
 	}
 
-	//-------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------
 	bool Object::DrawPoints(System::Drawing::Graphics^ myGraphics)
 	{
 		try
@@ -123,7 +156,7 @@ namespace Geometric
 		}
 	}
 
-	//-------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------
 	bool Object::DrawCircle(System::Drawing::Graphics^ myGraphics)
 	{
 		try
@@ -140,7 +173,7 @@ namespace Geometric
 		}
 	}
 
-	//-------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------
 	void Object::Move(/*the function change circle position*/)
 	{
 		/*
@@ -156,14 +189,18 @@ namespace Geometric
 		{
 			//lock
 			WaitForSingleObject(AMutex, INFINITE);
+
+			clock_t start = clock();
 			for (size_t i = 0; i < Circlesize; i++)
 			{
+				if (exitthread) return;
+
 				// go to the wall
-				if (PoxXCircle[i] + CircleW >= BELOW || PoxXCircle[i] <= TOP)
+				if (PoxXCircle[i] + CircleW >= PICBOX1BELOW || PoxXCircle[i] <= TOP)
 				{
 					DirectionXCircle[i] *= -1;
 				}
-				if (PoxYCircle[i] + CircleH >= RIGHT || PoxYCircle[i] <= LEFT)
+				if (PoxYCircle[i] + CircleH >= PICBOX1RIGHT || PoxYCircle[i] <= LEFT)
 				{
 					DirectionYCircle[i] *= -1;
 				}
@@ -186,6 +223,7 @@ namespace Geometric
 					{
 						/* The First treament */
 						Collect[i] = false;
+						break;
 
 						/* The Second treatment */
 						/*------------------------------------------------------------------------------------------------------------------------
@@ -249,10 +287,17 @@ namespace Geometric
 						-----------------------------------------------------------------------------------------
 						*/
 					}
+					else
+					{
+						Collect[i] = true;
+					}
 				}
 
 				//! ---------------------------end--------------------------------------
 			}
+
+			clock_t end = clock();
+			checktimeaboutOrdinary = double(end - start) / CLOCKS_PER_SEC;
 
 			//unlock
 			ReleaseMutex(AMutex);
@@ -278,23 +323,27 @@ namespace Geometric
 		while (true)
 		{
 			//lock
-			WaitForSingleObject(AMutex, INFINITE);
+			WaitForSingleObject(AMutexUseSecond, INFINITE);
+			
+			clock_t start = clock();
 			for (size_t i = 0; i < Circlesize; i++)
 			{
+				if (exitthread) return;
+
 				// go to the wall
-				if (PoxXCircle[i] + CircleW >= BELOW || PoxXCircle[i] <= TOP)
+				if (PoxXCircleUseSecond[i] + CircleW >= PICBOX2BELOW || PoxXCircleUseSecond[i] <= TOP)
 				{
-					DirectionXCircle[i] *= -1;
+					DirectionXCircleUseSecond[i] *= -1;
 				}
-				if (PoxYCircle[i] + CircleH >= RIGHT || PoxYCircle[i] <= LEFT)
+				if (PoxYCircleUseSecond[i] + CircleH >= PICBOX2RIGHT || PoxYCircleUseSecond[i] <= LEFT)
 				{
-					DirectionYCircle[i] *= -1;
+					DirectionYCircleUseSecond[i] *= -1;
 				}
 
-				PoxXCircle[i] += DirectionXCircle[i];
-				PoxYCircle[i] += DirectionYCircle[i];
+				PoxXCircleUseSecond[i] += DirectionXCircleUseSecond[i];
+				PoxYCircleUseSecond[i] += DirectionYCircleUseSecond[i];
 
-				GeoRectangular currentrectangle(PoxXCircle[i], PoxYCircle[i], CircleW, CircleH);
+				GeoRectangular currentrectangle(PoxXCircleUseSecond[i], PoxYCircleUseSecond[i], CircleW, CircleH);
 
 				////! collision detection
 				////! here will use several different collision detection algorithm
@@ -305,24 +354,27 @@ namespace Geometric
 					if (iIndex == i)
 						continue;
 
-					GeoRectangular georectangular(PoxXCircle[iIndex], PoxYCircle[iIndex], CircleW, CircleH);
+					GeoRectangular georectangular(PoxXCircleUseSecond[iIndex], PoxYCircleUseSecond[iIndex], CircleW, CircleH);
 
 					if (collision.AlgorithmSecond(currentrectangle.get(), georectangular.get()))			//!!!
 					{
-						Collect[i] = false;
+						CollectUseSecond[i] = false;
 						break;
 					}
 					else
 					{
-						Collect[i] = true;
+						CollectUseSecond[i] = true;
 					}
 				}
 
 				//! ---------------------------end--------------------------------------
 			}
 
+			clock_t end = clock();
+			checktimeaboutOptimization = double(end - start) / CLOCKS_PER_SEC;
+
 			//unlock
-			ReleaseMutex(AMutex);
+			ReleaseMutex(AMutexUseSecond);
 			Sleep(30);
 		}
 	}
