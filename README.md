@@ -25,13 +25,15 @@ The ultimate goal of the Repo is to create a visual learning platform, to help c
            · The  Eighth  Chapter
         · OJ
            · The  First Stage
-        · Visual
-           · Visual sorting
-   ![image]( https://github.com/Summer-M/Jing.Wang/raw/master/Resources/Pictures/Sort.png )
-           · List operation
-   ![image]( https://github.com/Summer-M/Jing.Wang/raw/master/Resources/Pictures/LinkedList.png )	
-           · Tree
-           · Algorithm
+        · Visual
+           · Visual Sort
+   ![image]( https://github.com/Summer-M/Jing.Wang/raw/master/Resources/Pictures/Sort.png )
+           
+           · List operation ( Some operations on the list )
+   ![image]( https://github.com/Summer-M/Jing.Wang/raw/master/Resources/Pictures/LinkedList.png )	
+           
+           · Tree ( Being added )          
+           · Algorithm ( About some of the operations of the algorithm )
    ![image]( https://github.com/Summer-M/Jing.Wang/raw/master/Resources/Pictures/Algorithm.png )
 #   · Others
     1 . I will continue to update the practice of the subject and the solution of the problem
