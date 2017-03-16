@@ -1,6 +1,6 @@
-# Jing.Wang
-This Repo is used to practice some problems in technical books and online judge or to verify some of the technical standards. 
-And thanks for the support of my girlfriend,i love her.
+﻿# Jing.Wang
+This Repo is used to establish a data visualization platform,to help practice some problems in technical 
+books and online judge or to verify some of the technical standards.
 #   · Purpose
     1 . This Repo make me keep coding practice,does not become rusty about some "coding techniques" 
         or "coding thinking"
@@ -24,11 +24,14 @@ And thanks for the support of my girlfriend,i love her.
            · The  Eighth  Chapter
         · OJ
            · The  First Stage
-        · Data Visualization
+        · Visual
            · Visual sorting
+              ![image](https://github.com/Summer-M/Jing.Wang/master/Resources/Pictures/Sort.png)
            · List operation
+              ![image](https://github.com/Summer-M/Jing.Wang/master/Resources/Pictures/LinkedList.png)	
            · Tree
            · Algorithm
+              ![image](https://github.com/Summer-M/Jing.Wang/master/Resources/Pictures/Algorithm.png)
 #   · Others
     1 . I will continue to update the practice of the subject and the solution of the problem
     2 . Welcome to find the answers to the questions and enrich the practice Library  
