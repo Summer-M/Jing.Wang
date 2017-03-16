@@ -1,6 +1,7 @@
-﻿# Jing.Wang
-This Repo is used to establish a data visualization platform,to help practice some problems in technical 
-books and online judge or to verify some of the technical standards.
+# Jing.Wang
+
+The ultimate goal of the Repo is to create a visual learning platform, to help computer novice to learn about the data structure and algorithm, etc.And hope to be able to clear the principle of some algorithms, access the process of data structure for computer.According to the ideal,can reduce the cost of some kind of learning.
+
 #   · Purpose
     1 . This Repo make me keep coding practice,does not become rusty about some "coding techniques" 
         or "coding thinking"
@@ -26,12 +27,12 @@ books and online judge or to verify some of the technical standards.
            · The  First Stage
         · Visual
            · Visual sorting
-              ![image](https://github.com/Summer-M/Jing.Wang/master/Resources/Pictures/Sort.png)
+   ![image]( https://github.com/Summer-M/Jing.Wang/raw/master/Resources/Pictures/Sort.png )
            · List operation
-              ![image](https://github.com/Summer-M/Jing.Wang/master/Resources/Pictures/LinkedList.png)	
+   ![image]( https://github.com/Summer-M/Jing.Wang/raw/master/Resources/Pictures/LinkedList.png )	
            · Tree
            · Algorithm
-              ![image](https://github.com/Summer-M/Jing.Wang/master/Resources/Pictures/Algorithm.png)
+   ![image]( https://github.com/Summer-M/Jing.Wang/raw/master/Resources/Pictures/Algorithm.png )
 #   · Others
     1 . I will continue to update the practice of the subject and the solution of the problem
     2 . Welcome to find the answers to the questions and enrich the practice Library  
