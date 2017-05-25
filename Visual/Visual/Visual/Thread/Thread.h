@@ -78,7 +78,7 @@ public:
 	// no code
 	static unsigned int _stdcall ThreadOfA(LPVOID lpParam)
 	{
-		Geometric::Object object;
+		VisualPaint::Object object;
 		object.Move();
 		return 0;
 	}
@@ -86,7 +86,7 @@ public:
 	// no code
 	static unsigned int _stdcall ThreadOfAB(LPVOID lpParam)
 	{
-		Geometric::Object object;
+		VisualPaint::Object object;
 		object.MoveRect();
 		return 0;
 	}

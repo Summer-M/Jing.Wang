@@ -11,7 +11,7 @@ using namespace System::Windows::Forms;
 using namespace System::Data;
 using namespace System::Drawing;
 
-using namespace Geometric;
+using namespace VisualPaint;
 
 
 namespace Visual {

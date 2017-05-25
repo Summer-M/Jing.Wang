@@ -1,13 +1,13 @@
 
 #include "../Draw/Draw.h"
 
-namespace Geometric
+namespace VisualPaint
 {
-//!\brief extern variable
-//-------------------------------------------------------------------------------------
+	//!\brief extern variable
+	//-------------------------------------------------------------------------------------
 	HANDLE AMutex = NULL;
 	HANDLE AMutexUseSecond = NULL;
-	
+
 	vector<int>	PoxXCircle = RandNumberss(350);
 	vector<int>	PoxYCircle = RandNumberss(350);
 	vector<int> DirectionXCircle = RandNumberDirect(50);
@@ -25,7 +25,7 @@ namespace Geometric
 	double checktimeaboutOrdinary(0);
 	double checktimeaboutOptimization(0);
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	inline vector<int> RandNumbers(int value)
 	{
 		vector<int> RandNumber;
@@ -70,11 +70,11 @@ namespace Geometric
 		return RandNumber;
 	}
 
-/*
-	class Object
-*/
+	/*
+		class Object
+	*/
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	MyText<SortType> Object::DrawText()
 	{
 		MyText<SortType> mytext;
@@ -94,7 +94,7 @@ namespace Geometric
 		return mytext;
 	}
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	MyRectangle<SortType> Object::DrawCylindrical()
 	{
 		MyRectangle<SortType> Rectangle;
@@ -116,7 +116,7 @@ namespace Geometric
 		return Rectangle;
 	}
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	DottedLine<SortType> Object::DrawDottedLine()
 	{
 		// pt1->pt2 or pt2->pt1
@@ -139,7 +139,7 @@ namespace Geometric
 		return dottedline;
 	}
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	bool Object::DrawPoints(System::Drawing::Graphics^ myGraphics)
 	{
 		try
@@ -156,7 +156,7 @@ namespace Geometric
 		}
 	}
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	bool Object::DrawCircle(System::Drawing::Graphics^ myGraphics)
 	{
 		try
@@ -173,7 +173,7 @@ namespace Geometric
 		}
 	}
 
-//-------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------
 	void Object::Move(/*the function change circle position*/)
 	{
 		/*
@@ -324,7 +324,7 @@ namespace Geometric
 		{
 			//lock
 			WaitForSingleObject(AMutexUseSecond, INFINITE);
-			
+
 			clock_t start = clock();
 			for (size_t i = 0; i < Circlesize; i++)
 			{
@@ -486,7 +486,7 @@ namespace Geometric
 			ProjectionOfPolygon(verticals, B, &minx1, &maxx1);
 
 			// collision?
-			if (ProjectionDistance(minx0, maxx0, minx1, maxx1)>0)
+			if (ProjectionDistance(minx0, maxx0, minx1, maxx1) > 0)
 			{
 				return false;
 			}
@@ -496,7 +496,7 @@ namespace Geometric
 	}
 
 	/*
-	class GeoCircle
+		class GeoCircle
 	*/
 
 	//-------------------------------------------------------------------------------------
@@ -530,5 +530,15 @@ namespace Geometric
 		CircleStruct.push_back(UppeLeftx() + width() / 2);
 		CircleStruct.push_back(UppeLefty() + height() / 2);
 		return CircleStruct;
+	}
+
+	/*
+		class Point
+	*/
+	void TPoint::paint(System::Drawing::Graphics^ Object, System::Drawing::Brush^  brush, double x, double y, float size)
+	{
+		Geo::CTMFORPOINT PTCTM(1, 0, 0, 0, -1, y1);
+		PTCTM.Transform(x,y);
+		Object->FillEllipse(brush, (float)x, (float)y, (float)size, (float)size);
 	}
 }

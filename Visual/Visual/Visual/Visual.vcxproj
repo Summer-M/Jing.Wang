@@ -133,6 +133,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Draw\Draw.cpp" />
+    <ClCompile Include="GeoControl.cpp" />
+    <ClCompile Include="Geometric\Geometric.cpp" />
     <ClCompile Include="LinkedListControl.cpp" />
     <ClCompile Include="MathControl.cpp" />
     <ClCompile Include="MyForm.cpp" />
@@ -143,6 +145,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Draw\Draw.h" />
+    <ClInclude Include="GeoControl.h">
+      <FileType>CppControl</FileType>
+    </ClInclude>
+    <ClInclude Include="Geometric\Geometric.h" />
     <ClInclude Include="LinkedListControl.h">
       <FileType>CppControl</FileType>
     </ClInclude>
@@ -163,6 +169,9 @@
     <ClInclude Include="Variable\Variable.h" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="GeoControl.resx">
+      <DependentUpon>GeoControl.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LinkedListControl.resx">
       <DependentUpon>LinkedListControl.h</DependentUpon>
     </EmbeddedResource>

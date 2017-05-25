@@ -637,7 +637,7 @@ private: System::Void pictureBox1_Paint(System::Object^  sender, System::Windows
 	// draw sorting process
 	if (this->normal->Checked)
 	{
-		Geometric::Object arrow;
+		VisualPaint::Object arrow;
 		vector<long long>::iterator SearchFirst;
 
 		try
@@ -657,7 +657,7 @@ private: System::Void pictureBox1_Paint(System::Object^  sender, System::Windows
 				// update cylindrical
 				for (SortType i = 0; i < RECTANGULAR_NUMBER; i++)
 				{
-					Geometric::Object object(RECTANGULAR_SPACE * i, IArraysize[i]);
+					VisualPaint::Object object(RECTANGULAR_SPACE * i, IArraysize[i]);
 					if (i == ExchangeIndex[0] || i == ExchangeIndex[1])
 					{
 						brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::PaleVioletRed);
@@ -690,7 +690,7 @@ private: System::Void pictureBox1_Paint(System::Object^  sender, System::Windows
 				for (SortType i = 0; i < RECTANGULAR_NUMBER; i++)
 				{
 					// update cylindrical
-					Geometric::Object object(RECTANGULAR_SPACE * i, IArraysize[i]);
+					VisualPaint::Object object(RECTANGULAR_SPACE * i, IArraysize[i]);
 					brush = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Black);
 					myGraphics->FillRectangle(brush, int(object.DrawCylindrical().RectangleX), int(object.DrawCylindrical().RectangleY),
 						int(object.DrawCylindrical().RectangleWidth), int(object.DrawCylindrical().RectangleHeight));
@@ -732,7 +732,7 @@ private: System::Void pictureBox1_Paint(System::Object^  sender, System::Windows
 
 		for (SortType i = 0; i < RECTANGULAR_NUMBER; i++)
 		{
-			Geometric::Object object(RECTANGULAR_SPACE * i, Every_Step_Of_The_Value.at(SortStep).at(i));
+			VisualPaint::Object object(RECTANGULAR_SPACE * i, Every_Step_Of_The_Value.at(SortStep).at(i));
 
 			if (i == Every_Step_Of_The_Change[2 * SortStep] || i == Every_Step_Of_The_Change[2 * SortStep + 1])
 			{

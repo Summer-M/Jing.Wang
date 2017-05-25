@@ -5,8 +5,9 @@
 #include <Windows.h>
 
 #include "../Variable/Variable.h"
+#include "../Geometric/Geometric.h"
 
-namespace Geometric
+namespace VisualPaint
 {
 	//using mamespace
 	using namespace std;
@@ -208,7 +209,7 @@ namespace Geometric
 	};
 
 	/*
-	Notice: the class is going to be into a template class!!
+		Notice: the class is going to be into a template class!!
 	*/
 	class Collision
 	{
@@ -264,6 +265,38 @@ namespace Geometric
 		// the second algorithm
 		bool AlgorithmSecond(AboutRect A, AboutRect B);
 	};
+
+	class TPoint
+	{
+	public:
+		TPoint::TPoint()
+			:x(0.00),
+			 y(0.00),
+			 x1(0.00),
+			 y1(0.00)
+		{}
+		TPoint(double x00, double y00,double x01,double y01)
+		{
+			x  = x00;
+			y  = y00;
+			x1 = x01;
+			y1 = y01;
+		}
+		~TPoint() {};
+
+	private:
+		double x;
+		double y;
+		double x1;
+		double y1;
+	public:
+		double &X() { return x; }
+		double &Y() { return y; }
+		double &X1() { return x1; }
+		double &Y1() { return y1; }
+		void paint(System::Drawing::Graphics^ Object, System::Drawing::Brush^  brush, double x, double y, float size = 3.0);
+	};
+
 	//! \brief Process rand test-numbers 
 	//-------------------------------------------------------------------------
 	inline vector<int> RandNumbers(int value);

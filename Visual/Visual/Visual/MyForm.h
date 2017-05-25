@@ -5,6 +5,7 @@
 #include "TreeControl.h"
 #include "MathControl.h"
 #include "Variable/Variable.h"
+#include "GeoControl.h"
 
 namespace Visual {
 
@@ -27,6 +28,7 @@ namespace Visual {
 			linkedlistcontrol = gcnew Visual::LinkedListControl();
 			treecontrol = gcnew Visual::TreeControl();
 			mathcontrol = gcnew Visual::MathControl();
+			geocontrol = gcnew Visual::GeoControl();
 
 			InitializeComponent();
 			//
@@ -68,6 +70,7 @@ namespace Visual {
 		Visual::LinkedListControl^ linkedlistcontrol;
 		Visual::TreeControl^ treecontrol;
 		Visual::MathControl^ mathcontrol;
+		Visual::GeoControl^ geocontrol;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -144,6 +147,7 @@ namespace Visual {
 			this->button5->Size = System::Drawing::Size(59, 51);
 			this->button5->TabIndex = 4;
 			this->button5->UseVisualStyleBackColor = true;
+			this->button5->Click += gcnew System::EventHandler(this, &MyForm::button5_Click);
 			// 
 			// button4
 			// 
@@ -269,6 +273,11 @@ private: System::Void button4_Click(System::Object^  sender, System::EventArgs^ 
 	mathcontrol->Show();
 	this->groupBox1->Controls->Clear();
 	this->groupBox1->Controls->Add(mathcontrol);
+}
+private: System::Void button5_Click(System::Object^  sender, System::EventArgs^  e) {
+	geocontrol->Show();
+	this->groupBox1->Controls->Clear();
+	this->groupBox1->Controls->Add(geocontrol);
 }
 };
 }
