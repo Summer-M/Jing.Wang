@@ -15,15 +15,14 @@ namespace Process
 
 	//-------------------------------------------------------
 
-
 	/*
-	Sort
+		Sort
 	*/
 
 	// No code!!!
 
 	/*
-	LinkedList
+		LinkedList
 	*/
 	//!\brief extern variable
 	//-------------------------------------------------------
@@ -90,18 +89,12 @@ namespace Process
 		int iCounter = 0;
 
 		while (p->next != NULL && p->data != data)
-		{
 			p = p->next;
-		}
 
 		if (p->data == data)
-		{
 			return true;
-		}
 		else
-		{
 			return false;
-		}
 
 		return true;
 	}
@@ -174,13 +167,9 @@ namespace Process
 			if (p->data == data)
 			{
 				if (p == head)
-				{
 					head = p->next;
-				}
 				else
-				{
 					Current->next = p->next;
-				}
 			}
 			else
 			{
@@ -266,18 +255,12 @@ namespace Process
 		int iCounter = 0;
 
 		while (p->next != NULL && p->data != data)
-		{
 			p = p->next;
-		}
 
 		if (p->data == data)
-		{
 			return true;
-		}
 		else
-		{
 			return false;
-		}
 
 		return true;
 	}

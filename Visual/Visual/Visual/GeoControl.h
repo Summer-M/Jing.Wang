@@ -526,43 +526,11 @@ namespace Visual {
 
 		}
 #pragma endregion
-private: System::Void pictureBox1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
-	mygraphics = e->Graphics;
-	mygraphics->DrawImage(bitmap, 0, 0);
-}
+private: System::Void pictureBox1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e);
+private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e);
+private: System::Void GeoControl_Load(System::Object^  sender, System::EventArgs^  e);
+public:	 void AboutMatrix();
+		 void change();
 
-// Matrix
-void AboutMatrix()
-{
-	// 1 
-	VisualPaint::TPoint Pt(100,100,this->pictureBox1->Width,this->pictureBox1->Height);
-	Pt.paint(mygraphics,brush,Pt.X(),Pt.Y(),15.0);
-}
-
-void change()
-{
-	
-}
-
-private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
-	if (this->Model->SelectedIndex == 0)
-	{
-		AboutMatrix();
-	}
-	else if (this->Model->SelectedIndex == 1)
-	{
-		AboutMatrix();
-	}
-	else if (this->Model->SelectedIndex == 2)
-	{
-		AboutMatrix();
-	}
-
-	this->pictureBox1->Invalidate();
-}
-private: System::Void GeoControl_Load(System::Object^  sender, System::EventArgs^  e) {
-	mygraphics->FromImage(bitmap);
-	this->pictureBox1->Invalidate();
-}
 };
 }

@@ -33,31 +33,19 @@ public:
 		switch (sortindex)
 		{
 		case 0:
-		{
 			sort.Bubble(sortnums);
-		}
-
 		break;
 
 		case 1:
-		{
 			sort.Select(sortnums);
-		}
-
 		break;
 
 		case 2:
-		{
 			sort.Insert(sortnums);
-		}
-
 		break;
 
 		case 3:
-		{
 			sort.Shell(sortnums);
-		}
-
 		break;
 
 		default:

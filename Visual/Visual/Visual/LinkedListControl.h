@@ -64,12 +64,8 @@ namespace Visual {
 	private: System::Windows::Forms::TextBox^  textBox8;
 	private: System::Windows::Forms::GroupBox^  groupBox2;
 	private: System::Windows::Forms::RadioButton^  format5;
-
 	private: System::Windows::Forms::RadioButton^  format4;
-
 	private: System::Windows::Forms::RadioButton^  format3;
-
-
 
 	private:
 		/// <summary>
@@ -359,145 +355,16 @@ namespace Visual {
 
 		}
 #pragma endregion
-private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
-	ReadyForLinkedList(0);
-}
-private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e) {
-	ReadyForLinkedList(1);
-}
-private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) {
-	ReadyForLinkedList(2);
-}
-private: System::Void button4_Click(System::Object^  sender, System::EventArgs^  e) {
-	ReadyForLinkedList(3);
-}
-private: System::Void button5_Click(System::Object^  sender, System::EventArgs^  e) {
-	ReadyForLinkedList(4);
-}
+private: System::Void button1_Click( System::Object^  sender, System::EventArgs^  e );
+private: System::Void button2_Click( System::Object^  sender, System::EventArgs^  e );
+private: System::Void button3_Click( System::Object^  sender, System::EventArgs^  e );
+private: System::Void button4_Click( System::Object^  sender, System::EventArgs^  e );
+private: System::Void button5_Click( System::Object^  sender, System::EventArgs^  e );
 
-private:void ReadyForLinkedList(/* start */const unsigned int index)
-{
-	LinkedList link;
+private:void ReadyForLinkedList( /* start */const unsigned int index );
+private:void UpdateTextBoxForOriginal( /* start */vector<long long> result );
+private:void UpdateTextBoxForResultAboutRemove( /* start */vector<long long> result );
+private:void UpdateTextBoxForResultAboutSearch( /* start */bool result );
 
-	switch (index)
-	{
-	case 0:
-	{
-		if (this->textBox3->Text == "")
-			break;
-		else
-		{
-			if (this->format4->Checked)
-			{
-				Mylink1 = link.CreateDoubly(Convert::ToInt32(this->textBox3->Text));
-
-				Result = link.Output1(Mylink1);
-				UpdateTextBoxForOriginal(Result);
-			}
-			else if (this->format3->Checked)
-			{
-				Mylink = link.Create(Convert::ToInt32(this->textBox3->Text));
-
-				Result = link.Output(Mylink);
-				UpdateTextBoxForOriginal(Result);
-			}
-			else
-			{
-				// 
-				break;
-			}
-		}
-	}
-
-	break;
-
-	case 1:
-	{
-		bool b_find;
-		if (this->textBox4->Text == "")
-			break;
-		else
-			b_find = link.SearchIndex(Convert::ToInt32(this->textBox4->Text), Mylink);
-
-		UpdateTextBoxForResultAboutSearch(b_find);
-	}
-
-	break;
-
-	case 2:
-	{
-		if (this->textBox5->Text == "")
-			break;
-		else
-			Mylink = link.Remove(Convert::ToInt32(this->textBox5->Text), Mylink);
-
-		Result = link.Output(Mylink);
-		UpdateTextBoxForResultAboutRemove(Result);
-	}
-
-	break;
-
-	case 3:
-	{
-		if (Mylink == NULL)
-			break;
-		else
-			Mylink = link.Reverse(Mylink);
-		Result = link.Output(Mylink);
-		UpdateTextBoxForResultAboutRemove(Result);
-	}
-
-	break;
-
-	case 4:
-	{
-		struct NoteList *Testinsert;
-		Testinsert = (struct NoteList *)malloc(sizeof(struct NoteList));
-		Testinsert->data = 100;
-		Testinsert->next = NULL;
-
-		if (this->textBox7->Text == "")
-			break;
-		else
-			Mylink = link.Insert(Convert::ToInt32(this->textBox7->Text), Mylink, Testinsert);
-		Result = link.Output(Mylink);
-		UpdateTextBoxForResultAboutRemove(Result);
-	}
-
-	break;
-
-	default:
-		break;
-	}
-}
-private:void UpdateTextBoxForOriginal(/* start */vector<long long> result)
-{
-	String^ Textaboutlink;
-	for (size_t i = 0; i < result.size(); i++)
-	{
-		Textaboutlink += result[i].ToString();
-		if (i != result.size() - 1)
-			Textaboutlink += ",";
-	}
-
-	this->OriginalData->Text = (this->OriginalData->Text == "") ? Textaboutlink : this->OriginalData->Text + "\r\n" + Textaboutlink;
-}
-private:void UpdateTextBoxForResultAboutRemove(/* start */vector<long long> result)
-{
-	String^ Textaboutlink;
-	for (size_t i = 0; i < result.size(); i++)
-	{
-		Textaboutlink += result[i].ToString();
-		if (i != result.size() - 1)
-			Textaboutlink += ",";
-	}
-
-	this->ResultData->Text = (this->ResultData->Text == "") ? Textaboutlink : this->ResultData->Text + "\r\n" + Textaboutlink;
-}
-private:void UpdateTextBoxForResultAboutSearch(/* start */bool result)
-{
-	String^ Textaboutlink = result ? "Yes!" : "No!";
-	this->ResultData->Text = (this->ResultData->Text == "") ? Textaboutlink : this->ResultData->Text + "\r\n" + Textaboutlink;
-}
 };
 }

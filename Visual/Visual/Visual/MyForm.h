@@ -254,27 +254,32 @@ namespace Visual {
 			this->ResumeLayout(false);
 		}
 #pragma endregion
-private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
+private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) 
+{
 	this->groupBox1->Controls->Clear();
 	this->groupBox1->Controls->Add(sortcontrol);
 	sortcontrol->Show();
 }
-private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e) {
+private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e) 
+{
 	linkedlistcontrol->Show();
 	this->groupBox1->Controls->Clear();
 	this->groupBox1->Controls->Add(linkedlistcontrol);
 }
-private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) {
+private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) 
+{
 	treecontrol->Show();
 	this->groupBox1->Controls->Clear();
 	this->groupBox1->Controls->Add(treecontrol);
 }
-private: System::Void button4_Click(System::Object^  sender, System::EventArgs^  e) {
+private: System::Void button4_Click(System::Object^  sender, System::EventArgs^  e) 
+{
 	mathcontrol->Show();
 	this->groupBox1->Controls->Clear();
 	this->groupBox1->Controls->Add(mathcontrol);
 }
-private: System::Void button5_Click(System::Object^  sender, System::EventArgs^  e) {
+private: System::Void button5_Click(System::Object^  sender, System::EventArgs^  e) 
+{
 	geocontrol->Show();
 	this->groupBox1->Controls->Clear();
 	this->groupBox1->Controls->Add(geocontrol);

@@ -116,9 +116,7 @@ namespace Process
 				for (size_t j = i + 1; j <= array.size() - 1; j++)
 				{
 					if (array[index] > array[j])
-					{
 						index = j;
-					}
 				}
 
 				iMiddle = array[index];
@@ -341,30 +339,30 @@ namespace Process
 	public:
 		// Singly Linked List
 		// judge empty
-		bool Empty(struct NoteList *head);
+		bool Empty( struct NoteList *head );
 		// judge full
-		bool Full(struct NoteList *head);
+		bool Full( struct NoteList *head );
 		// create in linkedlist
-		struct NoteList *Create(int nums);
+		struct NoteList *Create( int nums );
 		// search index in LinkedList
-		bool SearchIndex(int data, struct NoteList *head);
+		bool SearchIndex( int data, struct NoteList *head );
 		// search in LinkedList
-		struct NoteList* SearchList(int data, struct NoteList *head);
+		struct NoteList* SearchList( int data, struct NoteList *head );
 		// search in LinkedList
-		struct NoteList* Reverse(struct NoteList *head);
+		struct NoteList* Reverse( struct NoteList *head );
 		// insert in LinkedList
-		struct NoteList * Insert(int Pos, struct NoteList *head, struct NoteList *insert);
+		struct NoteList * Insert( int Pos, struct NoteList *head, struct NoteList *insert );
 		// remove in LinkedList
-		struct NoteList * Remove(int data, struct NoteList *head);
+		struct NoteList * Remove( int data, struct NoteList *head );
 		// Output data
-		vector<long long> Output(struct NoteList *head);
+		vector<long long> Output( struct NoteList *head );
 
 		// Doubly linked List
 		// create in linkedlist
-		struct DoublyNoteList *CreateDoubly(int nums);
+		struct DoublyNoteList *CreateDoubly( int nums );
 		// search in LinkedList
-		bool SearchIndex(int data, struct DoublyNoteList *head);
+		bool SearchIndex( int data, struct DoublyNoteList *head );
 		// Output data
-		vector<long long> LinkedList::Output1(struct DoublyNoteList *head);
+		vector<long long> LinkedList::Output1( struct DoublyNoteList *head );
 	};
 }
